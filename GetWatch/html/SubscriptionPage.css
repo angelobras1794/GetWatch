@@ -1,0 +1,225 @@
+/* Base styles */
+body {
+    background-color: #141414;
+    margin: 0;
+    font-family:
+      Inter,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+  }
+  
+
+  
+  /* Subscription Page */
+  .subscription-page {
+    max-width: 1596px;
+    margin: 185px auto 0;
+    font-family:
+      Manrope,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+  }
+  
+  /* Pricing Section */
+  .pricing-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 100px;
+    flex-wrap: wrap;
+  }
+  
+  .section-title {
+    font-size: 38px;
+    color: #fff;
+    font-weight: 700;
+    margin: 0;
+    flex: 1;
+  }
+  
+  .plan-tabs {
+    display: flex;
+    background-color: #0f0f0f;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .tab-button {
+    border: none;
+    background: none;
+    color: #999;
+    padding: 14px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .tab-button.active {
+    background-color: #1f1f1f;
+    color: #fff;
+  }
+  
+  /* Pricing Cards */
+  .pricing-cards {
+    display: flex;
+    margin-top: 26px;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .plan-card {
+    flex: 1;
+    min-width: 240px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .plan-title {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .plan-description {
+    color: #999;
+    font-size: 18px;
+    line-height: 27px;
+    margin: 16px 0 0;
+  }
+  
+  .price-container {
+    margin-top: 50px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  
+  .price-amount {
+    color: #fff;
+    font-size: 40px;
+    font-weight: 600;
+  }
+  
+  .price-period {
+    color: #999;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  .plan-actions {
+    margin-top: 50px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .btn {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 18px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .btn-secondary {
+    background-color: #141414;
+    color: #fff;
+  }
+  
+  .btn-primary {
+    background-color: #544cf6;
+    color: #fff;
+  }
+  
+  /* Comparison Section */
+  .comparison-section {
+    margin-top: 180px;
+  }
+  
+  .comparison-title {
+    font-size: 48px;
+    color: #fff;
+    font-weight: 700;
+    margin: 0;
+    padding-right: 300px;
+  }
+  
+  .comparison-table {
+    margin-top: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 18px;
+    color: #999;
+    font-weight: 500;
+  }
+  
+  .table-row {
+    display: flex;
+    border-bottom: 1px solid #262626;
+  }
+  
+  .table-header {
+    background-color: #0f0f0f;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .feature-name {
+    flex: 1;
+    min-width: 240px;
+    padding: 30px;
+  }
+  
+  .plan-column {
+    flex: 1;
+    min-width: 240px;
+    padding: 30px;
+    border-left: 1px solid #262626;
+  }
+  
+  
+  /* Responsive Styles */
+  @media (max-width: 991px) {
+    .top-nav {
+      max-width: 100%;
+    }
+  
+    .subscription-page {
+      margin-top: 40px;
+    }
+  
+    .section-title {
+      max-width: 100%;
+    }
+  
+    .comparison-title {
+      font-size: 40px;
+      padding-right: 20px;
+    }
+  
+    .comparison-section {
+      margin-top: 40px;
+    }
+  
+    .site-footer {
+      padding: 40px 20px;
+      margin-top: 40px;
+    }
+  
+    .footer-bottom {
+      margin-top: 40px;
+    }
+  }
+  
