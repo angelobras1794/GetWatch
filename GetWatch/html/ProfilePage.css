@@ -1,0 +1,202 @@
+.profile-container{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-left: 5%;
+    height: 100%;
+    position: relative;
+    
+    
+}
+
+.other-user-info{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    margin-left: 5%;
+    margin-top: 7%;
+    
+}
+.other-user-info p{
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+.other-user-info .userInfo-container{
+    margin-left: 3%;
+    
+}
+
+
+.user-info{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+    margin-left: 5%;
+}
+
+.image-container{
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+    
+    
+}
+.user-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    
+}
+.userInfo-container{
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    height: 100px;
+}
+.user-name{
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+    
+}
+.user-email{
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.other-info{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-container {
+    display: flex;
+    align-items: center; 
+    margin: 20px 0; 
+    padding: 10px 0; 
+    border-radius: 8px; 
+    width: 90%;
+    margin-left: 5%;
+}
+
+.section-menu {
+    display: flex;
+    gap: 20px; /* Espaçamento entre os itens */
+    list-style: none; /* Remove os marcadores da lista */
+    padding: 0;
+    margin: 0;
+}
+
+.menu-item {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    color: #ccc; /* Cor do texto */
+    cursor: pointer;
+    transition: color 0.3s ease; /* Animação ao passar o mouse */
+    gap: 10px; /* Espaçamento entre os itens */
+}
+
+.menu-item:hover {
+    color: #fff; /* Cor ao passar o mouse */
+}
+
+.menu-item.active {
+    font-weight: bold; /* Destaca o item ativo */
+    color: #fff; /* Cor do item ativo */
+}
+
+.info-container{
+    width: 100%;
+    height: 100%;
+    margin-left: 5%;
+    margin-top: 2%;
+    max-height: 400px; /* Altura máxima */
+    position: relative;
+    overflow-y: auto; /* Adiciona rolagem vertical quando necessário */
+    scrollbar-width: thin; /* Estiliza a largura da barra de rolagem (para navegadores compatíveis) */
+    scrollbar-color: #666 #1a1a1a; /* Cor da barra de rolagem e do fundo (para navegadores compatíveis) */
+}
+
+.info-item{
+    display: none;
+    flex-direction: column;
+    margin-bottom: 10px;
+    position: relative;
+    opacity: 0; /* Define a opacidade inicial como 0 */
+    transform: translateY(20px); /* Move o item ligeiramente para baixo */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Suaviza a opacidade e a posição */
+}
+.info-item.active{
+  display: flex;
+  opacity: 1; /* Define a opacidade como 1 */
+    transform: translateY(0); /* Move o item para sua posição original */
+}
+
+.transaction-item {
+    display: flex;
+    flex-direction: row; /* Organiza os itens em linha */
+    background-color: #1a1a1a; 
+    align-items: center;
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    margin-bottom: 10px; 
+    color: #fff; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+    width: 90%;
+}
+
+.movie-transaction-image {
+    width: 50px; 
+    height: 50px; 
+    border-radius: 5px;
+    object-fit: cover; 
+    margin-right: 15px; 
+}
+
+.transaction-details {
+    display: flex;
+    align-items: center;
+    
+    flex-direction: row; 
+    gap: 5px; 
+    flex-grow: 1; 
+}
+
+.transaction-title {
+    font-size: 16px;
+    margin: 0;
+    margin-left: 2%;
+    color: #ccc;
+
+}
+
+.transaction-quantity {
+    font-size: 16px;
+    color: #ccc; /* Cor mais clara para o texto secundário */
+    margin: 0;
+    margin-left: 15%;
+    word-wrap: break-word; /* Permite que o texto quebre em palavras longas */
+    white-space:nowrap; /* Impede quebras de linha automáticas */
+}
+
+.transaction-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff; /* Cor do preço */
+    margin: 0;
+    margin-left: 10%; /* Espaçamento entre os detalhes e o preço */
+}

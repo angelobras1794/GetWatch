@@ -1,0 +1,27 @@
+.navbar{
+    background-color:transparent !important;
+    position: relative;
+    z-index: 10;
+}
+.navbar .navbar-nav a, .navbar .navbar-brand {
+    color: rgba(255, 255, 255, 0.848)!important; /* Garante que a cor preta seja aplicada */
+}
+.navbar .navbar-nav a:hover, .navbar .navbar-brand:hover {
+    color: #3a3b3c !important; /* Cor azul ao passar o mouse */
+
+}
+.navbar .navbar-icons a.nav-link {
+    color: #fff !important; /* Garante que a cor preta seja aplicada */
+    margin-left: 15px;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.navbar .navbar-icons a.nav-link:hover {
+    color: #3a3b3c !important; /* Cor azul ao passar o mouse */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.85)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+
+}

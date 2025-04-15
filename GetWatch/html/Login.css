@@ -1,0 +1,222 @@
+
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .login-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .login-content {
+    display: flex;
+    width: 361px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 44.632px;
+  }
+  
+  .login-title {
+    color: #fff;
+    font-family: "ABeeZee", sans-serif;
+    font-size: 33px;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0.335px;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 22.316px;
+    width: 100%;
+  }
+  
+  .form-group {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7.439px;
+  }
+  
+  .form-label {
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0.149px;
+  }
+  
+  .input-wrapper {
+    width: 100%;
+    height: 45px;
+    position: relative;
+  }
+  
+  .form-input {
+    width: 100%;
+    height: 100%;
+    border-radius: 11.158px;
+    border: 0.93px solid #d4d7e3;
+    padding: 0 15px;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    color: #8897ad;
+    background-color: #f7fbff;
+  }
+  
+  .forgot-password {
+    color: #1e4ae9;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0.149px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .login-button , .signUp-button {
+    width: 100%;
+    padding: 14.877px 0;
+    border-radius: 11.158px;
+    box-sizing: border-box;
+    color: #fff;
+    font-family: "Roboto", sans-serif;
+    font-size: 19px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    background-color: #162d3a;
+    left: 3%;
+  }
+  .login-button:hover, .signUp-button:hover {
+    background-color: #1e4ae9;
+  }
+  
+  .divider {
+    display: flex;
+    width: 100%;
+    padding: 9.298px 0;
+    justify-content: center;
+    align-items: center;
+    gap: 14.877px;
+  }
+  
+  .divider-line {
+    width: 158px;
+    height: 1px;
+    background-color: #cfdfe2;
+  }
+  
+  .divider-text {
+    color: #294957;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0.149px;
+  }
+  
+
+  
+  .signup-prompt {
+    width: 100%;
+    color: #313957;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 160%;
+    letter-spacing: 0.167px;
+  }
+  
+  .signup-link {
+    color: #1e4ae9;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .art-section {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+  }
+  
+  .art-image {
+    width: 759px;
+    height: 998px;
+    object-fit: cover;
+  }
+  
+  .social-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .social-icon-button {
+    display: flex;
+    padding: 12px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid #262626;
+    cursor: pointer;
+    background-color: #1a1a1a;
+  }
+  
+
+  
+  .copyright {
+    color: #999;
+    font-family: "Manrope", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+  }
+  
+  .legal-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .legal-link {
+    color: #999;
+    font-family: "Manrope", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .legal-separator {
+    width: 1px;
+    height: 21px;
+    background-color: #262626;
+  }
+  
+  @media (max-width: 1248px) {
+    .login-container {
+      flex-direction: column;
+      padding: 20px;
+    }
+  
+    .art-section {
+      display: none;
+    }
+
+}   
