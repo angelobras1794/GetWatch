@@ -1,0 +1,67 @@
+@page "/SignUp"
+@using GetWatch.Pages.Layout
+@layout LoginPageLayout
+<NavBar/>
+<div class="login-container">
+        <section class="login-section">
+          <div class="login-content">
+            <h1 class="login-title">Criar conta</h1>
+            <form class="login-form">
+              <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-wrapper">
+                  <input
+                    type="username"
+                    id="username"
+                    placeholder="CrazyMango123"
+                    class="form-input"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-wrapper">
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Example@email.com"
+                    class="form-input"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrapper">
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="At least 8 characters"
+                    class="form-input"
+                  />
+                </div>
+              </div>
+             <div class="form-group">
+                <label for="password" class="form-label">Confirmar Password</label>
+                <div class="input-wrapper">
+                  <input
+                    type="password"
+                    id="confirmpassword"
+                    placeholder="At least 8 characters"
+                    class="form-input"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="signUp-button">Criar conta</button>
+            </form>
+            <div class="divider">
+              <div class="divider-line"></div>
+              <span class="divider-text">Or</span>
+              <div class="divider-line"></div>
+            </div>
+          </div>
+        </section>
+        <section class="art-section">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/09696e8c1bfa9e44555af5eed0d17577d3a64d54" alt="Movie posters collage" class="art-image" />
+        </section>
+</div>
+        <Footer/>

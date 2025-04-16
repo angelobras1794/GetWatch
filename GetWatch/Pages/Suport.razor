@@ -1,0 +1,74 @@
+@page "/Suport"
+@using GetWatch.Pages.Layout
+@layout SuportPageLayout
+<NavBar/>
+<form class="contact-form">
+        <div class="form-row">
+          <div class="input-group">
+            <label class="form-label">First Name</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                placeholder="Enter First Name"
+                class="form-input"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="form-label">Last Name</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                placeholder="Enter Last Name"
+                class="form-input"
+              />
+            </div>
+          </div>
+        </div>
+      
+        <div class="form-row">
+          <div class="input-group">
+            <label class="form-label">Email</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                placeholder="Enter your Email"
+                class="form-input"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="form-label">Phone Number</label>
+            <div class="phone-input-group">
+              <div class="input-wrapper">
+                <input
+                  type="tel"
+                  placeholder="Enter Phone Number"
+                  class="form-input"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="message-group">
+          <label class="form-label">Message</label>
+          <div class="textarea-wrapper">
+            <textarea
+              placeholder="Enter your Message"
+              class="form-textarea"
+            ></textarea>
+          </div>
+        </div>
+      
+        <div class="form-footer">
+          <div class="terms-group">
+            <div class="checkbox-wrapper"></div>
+            <p class="terms-text">I agree with Terms of Use and Privacy Policy</p>
+          </div>
+          <button class="submit-button">Send Message</button>
+        </div>
+      </form> 
+ <Faq/>    
+<Footer/> 
+
