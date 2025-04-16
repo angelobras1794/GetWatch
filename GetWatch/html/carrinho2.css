@@ -36,6 +36,7 @@
     background-color: #00e676;
 }
 
+
  
   
   /* Form Section Styles */
@@ -48,6 +49,7 @@
   .form-section h4 {
     color: var(--primary-color);
     margin-bottom: 20px;
+  
   }
   
   .form-group {
