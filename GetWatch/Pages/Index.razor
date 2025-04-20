@@ -1,5 +1,9 @@
 ﻿@page "/"
 @layout HomePageLayout
+@using GetWatch.Services.Movies
+@using GetWatch.Interfaces.Movies
+@inject IMovieRepository MovieRepository
+
 
 <PageTitle>Index</PageTitle>
 
@@ -20,46 +24,32 @@
         <div class="section-header">
           <h2 class="section-title">Atualmente nos cinemas</h2>
           <div class="control-buttons">
-            <button class="control-btn">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/adf500aba1852732ed6548e12bf1a2ff3121f91d?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Previous" class="control-icon" />
+            <button class="control-btn" @onclick="PreviousPage" disabled="@(!CanGoToPreviousPage())">
+                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/adf500aba1852732ed6548e12bf1a2ff3121f91d?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Previous" class="control-icon" />
             </button>
-            <button class="control-btn">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/684c888f9321ea341c9abf0b7017dc74a5f9de34?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Next" class="control-icon" />
+            <button class="control-btn" @onclick="NextPage" disabled="@(!CanGoToNextPage())">
+                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/684c888f9321ea341c9abf0b7017dc74a5f9de34?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Next" class="control-icon" />
             </button>
-          </div>
         </div>
-        <div class="movie-grid">
-          <a href="#">
-            <article class="movie-card">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1e22917116f3d2fe720374877a558a0a1731bc69?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Movie Poster" class="movie-poster" />
-              <p class="release-date">Released at <span>14 April 2023</span></p>  
-            </article>
-          </a>  
-          <a href="#"> 
-            <article class="movie-card">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e4afe867415bb01b7e21e0857caba3d9cabc5771?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Movie Poster" class="movie-poster" />
-              <p class="release-date">Released at <span>22 April 2023</span></p>
-            </article>
-          </a> 
-          <a href="#">
-            <article class="movie-card">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/021ed714e84aa0db8b1409a29631e74e47af3bb3?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Movie Poster" class="movie-poster" />
-              <p class="release-date">Released at <span>13 April 2023</span></p>
-            </article>
-          </a>
-          <a href="#"> 
-            <article class="movie-card">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/799633fa98fdc57befc4af252d57cb3b90140c55?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Movie Poster" class="movie-poster" />
-              <p class="release-date">Released at <span>19 April 2023</span></p>
-            </article>
-          </a>   
-          <a href="#"> 
-            <article class="movie-card">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e18d69833c5d5e71f27d5add44fb30b2c3896833?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Movie Poster" class="movie-poster" />
-              <p class="release-date">Released at <span>11 April 2023</span></p>
-            </article>
-          </a>   
-        </div>
+    </div>
+    <div class="movie-grid @(isAnimating ? "animate" : "")">
+        @if (movies.Any())
+        {
+            @foreach (var movie in GetMoviesForCurrentPage())
+            {
+                <a href="#"> 
+                <article class="movie-card">
+                    <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="movie-poster" />
+                    <p class="release-date">Release Date: <span>14 April 2023</span></p>  
+                </article>
+                </a>
+            }
+        }
+        else
+        {
+            <p>Loading movies...</p>
+        }
+      </div>
       </section> 
 
       <section class="categories-section">
@@ -245,4 +235,69 @@
       </section> 
       <Footer/>
       
-      
+ @code{
+   private List<PopularApiMovie> movies = new List<PopularApiMovie>();
+    private int currentPage = 0;
+    private int moviesPerPage = 4;
+    private bool isAnimating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch popular movies using the injected MovieRepository
+        movies = await MovieRepository.GetPopularMoviesAsync();
+        Console.WriteLine("Popular Movies:");
+        foreach (var movie in movies)
+        {
+            Console.WriteLine($"Title: {movie.Title}");
+            Console.WriteLine($"Release Date: {movie.ReleaseDate}");
+            Console.WriteLine($"Poster Path: {movie.PosterPath}");
+        }
+        Console.WriteLine($"{movies.Count} movies fetched.");
+    }
+
+    private IEnumerable<PopularApiMovie> GetMoviesForCurrentPage()
+    {
+        return movies.Skip(currentPage * moviesPerPage).Take(moviesPerPage);
+    }
+
+    private async Task NextPage()
+    {
+        if ((currentPage + 1) * moviesPerPage < movies.Count)
+        {
+            TriggerAnimation();
+            await Task.Delay(500); // Wait for the animation to complete
+            currentPage++;
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (currentPage > 0)
+        {
+            TriggerAnimation();
+            await Task.Delay(500); // Wait for the animation to complete
+            currentPage--;
+        }
+    }
+
+    private void TriggerAnimation()
+    {
+        isAnimating = true;
+        StateHasChanged();
+        Task.Delay(500).ContinueWith(_ =>
+        {
+            isAnimating = false;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private bool CanGoToNextPage()
+    {
+        return (currentPage + 1) * moviesPerPage < movies.Count;
+    }
+
+    private bool CanGoToPreviousPage()
+    {
+        return currentPage > 0;
+    }
+ }     

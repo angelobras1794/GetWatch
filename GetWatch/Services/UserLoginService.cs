@@ -11,10 +11,10 @@ namespace GetWatch.Services
     public class UserLoginService
     {
         
-        private GetWatchContext Context;
-        private IRepositoryFactory Factory;
-        private IUnitOfWork UnitOfWork;
-        private IRepository<DbUser> UserRepository;
+        private GetWatchContext? Context;
+        private IRepositoryFactory? Factory;
+        private IUnitOfWork? UnitOfWork;
+        private IRepository<DbUser>? UserRepository;
         
 
         public void Userlogin(DbUser user)
@@ -30,10 +30,14 @@ namespace GetWatch.Services
             UserRepository = UnitOfWork.GetRepository<DbUser>();
 
             // Build the chain
-            var existingEmails = UserRepository.GetAll().Select(u => u.Email).ToList();
+            var existingEmails = UserRepository?.GetAll().Select(u => u.Email).ToList() ?? new List<string>();
 
             var emailExistence = new EmailExistenceHandler(existingEmails);
-            var storedUser = UserRepository.GetAll().FirstOrDefault(u => u.Email == user.Email);
+            var storedUser = UserRepository?.GetAll().FirstOrDefault(u => u.Email == user.Email);
+            if (storedUser == null)
+            {
+                throw new ArgumentNullException(nameof(storedUser), "Stored user cannot be null.");
+            }
             var passwordCorrespondence = new PasswordCorrespondenceHandler(storedUser);
 
             emailExistence.SetNext(passwordCorrespondence);
