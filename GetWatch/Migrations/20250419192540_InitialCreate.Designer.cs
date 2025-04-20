@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GetWatch.Migrations
 {
     [DbContext(typeof(GetWatchContext))]
-    [Migration("20250416221557_InitialCreate")]
+    [Migration("20250419192540_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,9 +33,6 @@ namespace GetWatch.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("INTEGER");
 
@@ -56,7 +53,7 @@ namespace GetWatch.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DbServers");
+                    b.ToTable("DbUsers");
                 });
 #pragma warning restore 612, 618
         }

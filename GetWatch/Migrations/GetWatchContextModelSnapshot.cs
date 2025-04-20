@@ -30,9 +30,6 @@ namespace GetWatch.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("INTEGER");
 
@@ -53,7 +50,7 @@ namespace GetWatch.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DbServers");
+                    b.ToTable("DbUsers");
                 });
 #pragma warning restore 612, 618
         }

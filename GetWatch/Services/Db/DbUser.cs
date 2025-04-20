@@ -14,7 +14,7 @@ namespace GetWatch.Services.Db
         public string Email { get; set; } 
         public string Phone { get; set; }  = string.Empty;
         public bool IsAdmin { get; set; } = false;
-        public bool IsActive { get; set; } = true;
+        
        
         
     }
