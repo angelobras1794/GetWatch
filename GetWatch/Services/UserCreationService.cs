@@ -11,10 +11,10 @@ namespace GetWatch.Services
     public class UserCreationService
     {
 
-        private GetWatchContext Context;
-        private IRepositoryFactory Factory;
-        private IUnitOfWork UnitOfWork;
-        private IRepository<DbUser> UserRepository;
+        private GetWatchContext? Context;
+        private IRepositoryFactory? Factory;
+        private IUnitOfWork? UnitOfWork;
+        private IRepository<DbUser>? UserRepository;
 
          public void CreateUser(DbUser user)
 {
@@ -27,6 +27,11 @@ namespace GetWatch.Services
         UnitOfWork = new UnitOfWork(Context, Factory);
 
         UserRepository = UnitOfWork.GetRepository<DbUser>();
+        if (UserRepository == null)
+        {
+            throw new InvalidOperationException("UserRepository is not initialized.");
+        }
+
         var existingEmails = UserRepository.GetAll().Select(u => u.Email).ToList();
         var existingUsernames = UserRepository.GetAll().Select(u => u.Name).ToList();
 

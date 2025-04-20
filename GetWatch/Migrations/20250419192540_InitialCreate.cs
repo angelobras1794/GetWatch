@@ -12,7 +12,7 @@ namespace GetWatch.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DbServers",
+                name: "DbUsers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -21,13 +21,12 @@ namespace GetWatch.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Phone = table.Column<string>(type: "TEXT", nullable: false),
                     IsAdmin = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Updated = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DbServers", x => x.Id);
+                    table.PrimaryKey("PK_DbUsers", x => x.Id);
                 });
         }
 
@@ -35,7 +34,7 @@ namespace GetWatch.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DbServers");
+                name: "DbUsers");
         }
     }
 }

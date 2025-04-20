@@ -1,0 +1,106 @@
+@page "/Profile" 
+
+@using GetWatch.Pages.Layout
+@layout ProfilePageLayout
+
+<NavBar/>
+<div class="profile-container">
+        <div class="user-info">
+            
+            <div class="image-container">
+                <img src="poster.jpg" alt="User Image" class="user-image">
+            </div>
+            <div class="userInfo-container">
+                <p class="user-name">Joaquim Rego</p>
+                <p class="user-email">joaquimrego@gmail.com</p>
+
+            </div>
+        
+        </div>
+        <div class="other-user-info">
+            <div class="userInfo-container">
+                <p class="user-name">Genero</p>
+                <p class="user-email">M</p>
+
+            </div>
+            <div class="userInfo-container">
+                <p class="user-name">Pais</p>
+                <p class="user-email">Portugal</p>
+
+            </div>
+            <div class="userInfo-container">
+                <p class="user-name">Linguagem</p>
+                <p class="user-email">Portugues-BR</p>
+
+            </div>
+
+        </div>
+        <div class="other-info">
+            <div class="section-container">
+                <ul class="section-menu">
+                    <li class="menu-item active">Transactions</li>
+                    <li class="menu-item">Tickets in effect</li>
+                    <li class="menu-item">Support</li>
+                    <li class="menu-item">Planos</li>
+                </ul>
+
+            </div>
+            <div class="info-container">
+                <div class="info-item active" id="transactions">
+                    <div class="transaction-item">
+                        <img src="poster.jpg" alt="Movie Poster" class="movie-transaction-image">
+                        <div class="transaction-details">
+                            <p class="transaction-title">Ola</p>
+                            <p class="transaction-quantity">Quantidade:1</p>
+                            <p class="transaction-price">Preco:$10.00</p>
+                        </div>
+                        
+                    </div>
+                    <div class="transaction-item">
+                        <img src="poster.jpg" alt="Movie Poster" class="movie-transaction-image">
+                        <div class="transaction-details">
+                            <p class="transaction-title">Ola</p>
+                            <p class="transaction-quantity">Quantidade:1</p>
+                            <p class="transaction-price">Preco:$10.00</p>
+                        </div>
+                        
+                    </div>
+                    <div class="transaction-item">
+                        <img src="poster.jpg" alt="Movie Poster" class="movie-transaction-image">
+                        <div class="transaction-details">
+                            <p class="transaction-title">Ola</p>
+                            <p class="transaction-quantity">Quantidade:1</p>
+                            <p class="transaction-price">Preco:$10.00</p>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="info-item" id="tickets">
+                    <div class="transaction-item">
+                        <img src="poster.jpg" alt="Movie Poster" class="movie-transaction-image">
+                        <div class="transaction-details">
+                            <p class="transaction-title">JACKASS 3</p>
+                            <p class="transaction-title"> Dataaaa</p>
+                            <p class="transaction-price">Preco:$10.00</p>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="info-item" id="suporttickets">
+                    <div class="transaction-item">
+                        <div class="transaction-details">
+                            <p class="transaction-title">Comentario da treta</p>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="info-item" id="planos">
+                    <p>No active plans.</p>
+                </div>        
+            </div>
+        </div>
+    </div>
+    <Footer/>

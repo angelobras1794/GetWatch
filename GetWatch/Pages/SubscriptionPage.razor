@@ -1,0 +1,157 @@
+
+@using GetWatch.Pages.Layout
+@inherits SubscriptionPageLayout
+<NavBar/>
+<main class="subscription-page">
+    <section class="pricing-section">
+      <div class="pricing-header">
+        <h2 class="section-title">Escolhe um plano mais indicado para ti</h2>
+        <div class="plan-tabs">
+          <button class="tab-button active">Mensal</button>
+          <button class="tab-button">Anual</button>
+        </div>
+      </div>
+  
+      <div class="pricing-cards">
+        <article class="plan-card">
+          <div class="plan-content">
+            <h3 class="plan-title">Plano Básico</h3>
+            <p class="plan-description">
+              Aproveite uma extensa biblioteca de filmes e programas, apresentando
+              uma variedade de conteúdos, incluindo títulos recentes.
+            </p>
+          </div>
+          <div class="price-container">
+            <span class="price-amount">€9.99</span>
+            <span class="price-period">/mês</span>
+          </div>
+          <div class="plan-actions">
+            <button class="btn btn-secondary">Start Free Trial</button>
+            <button class="btn btn-primary">Choose Plan</button>
+          </div>
+        </article>
+  
+        <article class="plan-card">
+          <div class="plan-content">
+            <h3 class="plan-title">Plano Standard</h3>
+            <p class="plan-description">
+              Acesso a uma seleção mais ampla de filmes e programas, incluindo a
+              maioria dos lançamentos recentes e conteúdos exclusivos.
+            </p>
+          </div>
+          <div class="price-container">
+            <span class="price-amount">€12.99</span>
+            <span class="price-period">/mês</span>
+          </div>
+          <div class="plan-actions">
+            <button class="btn btn-secondary">Start Free Trial</button>
+            <button class="btn btn-primary">Choose Plan</button>
+          </div>
+        </article>
+  
+        <article class="plan-card">
+          <div class="plan-content">
+            <h3 class="plan-title">Plano Premium</h3>
+            <p class="plan-description">
+              Acesso à mais ampla seleção de filmes e programas, incluindo todos
+              os lançamentos e visualização offline.
+            </p>
+          </div>
+          <div class="price-container">
+            <span class="price-amount">€14.99</span>
+            <span class="price-period">/mês</span>
+          </div>
+          <div class="plan-actions">
+            <button class="btn btn-secondary">Start Free Trial</button>
+            <button class="btn btn-primary">Choose Plan</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  
+    <section class="comparison-section">
+      <h2 class="comparison-title">
+        Compare our plans and find the right one for you
+      </h2>
+  
+      <div class="comparison-table">
+        <div class="table-row table-header">
+          <div class="feature-name">Features</div>
+          <div class="plan-column">Basic</div>
+          <div class="plan-column">Standard</div>
+          <div class="plan-column">Premium</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Price</div>
+          <div class="plan-column">$9.99/Month</div>
+          <div class="plan-column">$12.99/Month</div>
+          <div class="plan-column">$14.99/Month</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Content</div>
+          <div class="plan-column">Access to a wide selection of movies and shows, including some new releases.</div>
+          <div class="plan-column">Access to a wider selection of movies and shows, including most new releases and exclusive content</div>
+          <div class="plan-column">Access to a widest selection of movies and shows, including all new releases and Offline Viewing</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Devices</div>
+          <div class="plan-column">Watch on one device simultaneously</div>
+          <div class="plan-column">Watch on Two device simultaneously</div>
+          <div class="plan-column">Watch on Four device simultaneously</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Free Trail</div>
+          <div class="plan-column">7 Days</div>
+          <div class="plan-column">7 Days</div>
+          <div class="plan-column">7 Days</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Cancel Anytime</div>
+          <div class="plan-column">Yes</div>
+          <div class="plan-column">Yes</div>
+          <div class="plan-column">Yes</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">HDR</div>
+          <div class="plan-column">No</div>
+          <div class="plan-column">Yes</div>
+          <div class="plan-column">Yes</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Dolby Atmos</div>
+          <div class="plan-column">No</div>
+          <div class="plan-column">Yes</div>
+          <div class="plan-column">Yes</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Ad - Free</div>
+          <div class="plan-column">No</div>
+          <div class="plan-column">Yes</div>
+          <div class="plan-column">Yes</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Offline Viewing</div>
+          <div class="plan-column">No</div>
+          <div class="plan-column">Yes, for select titles.</div>
+          <div class="plan-column">Yes, for all titles.</div>
+        </div>
+  
+        <div class="table-row">
+          <div class="feature-name">Family Sharing</div>
+          <div class="plan-column">No</div>
+          <div class="plan-column">Yes, up to 5 family members.</div>
+          <div class="plan-column">Yes, up to 6 family members.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer/>

@@ -1,12 +1,22 @@
 @page "/SignUp"
+
 @using GetWatch.Pages.Layout
+@using GetWatch.Pages
+@using GetWatch.Services.Db
+@using GetWatch.Services
+@inject UserCreationService UserCreationService
+@inject NavigationManager NavigationManager
+
+
+
+
 @layout LoginPageLayout
 <NavBar/>
 <div class="login-container">
         <section class="login-section">
           <div class="login-content">
             <h1 class="login-title">Criar conta</h1>
-            <form class="login-form">
+            <form class="login-form" @onsubmit="HandleSubmit">
               <div class="form-group">
                 <label for="username" class="form-label">Username</label>
                 <div class="input-wrapper">
@@ -15,6 +25,7 @@
                     id="username"
                     placeholder="CrazyMango123"
                     class="form-input"
+                    @bind="username"
                   />
                 </div>
               </div>
@@ -26,6 +37,7 @@
                     id="email"
                     placeholder="Example@email.com"
                     class="form-input"
+                    @bind="email"
                   />
                 </div>
               </div>
@@ -37,6 +49,7 @@
                     id="password"
                     placeholder="At least 8 characters"
                     class="form-input"
+                    @bind="password"
                   />
                 </div>
               </div>
@@ -48,6 +61,7 @@
                     id="confirmpassword"
                     placeholder="At least 8 characters"
                     class="form-input"
+                    @bind="confirmPassword"
                   />
                 </div>
               </div>
@@ -65,3 +79,52 @@
         </section>
 </div>
         <Footer/>
+
+
+
+
+@code {
+
+    private string username = string.Empty;
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string confirmPassword = string.Empty;
+
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            // Validate the form data
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                Console.WriteLine("All fields are required.");
+                return;
+            }
+
+            if (password != confirmPassword)
+            {
+                Console.WriteLine("Passwords do not match.");
+                return;
+            }
+
+            // Create a new user object
+            var user = new DbUser
+            {
+                Name = username,
+                Email = email,
+                Password = password
+            };
+
+            // Call the UserCreationService to create the user
+            UserCreationService.CreateUser(user);
+            NavigationManager.NavigateTo("/Login", true);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+    
+}        
