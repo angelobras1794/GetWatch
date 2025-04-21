@@ -40,12 +40,34 @@ namespace GetWatch.Services.Movies
                 return result?.Results ?? new List<PopularApiMovie>();
             }
         }
+
+        //fetch movie by id
+        public async Task<PopularApiMovie> GetMovieByIdAsync(int id)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://api.themoviedb.org/3/movie/{id}?language=en-US&append_to_response=credits"),
+                Headers =
+                {
+                    { "accept", "application/json" },
+                    { "Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhYjAyOTI1YmUxNDIyMjYzMjZhZWYzZmNhYjliYjVkMCIsIm5iZiI6MTc0NTEwMDMwNS4zMzcsInN1YiI6IjY4MDQxZTExMDMzNDRhZWU3MDg5YWYwNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.HZBMqlW0ES1oqXZ6LAoEtaomBNTxl3awG5aUTqowh1w" },
+                },
+            };
+
+            using (var response = await _httpClient.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                var body = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(body);
+
+                // Deserialize the response into a ApiMovie object
+                var result = JsonConvert.DeserializeObject<PopularApiMovie>(body);
+                return result ?? new PopularApiMovie();
+            }
+        }
+
     }
 
-    public class TmdbResponse
-    {
-        [JsonProperty("results")]
-        public List<PopularApiMovie> Results { get; set; } = new List<PopularApiMovie>();
-    }
 
 }

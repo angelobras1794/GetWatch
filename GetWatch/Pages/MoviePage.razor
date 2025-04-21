@@ -1,11 +1,20 @@
-@page "/MoviePage" 
+@page "/Movies/{id:int}" 
 @using GetWatch.Pages.Layout
 @layout MoviePageLayout
+@using GetWatch.Services.Db
+@using GetWatch.Services.Movies
+@using GetWatch.Services.Movies.Strategy
+@using GetWatch.Interfaces.Movies
+@inject IMovieRepository MovieRepository
 
 <NavBar/>
-<header class="movie-hero">
-        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/36d94e62e2f169463f0424ce45e391613054f574?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Movie Background" class="hero-background" />
-        <h1 class="movie-title">Jackass</h1>
+        @if (movie != null)
+        {
+        <header class="movie-hero">
+        
+          
+        <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="Movie Background" class="hero-background" />
+        <h1 class="movie-title">@movie.Title</h1>
         <div class="hero-actions">
           <button class="primary-button">
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a0a40d3feafbecc147030129826490c0ee592808?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Ticket" class="button-icon" />
@@ -23,26 +32,32 @@
         <section class="movie-info">
           <article class="description-section">
             <h2 class="section-title">Description</h2>
-            <p class="description-text">A bunch o friends having fun</p>
+            <p class="description-text">@movie.Overview</p>
           </article>
       
           <article class="cast-section">
-            <h2 class="section-title">Cast</h2>
-            <div class="cast-images">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2bfad155c2c119ca2874541be1fce8191b5dfe28?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Cast Member" class="cast-photo" />
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c09b0b2ccb8c948e8c97afc4ebe97b4c18b7b8db?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Cast Member" class="cast-photo" />
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/3e2ff80e6cee263f70f9fc5a60af00d60619bf33?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Cast Member" class="cast-photo" />
+    <h2 class="cast-title">Cast</h2>
+    <div class="cast-images">
+        @foreach (var castMember in movie.Credits.Cast.Take(5))
+        {
+            <div class="cast-card" title="@castMember.KnownForDepartment">
+                <img src="https://image.tmdb.org/t/p/w500/@castMember.ProfilePath" alt="@castMember.Name" class="cast-photo fade-in" />
+                <div class="cast-name">@castMember.Name</div>
+                <div class="cast-character">as @castMember.Character</div>
             </div>
-          </article>
+        }
+    </div>
+</article>
+
         </section>
       
         <aside class="movie-metadata">
           <div class="metadata-item">
             <div class="metadata-header">
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/14c718d8a29e1f926d9223c936ba4cd260b53661?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Calendar" class="metadata-icon" />
-              <h3 class="metadata-title">Released Year</h3>
+              <h3 class="metadata-title">Released Date</h3>
             </div>
-            <p class="metadata-value">2006</p>
+            <p class="metadata-value">@movie.ReleaseDate</p>
           </div>
       
           <div class="metadata-item">
@@ -61,35 +76,17 @@
           <div class="metadata-item">
             <div class="metadata-header">
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/25a7186b581d224614de8999be140270bf633361?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="metadata-icon" />
-              <h3 class="metadata-title">Ratings</h3>
+              <h3 class="metadata-title">Other Information</h3>
             </div>
             <div class="ratings-container">
-              <div class="rating-box">
-                <h4 class="rating-source">IMDb</h4>
-                <div class="rating-display">
-                  <div class="star-rating">
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2cd464d834accc4e13b82b903a0655b99b4f06ca?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2cd464d834accc4e13b82b903a0655b99b4f06ca?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2cd464d834accc4e13b82b903a0655b99b4f06ca?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2cd464d834accc4e13b82b903a0655b99b4f06ca?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b62d247cf70147adfeeb21a57b968bb8e560e930?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Half Star" class="star" />
-                  </div>
-                  <span class="rating-value">4.5</span>
-                </div>
-              </div>
-              <div class="rating-box">
-                <h4 class="rating-source">RottenTomatoes</h4>
-                <div class="rating-display">
-                  <div class="star-rating">
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/576021fc34e687d4861f20c8489937b8f8f2588d?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/576021fc34e687d4861f20c8489937b8f8f2588d?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/576021fc34e687d4861f20c8489937b8f8f2588d?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/576021fc34e687d4861f20c8489937b8f8f2588d?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/fdef1b48aa73dbef97d0df38719c07808b8bc497?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Empty Star" class="star" />
-                  </div>
-                  <span class="rating-value">4</span>
-                </div>
-              </div>
+              <div class="rating-item">
+                
+                <p class="rating-value">@movie.Popularity</p>
+              </div>  
+              <div class="rating-item">
+                
+                <p class="rating-value">Runtime(minutes): @movie.Runtime</p>
+              </div>  
             </div>
           </div>
       
@@ -99,119 +96,64 @@
               <h3 class="metadata-title">Gernes</h3>
             </div>
             <div class="genre-tags">
-              <span class="tag">Action</span>
-              <span class="tag">Adventure</span>
+              @foreach (var genre in movie.Genres)
+              {
+                <span class="tag">@genre.Name</span>
+              }
             </div>
           </div>
       
           <div class="metadata-item">
             <h3 class="metadata-title">Director</h3>
+            @foreach (var director in movie.Credits.Crew.Where(c => c.Job == "Director").Take(1))
+            {
             <div class="director-info">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b3d5a6512ea4dcfa918edbc6c8e88068e3627311?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Director" class="director-photo" />
-              <span class="director-name">wee man</span>
+              <img src="https://image.tmdb.org/t/p/w500/@director.ProfilePath" alt="@director.Name" class="director-photo" />
+              <span class="director-name">@director.Name</span>
             </div>
+            }
           </div>
         </aside>
       </main>
-      
-      <section class="reviews-section">
-        <article class="review-card new-review">
-          <div class="review-header">
-            <div class="reviewer-info">
-              <h3 class="reviewer-name">Your name</h3>
-              <p class="reviewer-location">From Portugal</p>
-            </div>
-            <div class="rating-pill">
-              <div class="star-rating">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/71dad75bbb46d9cba7eced7584a1bdf91af0d0ad?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5abd3bc22b269e0c19efd26cc1921225656a2c53?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddcf30f61cae5f096823aaf4bd1769f409a1b50d?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/4b414457ffeebb8d54eb94e96a1250e33711e211?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/eed4c335c9abe18afb7e752fd0a3a5a9f4de98e3?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Half Star" class="star" />
-              </div>
-              <span class="rating-value">4.5</span>
-            </div>
-          </div>
-          <div class="review-input">
-            <label class="input-label">Comment</label>
-            <div class="input-line"></div>
-          </div>
-        </article>
-      
-        <article class="review-card">
-          <div class="review-header">
-            <div class="reviewer-info">
-              <h3 class="reviewer-name">John Snow</h3>
-              <p class="reviewer-location">From Siberia</p>
-            </div>
-            <div class="rating-pill">
-              <div class="star-rating">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1dbd5063de8852a99144fde5e00a9576e5307a26?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/edbcce86481b965a638a7ec8c8c633bf87799526?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/47d1ea6b7d145f1e2f8ef22337f14659ec83a892?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c416acc89763450a58091be690987d06d26c6e27?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2b257a5073936bdd6b124914deb668843a6553af?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Half Star" class="star" />
-              </div>
-              <span class="rating-value">4.5</span>
-            </div>
-          </div>
-          <p class="review-text">
-            This movie was recommended to me by a very dear friend who went for the
-            movie by herself. I went to the cinemas to watch but had a houseful board
-            so couldn't watch it.
-          </p>
-        </article>
-      
-        <article class="review-card">
-          <div class="review-header">
-            <div class="reviewer-info">
-              <h3 class="reviewer-name">John Snow</h3>
-              <p class="reviewer-location">From Siberia</p>
-            </div>
-            <div class="rating-pill">
-              <div class="star-rating">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1dbd5063de8852a99144fde5e00a9576e5307a26?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/edbcce86481b965a638a7ec8c8c633bf87799526?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/47d1ea6b7d145f1e2f8ef22337f14659ec83a892?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c416acc89763450a58091be690987d06d26c6e27?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2b257a5073936bdd6b124914deb668843a6553af?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Half Star" class="star" />
-              </div>
-              <span class="rating-value">4.5</span>
-            </div>
-          </div>
-          <p class="review-text">
-            This movie was recommended to me by a very dear friend who went for the
-            movie by herself. I went to the cinemas to watch but had a houseful board
-            so couldn't watch it.
-          </p>
-        </article>
-      
-        <article class="review-card">
-          <div class="review-header">
-            <div class="reviewer-info">
-              <h3 class="reviewer-name">John Snow</h3>
-              <p class="reviewer-location">From Siberia</p>
-            </div>
-            <div class="rating-pill">
-              <div class="star-rating">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1dbd5063de8852a99144fde5e00a9576e5307a26?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/edbcce86481b965a638a7ec8c8c633bf87799526?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/47d1ea6b7d145f1e2f8ef22337f14659ec83a892?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c416acc89763450a58091be690987d06d26c6e27?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="star" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/2b257a5073936bdd6b124914deb668843a6553af?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Half Star" class="star" />
-              </div>
-              <span class="rating-value">4.5</span>
-            </div>
-          </div>
-          <p class="review-text">
-            This movie was recommended to me by a very dear friend who went for the
-            movie by herself. I went to the cinemas to watch but had a houseful board
-            so couldn't watch it.
-          </p>
-        </article>
-      
-        <button class="scroll-button">
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/bb3e77eac266a3a9da590f3abd12ebf5b118ba6b?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Scroll" class="scroll-icon" />
-        </button>
-      </section>
-        <Footer/>
+      }else{
+        <div class="loading-container">
+          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Loading" class="loading-image" />
+          <p class="loading-text">Loading movie details...</p>
+        </div>
+      }
+      <Footer/>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+
+    private PopularApiMovie? movie;
+
+    protected override async Task OnInitializedAsync()
+    {
+      Console.WriteLine($"Movie ID: {id}");
+        try
+        {
+            var httpclient = new HttpClient();
+            var MovieIdStrategy = new MovieByIdFetchStrategy(id);
+            var movieFetcher = new SingleMovieFetcher(MovieIdStrategy);
+            // Fetch popular movies using the injected MovieRepository
+            movie = await movieFetcher.FetchMovieAsync(httpclient);
+            if (movie == null)
+            {
+                Console.WriteLine($"Movie with ID {id} not found.");
+            }
+            else
+            {
+                Console.WriteLine($"Movie Title: {movie.Title}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching movie details: {ex.Message}");
+        }
+    }
+
+    
+}

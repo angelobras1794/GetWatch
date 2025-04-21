@@ -10,6 +10,7 @@ namespace GetWatch.Interfaces.Movies
     {
         Task<List<PopularApiMovie>> GetPopularMoviesAsync();
         //get specific movie by id
+        Task<PopularApiMovie> GetMovieByIdAsync(int id);
         
 
     }

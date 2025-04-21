@@ -21,6 +21,21 @@ namespace GetWatch.Services.Movies
         [JsonProperty("release_date")]
         public string? ReleaseDate { get; set; }
 
+        [JsonProperty("genres")]
+        public List<Genre> Genres { get; set; } = new List<Genre>();
+
+        [JsonProperty("overview")]
+        public string? Overview { get; set; } = string.Empty;
+
+        [JsonProperty("credits")]
+        public Credits? Credits { get; set; } = new Credits();
+
+        [JsonProperty("popularity")]
+        public double? Popularity { get; set; }
+
+        [JsonProperty("runtime")]
+        public int? Runtime { get; set; }
+
 
     }
 }

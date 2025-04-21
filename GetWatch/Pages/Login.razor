@@ -2,12 +2,17 @@
 @using GetWatch.Pages.Layout
 @layout LoginPageLayout
 
+@using GetWatch.Services.Db
+@using GetWatch.Services
+@inject UserLoginService UserLoginService
+@inject NavigationManager NavigationManager
+
 <NavBar/>
 <div class="login-container">
         <section class="login-section">
           <div class="login-content">
             <h1 class="login-title">Login</h1>
-            <form class="login-form">
+            <form class="login-form" @onsubmit="HandleLogin">
               <div class="form-group">
                 <label for="email" class="form-label">Email</label>
                 <div class="input-wrapper">
@@ -16,6 +21,7 @@
                     id="email"
                     placeholder="Example@email.com"
                     class="form-input"
+                    @bind="email"
                   />
                 </div>
               </div>
@@ -27,6 +33,7 @@
                     id="password"
                     placeholder="At least 8 characters"
                     class="form-input"
+                    @bind="password"
                   />
                 </div>
               </div>
@@ -34,6 +41,10 @@
               <button type="submit" class="login-button">Login</button>
                
             </form>
+             @if (!string.IsNullOrEmpty(feedbackMessage))
+            {
+                <p class="feedback-message @(isError ? "error" : "success")">@feedbackMessage</p>
+            }
             <div class="divider">
               <div class="divider-line"></div>
               <span class="divider-text">Or</span>
@@ -50,3 +61,47 @@
         </section>
       </div>
       <Footer/>
+
+
+@code{
+    
+     private string email = string.Empty;
+    private string password = string.Empty;
+
+     private string feedbackMessage = string.Empty;
+    private bool isError = false;
+
+    private void HandleLogin()
+    {
+        try
+        {
+            // Validate the form data
+            if ( string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            {
+                feedbackMessage = "All fields are required.";
+                isError = true;
+                return;
+            }
+            // Create a new user object
+            var user = new DbUser
+            {
+                Email = email,
+                Password = password
+            };
+
+            UserLoginService.Userlogin(user);
+
+            // If successful, show success message and redirect
+            feedbackMessage = "Account logged in successfully!";
+            isError = false;
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception and show an error message
+            feedbackMessage = $"Error: {ex.Message}";
+            isError = true;
+        }
+    }
+}      

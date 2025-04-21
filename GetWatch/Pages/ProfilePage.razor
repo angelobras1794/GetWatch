@@ -1,7 +1,11 @@
 @page "/Profile" 
-
+@attribute [Authorize]
 @using GetWatch.Pages.Layout
 @layout ProfilePageLayout
+@using GetWatch.Services.Db
+@using GetWatch.Services
+@inject CustomAuthenticationStateProvider AuthProvider
+@inject NavigationManager Nav
 
 <NavBar/>
 <div class="profile-container">
@@ -34,6 +38,9 @@
 
             </div>
 
+        </div>
+        <div class="logout-container">
+            <button class="logout-button" @onclick="Logout">Logout</button>
         </div>
         <div class="other-info">
             <div class="section-container">
@@ -104,3 +111,11 @@
         </div>
     </div>
     <Footer/>
+
+    @code {
+        private async void Logout()
+    {
+        await AuthProvider.NotifyUserLogout();
+        Nav.NavigateTo("/login", true);
+    }
+    }
