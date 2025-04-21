@@ -1,0 +1,136 @@
+.form-section {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 15px;
+    margin: 30px auto;
+    max-width: 800px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Lista de cartões */
+  .card-list {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 40px;
+    color: #333;
+  }
+  
+  .card-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #ccc;
+    gap: 20px;
+  }
+  
+  .card-item:last-child {
+    border-bottom: none;
+  }
+  
+  .card-item input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+  .card-item i {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .card-item.selected {
+    background-color: #e0f7e9;
+    border-radius: 8px;
+  }
+  
+  /* Adicionar cartão */
+  .add-card-form {
+    background-color: #122620;
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  
+  .card-icons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  
+  .add-card-form .form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .add-card-form .form-control {
+    background-color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  .add-card-form .form-row {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .add-card-form .form-row .form-group {
+    flex: 1;
+  }
+  
+  .add-card-form .form-check-label {
+    margin-left: 5px;
+    font-size: 14px;
+  }
+  
+  .add-card-form .button {
+    background-color: #04c45c;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    transition: background-color 0.3s;
+  }
+  
+  .add-card-form .button:hover {
+    background-color: #029b46;
+  }
+
+.back {
+    display: inline-block;
+    background-color: #333;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    width: 40%;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.back-link {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.back-link a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.back-link span {
+  margin-right: 5px;
+}
