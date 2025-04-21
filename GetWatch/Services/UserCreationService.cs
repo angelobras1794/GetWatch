@@ -18,8 +18,7 @@ namespace GetWatch.Services
 
          public void CreateUser(DbUser user)
 {
-    try
-    {
+    
         Context = new GetWatchContext();
         Context.Database.EnsureCreated();
             
@@ -54,12 +53,9 @@ namespace GetWatch.Services
         UnitOfWork.SaveChanges();
         UnitOfWork.Commit();
         Console.WriteLine("User created successfully!");
-    }
-    catch (Exception ex)
-    {
-        // Handle the exception (e.g., log it or notify the user)
-        Console.WriteLine($"Error: {ex.Message}");
-    }
+    
+        
+    
 }
 
         

@@ -10,17 +10,20 @@ namespace GetWatch.Services
 {
     public class UserLoginService
     {
+        private readonly CustomAuthenticationStateProvider _authStateProvider;
+
+        public UserLoginService(CustomAuthenticationStateProvider authStateProvider)
+        {
+            _authStateProvider = authStateProvider;
+        }
         
         private GetWatchContext? Context;
         private IRepositoryFactory? Factory;
         private IUnitOfWork? UnitOfWork;
         private IRepository<DbUser>? UserRepository;
-        
 
-        public void Userlogin(DbUser user)
+        public async Task Userlogin(DbUser user)
     {
-        try
-        {
             Context = new GetWatchContext();
             Context.Database.EnsureCreated();
 
@@ -28,8 +31,6 @@ namespace GetWatch.Services
             UnitOfWork = new UnitOfWork(Context, Factory);
 
             UserRepository = UnitOfWork.GetRepository<DbUser>();
-
-            // Build the chain
             var existingEmails = UserRepository?.GetAll().Select(u => u.Email).ToList() ?? new List<string>();
 
             var emailExistence = new EmailExistenceHandler(existingEmails);
@@ -39,21 +40,14 @@ namespace GetWatch.Services
                 throw new ArgumentNullException(nameof(storedUser), "Stored user cannot be null.");
             }
             var passwordCorrespondence = new PasswordCorrespondenceHandler(storedUser);
-
             emailExistence.SetNext(passwordCorrespondence);
-
-            // Start the chain
             emailExistence.Handle(user);
-
-            // If all validations pass, proceed with login
+            await _authStateProvider.NotifyUserAuthentication(user.Email);
             Console.WriteLine("User login successful!");
-        }
-        catch (Exception ex)
-        {
-            // Handle the exception (e.g., log it or notify the user)
-            Console.WriteLine($"Error during login: {ex.Message}");
-        }
+        
+        
     }
+    
         
     }
 }

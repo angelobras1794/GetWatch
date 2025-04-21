@@ -67,6 +67,10 @@
               </div>
               <button type="submit" class="signUp-button">Criar conta</button>
             </form>
+            @if (!string.IsNullOrEmpty(feedbackMessage))
+            {
+                <p class="feedback-message @(isError ? "error" : "success")">@feedbackMessage</p>
+            }
             <div class="divider">
               <div class="divider-line"></div>
               <span class="divider-text">Or</span>
@@ -89,6 +93,8 @@
     private string email = string.Empty;
     private string password = string.Empty;
     private string confirmPassword = string.Empty;
+    private string feedbackMessage = string.Empty;
+    private bool isError = false;
 
 
     private async Task HandleSubmit()
@@ -98,13 +104,15 @@
             // Validate the form data
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                Console.WriteLine("All fields are required.");
+                feedbackMessage = "All fields are required.";
+                isError = true;
                 return;
             }
 
             if (password != confirmPassword)
             {
-                Console.WriteLine("Passwords do not match.");
+                feedbackMessage = "Passwords do not match.";
+                isError = true;
                 return;
             }
 
@@ -118,12 +126,18 @@
 
             // Call the UserCreationService to create the user
             UserCreationService.CreateUser(user);
-            NavigationManager.NavigateTo("/Login", true);
 
+            // If successful, show success message and redirect
+            feedbackMessage = "Account created successfully! Redirecting to login...";
+            isError = false;
+
+            NavigationManager.NavigateTo("/Login", true);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle the exception and show an error message
+            feedbackMessage = $"Error: {ex.Message}";
+            isError = true;
         }
     }
     

@@ -181,21 +181,79 @@ body {
   }
   
   .cast-section {
-    margin-top: 30px;
-  }
-  
-  .cast-images {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
+
+.cast-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cast-images {
     display: flex;
-    margin-top: 30px;
-    gap: 20px;
-  }
-  
-  .cast-photo {
-    flex: 1;
-    aspect-ratio: 0.95;
-    border-radius: 12px;
-    object-fit: contain;
-  }
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+}
+
+.cast-card {
+  background-color: #2a2a2a;
+  border-radius: 16px;
+  overflow: hidden;
+  width: 180px;
+  max-width: 45vw; /* allows flexibility on mobile */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.8s ease-in;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cast-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.cast-photo {
+    width: 200px !important;
+    height: 240px;
+    object-fit: cover;
+    border-bottom: 2px solid #444;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.cast-name, .cast-character {
+    padding: 8px 10px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.cast-character {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #bbbbbb;
+    padding-bottom: 10px;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
   
   .movie-metadata {
     background-color: #1a1a1a;

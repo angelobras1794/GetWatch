@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Components.Authorization;
 using GetWatch.Data;
 using GetWatch.Services.Db;
 using GetWatch.Services;
 using GetWatch.Interfaces.Movies;
 using GetWatch.Services.Movies;
+using Microsoft.AspNetCore.Authentication.Cookies; // Add this at the top
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +16,29 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+
+
+
 builder.Services.AddScoped<UserCreationService>();
 builder.Services.AddDbContext<GetWatchContext>();
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
+builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthenticationStateProvider>());
+builder.Services.AddScoped<UserLoginService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login"; // Redirect here if unauthenticated
+    });
+
+
+
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+
+
 
 var app = builder.Build();
 
@@ -31,6 +55,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication(); // Enable authentication middleware
+app.UseAuthorization();  // Enable authorization middleware
+
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

@@ -2,6 +2,7 @@
 @layout HomePageLayout
 @using GetWatch.Services.Movies
 @using GetWatch.Interfaces.Movies
+@using GetWatch.Services.Movies.Strategy
 @inject IMovieRepository MovieRepository
 
 
@@ -37,10 +38,10 @@
         {
             @foreach (var movie in GetMoviesForCurrentPage())
             {
-                <a href="#"> 
+                <a href="/Movies/@movie.Id"> 
                 <article class="movie-card">
                     <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="movie-poster" />
-                    <p class="release-date">Release Date: <span>14 April 2023</span></p>  
+                    <p class="release-date">Release Date: <span>@movie.ReleaseDate</span></p>  
                 </article>
                 </a>
             }
@@ -241,10 +242,15 @@
     private int moviesPerPage = 4;
     private bool isAnimating = false;
 
+    
+
     protected override async Task OnInitializedAsync()
     {
+        var httpclient = new HttpClient();
+        var popularStrategy = new PopularMovieFetchStrategy();
+        var movieFetcher = new MovieFetcher(popularStrategy);
         // Fetch popular movies using the injected MovieRepository
-        movies = await MovieRepository.GetPopularMoviesAsync();
+        movies = await movieFetcher.FetchMoviesAsync(httpclient);
         Console.WriteLine("Popular Movies:");
         foreach (var movie in movies)
         {
