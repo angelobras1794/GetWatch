@@ -21,156 +21,43 @@
           </div>
         </div>  
     </div>   
-    <section class="current-movies">
-        <div class="section-header">
-          <h2 class="section-title">Atualmente nos cinemas</h2>
-          <div class="control-buttons">
-            <button class="control-btn" @onclick="PreviousPage" disabled="@(!CanGoToPreviousPage())">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/adf500aba1852732ed6548e12bf1a2ff3121f91d?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Previous" class="control-icon" />
-            </button>
-            <button class="control-btn" @onclick="NextPage" disabled="@(!CanGoToNextPage())">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/684c888f9321ea341c9abf0b7017dc74a5f9de34?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Next" class="control-icon" />
-            </button>
-        </div>
-    </div>
-    <div class="movie-grid @(isAnimating ? "animate" : "")">
-        @if (movies.Any())
-        {
-            @foreach (var movie in GetMoviesForCurrentPage())
-            {
-                <a href="/Movies/@movie.Id"> 
-                <article class="movie-card">
-                    <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="movie-poster" />
-                    <p class="release-date">Release Date: <span>@movie.ReleaseDate</span></p>  
-                </article>
-                </a>
-            }
-        }
-        else
-        {
-            <p>Loading movies...</p>
-        }
-      </div>
-      </section> 
+    <MovieSlider Title="Atualmente nos cinemas" Items="movies" ItemsPerPage="5">
+    <ChildContent>
+        <a href="/Movies/@context.Id" class="movie-link">
+            <article class="movie-card">
+                <img src="https://image.tmdb.org/t/p/w500/@context.PosterPath" alt="@context.Title" class="movie-poster" />
+                <p class="release-date">Release Date: <span>@context.ReleaseDate</span></p>
+            </article>
+        </a>
+    </ChildContent>
+</MovieSlider>
 
-      <section class="categories-section">
-        <div class="section-header">
-          <h2 class="section-title">Explora a nossa variedade de categorias</h2>
-          <div class="control-buttons">
-            <button class="control-btn">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/adf500aba1852732ed6548e12bf1a2ff3121f91d?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Previous" class="control-icon" />
-            </button>
-            <button class="control-btn">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/684c888f9321ea341c9abf0b7017dc74a5f9de34?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Next" class="control-icon" />
-            </button>
-          </div>
-        </div>
-        <div class="categories-grid">
-          
-          <article class="category-card">
-            
+    <MovieSlider Title="Explora a nossa variedade de categorias" Items="genresWithMovies" ItemsPerPage="5">
+    <ChildContent>
+        <a href="/MoviesGenres/@context.Id" class="movie-link">
+        <article class="category-card">
             <div class="category-images">
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c068d89241bb3a745007856b0e05776508d8b04?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Action Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ae8851fa082817d085e0db99c218616f7151dfd7?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Action Movie" class="category-image" />
-              </div>
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5b377771d7f641e585ffe046abc721fe2955116b?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Action Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ac1f9fa788f510fb8cd9282d18768431ba4090a0?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Action Movie" class="category-image" />
-              </div>
+                <div class="image-row">
+                    @foreach (var movie in context.Movies.Take(2))
+                    {
+                        <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="category-image" />
+                    }
+                </div>
+                <div class="image-row">
+                    @foreach (var movie in context.Movies.Skip(2).Take(2))
+                    {
+                        <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="category-image" />
+                    }
+                </div>
             </div>
             <div class="category-footer">
-              <h3 class="category-title">Ação</h3>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddc4c0a3452ef69ee120ccb08a7666525800c14a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Action Icon" class="category-icon" />
+                <h3 class="category-title">@context.Name</h3>
+                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddc4c0a3452ef69ee120ccb08a7666525800c14a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="@context.Name Icon" class="category-icon" />
             </div>
-          </article>
-          
-
-          <article class="category-card">
-            <div class="category-images">
-              <div class="image-row">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/e136ffd8399150f9d7b90b638c3183e4df871f39?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc"
-                  alt="Adventure Movie"
-                  class="category-image"
-                />
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/31bfdb92e5db0bc4ebec758202c1b8a5b58f9cbf?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc"
-                  alt="Adventure Movie"
-                  class="category-image"
-                />
-              </div>
-              <div class="image-row">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1dfb11c933784f971e6c038f6e57df515cfc151c?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc"
-                  alt="Adventure Movie"
-                  class="category-image"
-                />
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/2cfc2b9050358c8377f4382061e46845ccf2a24b?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc"
-                  alt="Adventure Movie"
-                  class="category-image"
-                />
-              </div>
-            </div>
-            <div class="category-footer">
-              <h3 class="category-title">Aventura</h3>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/47c6e33d2f22d6040c1acfe0f8b263849518c253?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Adventure Icon" class="category-icon" />
-            </div>
-          </article>
-
-          <article class="category-card">
-            <div class="category-images">
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1f2c273b5c7548fc843c2338c3af2800acf274e2?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Comedy Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c4ac2b657a6740722a833014c5c9fa2240f09d92?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Comedy Movie" class="category-image" />
-              </div>
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1a055de40a911ca789f734a8ba0a17e74bc56a9f?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Comedy Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/25ea419ae7555184b0f87672f6fe94444a01528a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Comedy Movie" class="category-image" />
-              </div>
-            </div>
-            <div class="category-footer">
-              <h3 class="category-title">Comédia</h3>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c1a686f6057b6967f55b12754d8fb7e30bafb9cc?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Comedy Icon" class="category-icon" />
-            </div>
-          </article>
-
-          <article class="category-card">
-            <div class="category-images">
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/3fb7d228d9f736a4a901b50a47ee59a196326a2a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Drama Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a663230f0df4f76def2eab789690421870a1d82b?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Drama Movie" class="category-image" />
-              </div>
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/663cd8c2db89dcba97691badde86c73d7d0b123c?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Drama Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/63e545be30373cff5ce75d9633552264e9a57cd4?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Drama Movie" class="category-image" />
-              </div>
-            </div>
-            <div class="category-footer">
-              <h3 class="category-title">Drama</h3>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/86b1560c4aa8c3593df0efdc20ed01649f276bba?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Drama Icon" class="category-icon" />
-            </div>
-          </article>
-
-          <article class="category-card">
-            <div class="category-images">
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0bb05ae85ecb71a8ec89c5152bb5482a76ad450a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Horror Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0f00bf3b0a9bac897a99fa455dd5d55467db3234?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Horror Movie" class="category-image" />
-              </div>
-              <div class="image-row">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/02d614d088cfc53dfecbf26424818b362c6213cd?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Horror Movie" class="category-image" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/8e2045f6eea19b707ec139719dfd81a43d9c5f6f?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Horror Movie" class="category-image" />
-              </div>
-            </div>
-            <div class="category-footer">
-              <h3 class="category-title">Horror</h3>
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/776cdf9f7049135b931604761f610381ec837375?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Horror Icon" class="category-icon" />
-            </div>
-          </article>
-        </div>
-      </section>
+        </article>
+        </a>
+    </ChildContent>
+</MovieSlider>
       <Faq/>  
       <section class="pricing-section">
         <div class="pricing-header">
@@ -237,73 +124,38 @@
       <Footer/>
       
  @code{
-   private List<PopularApiMovie> movies = new List<PopularApiMovie>();
-    private int currentPage = 0;
-    private int moviesPerPage = 4;
-    private bool isAnimating = false;
 
-    
+   private List<PopularApiMovie> movies = new List<PopularApiMovie>();
+    private List<GenreWithMovies> genresWithMovies = new List<GenreWithMovies>();
 
     protected override async Task OnInitializedAsync()
     {
         var httpclient = new HttpClient();
         var popularStrategy = new PopularMovieFetchStrategy();
         var movieFetcher = new MovieFetcher(popularStrategy);
-        // Fetch popular movies using the injected MovieRepository
+        // Fetch popular movies 
         movies = await movieFetcher.FetchMoviesAsync(httpclient);
-        Console.WriteLine("Popular Movies:");
-        foreach (var movie in movies)
-        {
-            Console.WriteLine($"Title: {movie.Title}");
-            Console.WriteLine($"Release Date: {movie.ReleaseDate}");
-            Console.WriteLine($"Poster Path: {movie.PosterPath}");
-        }
-        Console.WriteLine($"{movies.Count} movies fetched.");
-    }
+        
+        // Fetch movie genres
+        var genreFetcher = new GenreFetcher();
+        var genres = await genreFetcher.FetchGenresAsync(httpclient);
 
-    private IEnumerable<PopularApiMovie> GetMoviesForCurrentPage()
-    {
-        return movies.Skip(currentPage * moviesPerPage).Take(moviesPerPage);
-    }
+        // Fetch 4 movies for each genre
+        foreach (var genre in genres)
+      {
+        var genreStrategy = new GenreMovieFetchStrategy(genre.Id);
+        movieFetcher = new MovieFetcher(genreStrategy);
+        var moviesByGenre = await movieFetcher.FetchMoviesAsync(httpclient);
 
-    private async Task NextPage()
-    {
-        if ((currentPage + 1) * moviesPerPage < movies.Count)
+        // Add the genre and its movies to the list
+        genresWithMovies.Add(new GenreWithMovies
         {
-            TriggerAnimation();
-            await Task.Delay(500); // Wait for the animation to complete
-            currentPage++;
-        }
-    }
-
-    private async Task PreviousPage()
-    {
-        if (currentPage > 0)
-        {
-            TriggerAnimation();
-            await Task.Delay(500); // Wait for the animation to complete
-            currentPage--;
-        }
-    }
-
-    private void TriggerAnimation()
-    {
-        isAnimating = true;
-        StateHasChanged();
-        Task.Delay(500).ContinueWith(_ =>
-        {
-            isAnimating = false;
-            InvokeAsync(StateHasChanged);
+            Id = genre.Id,
+            Name = genre.Name,
+            Movies = moviesByGenre.Take(4).ToList() // Limit to 4 movies per genre
         });
     }
-
-    private bool CanGoToNextPage()
-    {
-        return (currentPage + 1) * moviesPerPage < movies.Count;
     }
+    
 
-    private bool CanGoToPreviousPage()
-    {
-        return currentPage > 0;
-    }
- }     
+}     

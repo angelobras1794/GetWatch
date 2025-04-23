@@ -1,0 +1,76 @@
+@page "/MoviesGenres/{id:int}" 
+@using GetWatch.Pages.Layout
+@using GetWatch.Services.Movies
+@using GetWatch.Services.Movies.Strategy
+@using GetWatch.Interfaces.Movies
+
+@layout CategoryPageLayout
+<NavBar/>
+<div class="category-container">
+        <div class="category-content">
+            <MovieSlider Title="Slider" Items="movies" ItemsPerPage="20">
+                <ChildContent>
+                <a href="/Movies/@context.Id" class="movie-link">
+                <article class="movie-card">
+                    <figure class="movie-poster-container">
+                    <img
+                        src="https://image.tmdb.org/t/p/w500/@context.PosterPath"
+                        alt="@context.Title"
+                        class="movie-poster"
+                    />
+                    </figure>
+                    <div class="movie-info">
+                    <div class="duration-badge">
+                        <div class="icon-wrapper">
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="time-icon"
+                            aria-hidden="true">
+                            <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M12 2.25C6.61522 2.25 2.25 6.61522 2.25 12C2.25 17.3848 6.61522 21.75 12 21.75C17.3848 21.75 21.75 17.3848 21.75 12C21.75 6.61522 17.3848 2.25 12 2.25ZM12.75 6C12.75 5.58579 12.4142 5.25 12 5.25C11.5858 5.25 11.25 5.58579 11.25 6V12C11.25 12.4142 11.5858 12.75 12 12.75H16.5C16.9142 12.75 17.25 12.4142 17.25 12C17.25 11.5858 16.9142 11.25 16.5 11.25H12.75V6Z"
+                            fill="#999999"
+                            ></path>
+                        </svg>
+                        </div>
+                        <time class="duration-text">1h 57min</time>
+                    </div>
+                    </div>
+                </article>
+                </a>
+                </ChildContent>
+                </MovieSlider>
+        </div>
+    </div>
+<Footer/>    
+
+
+@code{
+    [Parameter]
+    public int id { get; set; }
+    private List<PopularApiMovie> movies = new List<PopularApiMovie>();
+
+    protected override async Task OnInitializedAsync()
+    {
+      Console.WriteLine($"Genre ID: {id}");
+        try
+        {
+            var httpclient = new HttpClient();
+            var MoviesStrategy = new GenreMovieFetchStrategy(id);
+            var movieFetcher = new MovieFetcher(MoviesStrategy);
+            // Fetch popular movies using the injected MovieRepository
+            movies = await movieFetcher.FetchMoviesAsync(httpclient);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching movie details: {ex.Message}");
+        }
+    }
+
+}

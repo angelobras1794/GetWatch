@@ -170,31 +170,11 @@ body {
     -ms-overflow-style: none; /* Internet Explorer and Edge */
 }
 
-.movie-grid.animate {
+.movie-grid.animate{
     animation: slide-in 0.5s ease-in-out;
 }
 
-@keyframes slide-in {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
 
-@keyframes slide-out {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-}
 
 .movie-grid a {
     text-decoration: none; /* Remove o sublinhado padrão */
@@ -217,7 +197,7 @@ body {
     width: 100%;
     aspect-ratio: 0.94;
     border-radius: 12px;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .release-date {
@@ -236,12 +216,23 @@ body {
 .categories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Ajusta o número de colunas com base na largura disponível */
-
     justify-content: space-between;
     gap: 30px;
     margin-top: 80px;
-    
+     /* Smooth sliding effect */
 }
+.categories-grid.animate {
+    animation: slide-in 0.3s ease-in-out ;/* Slide in */
+}
+
+.categories-grid a{
+    text-decoration: none !important; /* Remove o sublinhado padrão */
+    color: inherit; /* Garante que a cor do texto seja herdada */ /* Faz com que o link se comporte como um bloco */
+    width: 100% !important; /* Garante que o link não aumente o tamanho do elemento */
+}
+
+
+
 
 
 .category-card {
@@ -249,8 +240,9 @@ body {
     border: 1px solid #262626;
     background-color: #1a1a1a;
     padding: 30px;
-    flex: 1;
     min-width: 240px;
+    /* Adjust for 4 items per page */
+   
 }
 
 .category-images {
@@ -260,16 +252,16 @@ body {
 
 .image-row {
     display: flex;
+    justify-content: space-between;
     gap: 5px;
     margin-bottom: 5px;
 }
 
 .category-image {
-    width: 115px;
+    width: calc(50% - 2.5px); /* duas imagens por linha com gap de 5px no total */
+    height: 123px; /* ou ajusta conforme preferires */
     border-radius: 10px;
-    aspect-ratio: 0.93;
-    object-fit: contain;
-    flex: 1;
+    object-fit: cover;
 }
 
 .category-footer {
@@ -415,3 +407,32 @@ body {
 
 
 
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+
+}
+
+.movie-link{
+    text-decoration: none !important; /* Remove o sublinhado padrão */
+    color: inherit; /* Garante que a cor do texto seja herdada */ /* Faz com que o link se comporte como um bloco */
+    width: 100% !important; /* Garante que o link não aumente o tamanho do elemento */
+}
