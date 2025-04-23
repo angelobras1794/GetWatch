@@ -1,0 +1,79 @@
+.slider-container{
+    margin-top: 154px;
+    margin-left: 5%;
+    width: 90%;
+    max-width: 1597px;
+}
+
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 38px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.control-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #333;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.control-btn:hover {
+    background-color: #444;
+    border: 1px solid #444;
+}
+
+.control-icon {
+    width: 28px;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+.slider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    overflow: hidden;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slider-grid.animate {
+    animation: slide-in 0.5s ease-in-out;
+}

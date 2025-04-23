@@ -1,0 +1,84 @@
+@typeparam TItem
+
+<div class="slider-container">
+    <div class="section-header">
+        <h2 class="section-title">@Title</h2>
+        <div class="control-buttons">
+            <button class="control-btn" @onclick="PreviousPage" disabled="@(!CanGoToPreviousPage())">
+                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/adf500aba1852732ed6548e12bf1a2ff3121f91d?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Previous" class="control-icon" />
+            </button>
+            <button class="control-btn" @onclick="NextPage" disabled="@(!CanGoToNextPage())">
+                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/684c888f9321ea341c9abf0b7017dc74a5f9de34?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="Next" class="control-icon" />
+            </button>
+        </div>
+    </div>
+    <div class="slider-grid @(isAnimating ? "animate" : "")">
+        @if (Items.Any())
+        {
+            @foreach (var item in GetItemsForCurrentPage())
+            {
+                @ChildContent(item)
+            }
+        }
+        else
+        {
+            <p>Loading...</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Slider";
+    [Parameter] public IEnumerable<TItem> Items { get; set; } = Enumerable.Empty<TItem>();
+    [Parameter] public int ItemsPerPage { get; set; } = 4;
+    [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
+
+    private int currentPage = 0;
+    private bool isAnimating = false;
+
+    private IEnumerable<TItem> GetItemsForCurrentPage()
+    {
+        return Items.Skip(currentPage * ItemsPerPage).Take(ItemsPerPage);
+    }
+
+    private async Task NextPage()
+    {
+        if ((currentPage + 1) * ItemsPerPage < Items.Count())
+        {
+            TriggerAnimation();
+            await Task.Delay(500); // Wait for the animation to complete
+            currentPage++;
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (currentPage > 0)
+        {
+            TriggerAnimation();
+            await Task.Delay(500); // Wait for the animation to complete
+            currentPage--;
+        }
+    }
+
+    private bool CanGoToNextPage()
+    {
+        return (currentPage + 1) * ItemsPerPage < Items.Count();
+    }
+
+    private bool CanGoToPreviousPage()
+    {
+        return currentPage > 0;
+    }
+
+    private void TriggerAnimation()
+    {
+        isAnimating = true;
+        StateHasChanged();
+        Task.Delay(500).ContinueWith(_ =>
+        {
+            isAnimating = false;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+}

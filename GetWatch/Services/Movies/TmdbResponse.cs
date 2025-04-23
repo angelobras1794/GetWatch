@@ -10,5 +10,14 @@ namespace GetWatch.Services.Movies
     {
         [JsonProperty("results")]
         public List<PopularApiMovie> Results { get; set; } = new List<PopularApiMovie>();
+
+        [JsonProperty("total_pages")]
+        public int TotalPages { get; set; }
+    }
+
+    public class TmdbGenresResponse
+    {
+        [JsonProperty("genres")]
+        public List<Genre> Genres { get; set; } = new List<Genre>();
     }
 }
