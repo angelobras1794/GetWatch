@@ -11,15 +11,26 @@
         @if (movie != null)
         {
         <header class="movie-hero">
-        
-          
+       
         <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="Movie Background" class="hero-background" />
         <h1 class="movie-title">@movie.Title</h1>
         <div class="hero-actions">
-          <button class="primary-button">
+          @if (IsPlayingInCinemas(movie)){
+            <button class="primary-button" id="buy-tickets-button">
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a0a40d3feafbecc147030129826490c0ee592808?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Ticket" class="button-icon" />
-            <span>Reservar Bilhetes</span>
-          </button>
+            <span>Buy Tickets</span>
+            </button>
+          }else{
+            <button class="primary-button" id="purchase-button">
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Play" class="button-icon" />
+            <span>Purchase</span>
+            </button>
+            <button class="primary-button" id="rent-button">
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Play" class="button-icon" />
+            <span>Rent</span>
+            </button>
+          }
+          
           <div class="action-buttons">
             <button class="icon-button">
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e44857ca31981cfdf28982666dbb3ff14fe1e0cb?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Action" class="button-icon" />
@@ -154,6 +165,19 @@
             Console.WriteLine($"Error fetching movie details: {ex.Message}");
         }
     }
+
+      public bool IsPlayingInCinemas(PopularApiMovie movie)
+  {
+      if (DateTime.TryParse(movie.ReleaseDate, out var releaseDate))
+      {
+          var currentDate = DateTime.UtcNow;
+          // Check if the movie was released within the last 3 months
+          return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-3);
+      }
+      return false;
+  }
+
+
 
     
 }
