@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Selecionar Sessão</title>
+  <link rel="stylesheet" href="ModalLugarBilhete.css">
+</head>
+<body>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-cinema">
+
+    <button class="close-button" onclick="fecharModal()">X</button>
+
+    <div class="date-selector">
+      <span>5</span>
+      <span>6</span>
+      <span class="selected">Today, 8 Jul</span>
+      <span>9</span>
+      <span>10</span>
+      <span>11</span>
+    </div>
+
+    <div class="sessions">
+      <button class="session">11:00</button>
+      <button class="session">12:00</button>
+      <button class="session selected">13:00</button>
+      <button class="session">14:00</button>
+      <button class="session full">Session Full 15:00</button>
+    </div>
+
+    <h3>Selecione Os Lugares</h3>
+
+    <div class="seat-map">
+      <div class="screen">Screen</div>
+      <div class="seats">
+        <!-- A simple grid of seats -->
+        <div class="row">A <span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span></div>
+        <div class="row">B <span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span></div>
+        <div class="row">C <span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat reserved"></span></div>
+        <div class="row">D <span class="seat available"></span><span class="seat available"></span><span class="seat reserved"></span><span class="seat available"></span><span class="seat available"></span></div>
+        <div class="row">E <span class="seat available"></span><span class="seat selected"></span><span class="seat available"></span><span class="seat available"></span><span class="seat available"></span></div>
+        <div class="row">F <span class="seat available"></span><span class="seat available"></span><span class="seat reserved"></span><span class="seat reserved"></span><span class="seat available"></span></div>
+        <div class="row">G <span class="seat available"></span><span class="seat available"></span><span class="seat available"></span><span class="seat reserved"></span><span class="seat available"></span></div>
+      </div>
+      <div class="legend">
+        <span><span class="legend-dot available"></span> Available</span>
+        <span><span class="legend-dot reserved"></span> Reserved</span>
+        <span><span class="legend-dot selected"></span> Selected</span>
+      </div>
+    </div>
+
+    <div class="ticket-count">
+      <div>Crianças (1–12): <button>-</button> 0 <button>+</button></div>
+      <div>Adultos: <button>-</button> 1 <button>+</button></div>
+    </div>
+
+    <div class="total">Total: 15.00 $</div>
+
+    <div class="actions">
+      <button class="add-cart">Adicionar ao carrinho</button>
+      <button class="checkout">Checkout</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fecharModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Modal Reservar Bilhete</title>
+  <link rel="stylesheet" href="ModalComprar_Alugar.css">
+</head>
+<body>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="close-button" onclick="fecharModal()">&times;</button>
+
+      <button class="main-button">Alugar</button>
+
+      <div class="option-group">
+        <button class="option-button">UHD. 4.99$</button>
+        <button class="option-button">HD. 4.99$</button>
+        <button class="option-button">SD. 4.99$</button>
+      </div>
+
+      <button class="main-button">Comprar cópia virtual</button>
+
+      <div class="option-group">
+        <button class="option-button">UHD 4.99$</button>
+        <button class="option-button">HD 4.99$</button>
+        <button class="option-button">SD 4.99$</button>
+      </div>
+
+      <div class="bottom-buttons">
+        <button class="main-button">Comprar Blue-Ray</button>
+        <button class="option-button">4.99$</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function fecharModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
