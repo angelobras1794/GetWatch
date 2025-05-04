@@ -16,11 +16,9 @@ namespace GetWatch.Tests
             var cart = new ShoppingCart();
             var item1 = new Product(1, "Test Product 1", 10.0);
             var item2 = new Product(2, "Test Product 2", 20.0);
-
             // Act
             cart.AddItem(item1);
             cart.AddItem(item2);
-
             // Assert
             Assert.Equal(30.0, cart.Price);
         }
