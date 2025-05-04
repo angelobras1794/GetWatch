@@ -7,7 +7,7 @@ using GetWatch.Services.Db.CartItem;
 
 namespace GetWatch.Services.Db
 {
-    public class DbCart
+    public class DbCart : DbItem
     {
        
         public Guid UserId { get; set; }

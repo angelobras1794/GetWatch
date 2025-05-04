@@ -7,7 +7,7 @@ using GetWatch.Services.Movies;
 
 namespace GetWatch.Services.Db.CartItem
 {
-    public class DbCartItem
+    public class DbCartItem : DbItem
     {
         public Guid CartId { get; set; }
         public DbCart? Cart { get; set; }

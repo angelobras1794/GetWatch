@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace GetWatch.Services.Db
 {
-    public class DbSupportTickets
+    public class DbSupportTickets : DbItem
     {
-        public int UserId { get; set; } // Foreign key to DbUser
+        public Guid UserId { get; set; } // Foreign key to DbUser
         public DbUser? User { get; set; } // Navigation property
         public string Subject { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

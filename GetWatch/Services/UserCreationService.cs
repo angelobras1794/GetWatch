@@ -17,7 +17,7 @@ namespace GetWatch.Services
         private IRepository<DbUser>? UserRepository;
 
          public void CreateUser(DbUser user)
-{
+        {
     
         Context = new GetWatchContext();
         Context.Database.EnsureCreated();
@@ -34,7 +34,6 @@ namespace GetWatch.Services
         var existingEmails = UserRepository.GetAll().Select(u => u.Email).ToList();
         var existingUsernames = UserRepository.GetAll().Select(u => u.Name).ToList();
 
-        // Build the chain
         var usernameValidation = new UsernameDuplicationHandler(existingUsernames);
         var emailValidation = new EmailValidationHandler();
         var emailDuplication = new EmailDuplicationHandler(existingEmails);
@@ -44,19 +43,16 @@ namespace GetWatch.Services
         emailValidation.SetNext(emailDuplication);
         emailDuplication.SetNext(passwordValidation);
 
-        // Start the chain
         usernameValidation.Handle(user);
-
-        // If all validations pass, proceed with user creation
         UnitOfWork.Begin();
         UserRepository.Insert(user);    
         UnitOfWork.SaveChanges();
         UnitOfWork.Commit();
-        Console.WriteLine("User created successfully!");
+       
     
         
     
-}
+    }
 
         
     }
