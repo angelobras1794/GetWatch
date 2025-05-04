@@ -8,7 +8,7 @@ namespace GetWatch.Services.Db.Purchases
 {
     public class DbPurchases : DbItem
     {
-         public int UserId { get; set; } // Foreign key to DbUser
+         public Guid UserId { get; set; } // Foreign key to DbUser
         public DbUser? User { get; set; } // Navigation property
         public decimal Amount { get; set; }
 
