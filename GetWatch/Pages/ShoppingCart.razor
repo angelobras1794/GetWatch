@@ -1,0 +1,89 @@
+@page "/ShoppingCart"
+@using GetWatch.Pages.Layout
+@layout ShoppingCartPageLayout
+
+<NavBar />
+<div class="progress-container">
+    <div class="progress-bar">
+        <div class="progress-completed" id="progress-completed"></div>
+    </div>
+
+    <div class="progress-steps">
+        <div class="step completed" data-step="1">
+            <div class="step-marker">1</div>
+            <div class="step-name">Cart</div>
+        </div>
+
+        <div class="step" data-step="2">
+            <div class="step-marker">2</div>
+            <div class="step-name">Adresses</div>
+        </div>
+
+        <div class="step" data-step="3">
+            <div class="step-marker">3</div>
+            <div class="step-name">Payment</div>
+        </div>
+
+        <div class="step" data-step="4">
+            <div class="step-marker">4</div>
+            <div class="step-name">Confirm</div>
+        </div>
+    </div>
+</div>
+
+<div class="cart-container">
+    @foreach (var item in CartItems)
+    {
+    <div class="cart-item">
+        <div class="item-info">
+            <div class="item-title">@item.Title</div>
+            <div class="item-action">@item.Action</div>
+        </div>
+        <div class="item-quantity">
+            <button class="quantity-btn" @onclick="@(() => DecreaseQuantity(item))">-</button>
+            <span>@item.Quantity</span>
+            <button class="quantity-btn" @onclick="@(() => IncreaseQuantity(item))">+</button>
+        </div>
+        <div class="item-price">€@((item.Price * item.Quantity).ToString("0.00"))</div>
+        <button class="remove-btn" @onclick="@(() => RemoveItem(item))">Remove</button>
+    </div>
+    }
+
+    
+    <div class="cart-total">
+    <span>Total</span>
+    <span>€@Total.ToString("0.00")</span>
+    </div>
+
+    <button class="button">Próximo Passo </button>
+    <a href="/GetWatch/html/homePage.html" class="back">Voltar</a>
+</div>
+
+@code {
+
+    public class CartItem
+{
+    public string Title { get; set; }
+    public string Action { get; set; } 
+    public int Quantity { get; set; }
+    public decimal Price { get; set; }
+}
+    private List<CartItem> CartItems = new()
+    {
+        new CartItem { Title = "Movie 1", Action = "Rent", Quantity = 1, Price = 15.00m },
+        new CartItem { Title = "Mobile 2", Action = "Buy", Quantity = 1, Price = 15.00m },
+        new CartItem { Title = "Mobile 2", Action = "Buy", Quantity = 1, Price = 15.00m },
+    };
+
+    void IncreaseQuantity(CartItem item) => item.Quantity++;
+    void DecreaseQuantity(CartItem item)
+    {
+        if (item.Quantity > 1)
+            item.Quantity--;
+    }
+
+    void RemoveItem(CartItem item) => CartItems.Remove(item);
+
+    private decimal Total => CartItems.Sum(item => item.Price * item.Quantity);
+}
+<Footer/>

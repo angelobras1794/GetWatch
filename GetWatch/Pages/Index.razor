@@ -8,154 +8,156 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="mainFrame">  
-       <NavBar/>
-        <div class="logoButtonContainer">
-          <div class="logo">
-            <div class="icon-left diamond"></div>
-            GetWatch
-          </div>
-          <div class="button-container">
-            <button class="btn-explorar">Explorar</button>
-            <button class="btn-planos">Planos</button>
-          </div>
-        </div>  
-    </div>   
-    <MovieSlider Title="Atualmente nos cinemas" Items="movies" ItemsPerPage="5">
-    <ChildContent>
-        <a href="/Movies/@context.Id" class="movie-link">
-            <article class="movie-card">
-                <img src="https://image.tmdb.org/t/p/w500/@context.PosterPath" alt="@context.Title" class="movie-poster" />
-                <p class="release-date">Release Date: <span>@context.ReleaseDate</span></p>
-            </article>
-        </a>
-    </ChildContent>
+<div class="mainFrame">
+  <NavBar />
+  <div class="logoButtonContainer">
+    <div class="logo">
+      <div class="icon-left diamond"></div>
+      GetWatch
+    </div>
+    <div class="button-container">
+      <button class="btn-explorar">Explorar</button>
+      <button class="btn-planos">Planos</button>
+    </div>
+  </div>
+</div>
+<MovieSlider Title="Atualmente nos cinemas" Items="movies" ItemsPerPage="5">
+  <ChildContent>
+    <a href="/Movies/@context.Id" class="movie-link">
+      <article class="movie-card">
+        <img src="https://image.tmdb.org/t/p/w500/@context.PosterPath" alt="@context.Title" class="movie-poster" />
+        <p class="release-date">Release Date: <span>@context.ReleaseDate</span></p>
+      </article>
+    </a>
+  </ChildContent>
 </MovieSlider>
 
-    <MovieSlider Title="Explora a nossa variedade de categorias" Items="genresWithMovies" ItemsPerPage="5">
-    <ChildContent>
-        <a href="/MoviesGenres/@context.Id" class="movie-link">
-        <article class="category-card">
-            <div class="category-images">
-                <div class="image-row">
-                    @foreach (var movie in context.Movies.Take(2))
-                    {
-                        <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="category-image" />
-                    }
-                </div>
-                <div class="image-row">
-                    @foreach (var movie in context.Movies.Skip(2).Take(2))
-                    {
-                        <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="category-image" />
-                    }
-                </div>
-            </div>
-            <div class="category-footer">
-                <h3 class="category-title">@context.Name</h3>
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddc4c0a3452ef69ee120ccb08a7666525800c14a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc" alt="@context.Name Icon" class="category-icon" />
-            </div>
-        </article>
-        </a>
-    </ChildContent>
+<MovieSlider Title="Explora a nossa variedade de categorias" Items="genresWithMovies" ItemsPerPage="5">
+  <ChildContent>
+    <a href="/MoviesGenres/@context.Id" class="movie-link">
+      <article class="category-card">
+        <div class="category-images">
+          <div class="image-row">
+            @foreach (var movie in context.Movies.Take(2))
+            {
+              <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="category-image" />
+            }
+          </div>
+          <div class="image-row">
+            @foreach (var movie in context.Movies.Skip(2).Take(2))
+            {
+              <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="@movie.Title" class="category-image" />
+            }
+          </div>
+        </div>
+        <div class="category-footer">
+          <h3 class="category-title">@context.Name</h3>
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/ddc4c0a3452ef69ee120ccb08a7666525800c14a?placeholderIfAbsent=true&apiKey=c2f6e4beed68484bafe533ebc61b5dcc"
+            alt="@context.Name Icon" class="category-icon" />
+        </div>
+      </article>
+    </a>
+  </ChildContent>
 </MovieSlider>
-      <Faq/>  
-      <section class="pricing-section">
-        <div class="pricing-header">
-          <h2 class="section-title">Escolhe um plano mais indicado para ti</h2>
-        </div>
+<Faq />
+<section class="pricing-section">
+  <div class="pricing-header">
+    <h2 class="section-title">Escolhe um plano mais indicado para ti</h2>
+  </div>
 
-        <div class="pricing-grid">
-          <article class="pricing-card">
-            <div class="plan-info">
-              <h3 class="plan-title">Plano Básico</h3>
-              <p class="plan-description">
-                Aproveite uma extensa biblioteca de filmes e programas,
-                apresentando uma variedade de conteúdos, incluindo títulos
-                recentes.
-              </p>
-            </div>
-            <div class="price-tag">
-              <span class="price">€9.99</span>
-              <span class="period">/mês</span>
-            </div>
-            <div class="plan-actions">
-              <button class="trial-button">Start Free Trial</button>
-              <button class="choose-button">Choose Plan</button>
-            </div>
-          </article>
+  <div class="pricing-grid">
+    <article class="pricing-card">
+      <div class="plan-info">
+        <h3 class="plan-title">Plano Básico</h3>
+        <p class="plan-description">
+          Aproveite uma extensa biblioteca de filmes e programas,
+          apresentando uma variedade de conteúdos, incluindo títulos
+          recentes.
+        </p>
+      </div>
+      <div class="price-tag">
+        <span class="price">€9.99</span>
+        <span class="period">/mês</span>
+      </div>
+      <div class="plan-actions">
+        <button class="trial-button">Start Free Trial</button>
+        <button class="choose-button">Choose Plan</button>
+      </div>
+    </article>
 
-          <article class="pricing-card">
-            <div class="plan-info">
-              <h3 class="plan-title">Plano Standard</h3>
-              <p class="plan-description">
-                Acesso a uma seleção mais ampla de filmes e programas, incluindo
-                a maioria dos lançamentos recentes e conteúdos exclusivos.
-              </p>
-            </div>
-            <div class="price-tag">
-              <span class="price">€12.99</span>
-              <span class="period">/mês</span>
-            </div>
-            <div class="plan-actions">
-              <button class="trial-button">Start Free Trial</button>
-              <button class="choose-button">Choose Plan</button>
-            </div>
-          </article>
+    <article class="pricing-card">
+      <div class="plan-info">
+        <h3 class="plan-title">Plano Standard</h3>
+        <p class="plan-description">
+          Acesso a uma seleção mais ampla de filmes e programas, incluindo
+          a maioria dos lançamentos recentes e conteúdos exclusivos.
+        </p>
+      </div>
+      <div class="price-tag">
+        <span class="price">€12.99</span>
+        <span class="period">/mês</span>
+      </div>
+      <div class="plan-actions">
+        <button class="trial-button">Start Free Trial</button>
+        <button class="choose-button">Choose Plan</button>
+      </div>
+    </article>
 
-          <article class="pricing-card">
-            <div class="plan-info">
-              <h3 class="plan-title">Plano Premium</h3>
-              <p class="plan-description">
-                Acesso à mais ampla seleção de filmes e programas, incluindo
-                todos os lançamentos e visualização offline.
-              </p>
-            </div>
-            <div class="price-tag">
-              <span class="price">€14.99</span>
-              <span class="period">/mês</span>
-            </div>
-            <div class="plan-actions">
-              <button class="trial-button">Start Free Trial</button>
-              <button class="choose-button">Choose Plan</button>
-            </div>
-          </article>
-        </div>
-      </section> 
-      <Footer/>
-      
- @code{
+    <article class="pricing-card">
+      <div class="plan-info">
+        <h3 class="plan-title">Plano Premium</h3>
+        <p class="plan-description">
+          Acesso à mais ampla seleção de filmes e programas, incluindo
+          todos os lançamentos e visualização offline.
+        </p>
+      </div>
+      <div class="price-tag">
+        <span class="price">€14.99</span>
+        <span class="period">/mês</span>
+      </div>
+      <div class="plan-actions">
+        <button class="trial-button">Start Free Trial</button>
+        <button class="choose-button">Choose Plan</button>
+      </div>
+    </article>
+  </div>
+</section>
+<Footer />
 
-   private List<PopularApiMovie> movies = new List<PopularApiMovie>();
-    private List<GenreWithMovies> genresWithMovies = new List<GenreWithMovies>();
+@code {
 
-    protected override async Task OnInitializedAsync()
+  private List<PopularApiMovie> movies = new List<PopularApiMovie>();
+  private List<GenreWithMovies> genresWithMovies = new List<GenreWithMovies>();
+
+  protected override async Task OnInitializedAsync()
+  {
+    var httpclient = new HttpClient();
+    var popularStrategy = new PopularMovieFetchStrategy();
+    var movieFetcher = new MovieFetcher(popularStrategy);
+    // Fetch popular movies
+    movies = await movieFetcher.FetchMoviesAsync(httpclient);
+
+    // Fetch movie genres
+    var genreFetcher = new GenreFetcher();
+    var genres = await genreFetcher.FetchGenresAsync(httpclient);
+
+    // Fetch 4 movies for each genre
+    foreach (var genre in genres)
     {
-        var httpclient = new HttpClient();
-        var popularStrategy = new PopularMovieFetchStrategy();
-        var movieFetcher = new MovieFetcher(popularStrategy);
-        // Fetch popular movies 
-        movies = await movieFetcher.FetchMoviesAsync(httpclient);
-        
-        // Fetch movie genres
-        var genreFetcher = new GenreFetcher();
-        var genres = await genreFetcher.FetchGenresAsync(httpclient);
+      var genreStrategy = new GenreMovieFetchStrategy(genre.Id);
+      movieFetcher = new MovieFetcher(genreStrategy);
+      var moviesByGenre = await movieFetcher.FetchMoviesAsync(httpclient);
 
-        // Fetch 4 movies for each genre
-        foreach (var genre in genres)
+      // Add the genre and its movies to the list
+      genresWithMovies.Add(new GenreWithMovies
       {
-        var genreStrategy = new GenreMovieFetchStrategy(genre.Id);
-        movieFetcher = new MovieFetcher(genreStrategy);
-        var moviesByGenre = await movieFetcher.FetchMoviesAsync(httpclient);
-
-        // Add the genre and its movies to the list
-        genresWithMovies.Add(new GenreWithMovies
-        {
-            Id = genre.Id,
-            Name = genre.Name,
-            Movies = moviesByGenre.Take(4).ToList() // Limit to 4 movies per genre
-        });
+        Id = genre.Id,
+        Name = genre.Name,
+        Movies = moviesByGenre.Take(4).ToList() // Limit to 4 movies per genre
+      });
     }
-    }
-    
+  }
 
-}     
+
+}
