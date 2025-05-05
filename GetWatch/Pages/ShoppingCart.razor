@@ -1,6 +1,10 @@
 @page "/ShoppingCart"
 @using GetWatch.Pages.Layout
+@using GetWatch.Pages
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @layout ShoppingCartPageLayout
+@inject ProtectedSessionStorage SessionStorage
+@using GetWatch.Services.ShoppingCart
 
 <NavBar />
 <div class="progress-container">
@@ -32,20 +36,20 @@
 </div>
 
 <div class="cart-container">
-    @foreach (var item in CartItems)
+    @foreach (var item in cartItems)
     {
     <div class="cart-item">
         <div class="item-info">
-            <div class="item-title">@item.Title</div>
-            <div class="item-action">@item.Action</div>
+            <div class="item-title">@item.Name</div>
+            @* <div class="item-action">@item.Action</div> *@
         </div>
         <div class="item-quantity">
-            <button class="quantity-btn" @onclick="@(() => DecreaseQuantity(item))">-</button>
+            <button class="quantity-btn" @onclick="@(() => Decrease(item))">-</button>
             <span>@item.Quantity</span>
-            <button class="quantity-btn" @onclick="@(() => IncreaseQuantity(item))">+</button>
+            <button class="quantity-btn" @onclick="@(() => Increase(item))">+</button>
         </div>
         <div class="item-price">€@((item.Price * item.Quantity).ToString("0.00"))</div>
-        <button class="remove-btn" @onclick="@(() => RemoveItem(item))">Remove</button>
+        <button class="remove-btn" @onclick="@(() => Remove(item))">Remove</button>
     </div>
     }
 
@@ -58,32 +62,26 @@
     <button class="button">Próximo Passo </button>
     <a href="/GetWatch/html/homePage.html" class="back">Voltar</a>
 </div>
+<Footer/>
 
-@code {
 
-    public class CartItem
-{
-    public string Title { get; set; }
-    public string Action { get; set; } 
-    public int Quantity { get; set; }
-    public decimal Price { get; set; }
-}
-    private List<CartItem> CartItems = new()
+
+
+@code{
+    [Inject]
+    private IShoppingCart ShoppingCarts { get; set; }
+
+    protected override void OnInitialized()
     {
-        new CartItem { Title = "Movie 1", Action = "Rent", Quantity = 1, Price = 15.00m },
-        new CartItem { Title = "Mobile 2", Action = "Buy", Quantity = 1, Price = 15.00m },
-        new CartItem { Title = "Mobile 2", Action = "Buy", Quantity = 1, Price = 15.00m },
-    };
+        // Ensure cart items are added or fetched
 
-    void IncreaseQuantity(CartItem item) => item.Quantity++;
-    void DecreaseQuantity(CartItem item)
-    {
-        if (item.Quantity > 1)
-            item.Quantity--;
+        ShoppingCarts.AddItem(new Product(1, "Product 1", 10.0));
+
     }
 
-    void RemoveItem(CartItem item) => CartItems.Remove(item);
-
-    private decimal Total => CartItems.Sum(item => item.Price * item.Quantity);
+    public List<ICartItem> cartItems => ShoppingCarts.GetItems();
+    public void Increase(ICartItem item) => ShoppingCarts.IncreaseQuantity(item);
+    public void Decrease(ICartItem item) => ShoppingCarts.DecreaseQuantity(item);
+    public void Remove(ICartItem item) => ShoppingCarts.RemoveItem(item);
+    public double Total => ShoppingCarts.Price;
 }
-<Footer/>

@@ -9,6 +9,7 @@ using GetWatch.Services;
 using GetWatch.Interfaces.Movies;
 using GetWatch.Services.Movies;
 using Microsoft.AspNetCore.Authentication.Cookies; // Add this at the top
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+
+
+builder.Services.AddScoped<IShoppingCart, ShoppingCart>();
+builder.Services.AddScoped<ProtectedSessionStorage>();
 
 
 

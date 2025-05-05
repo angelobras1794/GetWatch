@@ -5,5 +5,7 @@ namespace GetWatch.Services.ShoppingCart
     {
         int Id { get; set; }
         string Name { get; set; }
+
+        int Quantity { get; set; }
     }
 }
