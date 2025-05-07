@@ -8,6 +8,7 @@ using GetWatch.Services.Db;
 using GetWatch.Services;
 using GetWatch.Interfaces.Movies;
 using GetWatch.Services.Movies;
+using GetWatch.Services.Tickets;
 using Microsoft.AspNetCore.Authentication.Cookies; // Add this at the top
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<CustomAuthenticationStateProvider>());
 builder.Services.AddScoped<UserLoginService>();
+//builder.Services.AddScoped<SupportTicketService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

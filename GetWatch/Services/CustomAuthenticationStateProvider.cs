@@ -18,12 +18,16 @@ namespace GetWatch.Services
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var email = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authEmail");
+            var userId = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authUserId");
+            
+            Console.WriteLine($"Retrieved from localStorage - Email: {email}, UserId: {userId}"); // Debugging log
 
-            if (!string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(userId))
             {
                 var identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.NameIdentifier, userId),
                     new Claim(ClaimTypes.Role, "User")
                 }, "CustomAuth");
 
@@ -34,13 +38,15 @@ namespace GetWatch.Services
             return new AuthenticationState(_anonymous);
         }
 
-        public async Task NotifyUserAuthentication(string email)
+        public async Task NotifyUserAuthentication(string email, string userId)
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authEmail", email);
+            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authUserId", userId);
 
             var identity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.NameIdentifier, userId),
                 new Claim(ClaimTypes.Role, "User")
             }, "CustomAuth");
 
@@ -51,6 +57,7 @@ namespace GetWatch.Services
         public async Task NotifyUserLogout()
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authEmail");
+            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authUserId");
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymous)));
         }
     }
