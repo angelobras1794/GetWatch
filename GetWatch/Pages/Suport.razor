@@ -1,9 +1,20 @@
 @attribute [Authorize]
 @page "/Suport"
 @using GetWatch.Pages.Layout
+@using System.Security.Claims
+@using GetWatch.Services.Tickets
+@using GetWatch.Services.Db
+@using GetWatch.Services
+@using GetWatch.Services.Tickets
+@using global::GetWatch.Services.Tickets
+@using GetWatch.Interfaces.Db
+
+@inject NavigationManager NavigationManager
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider 
+
 @layout SuportPageLayout
 <NavBar/>
-<form class="contact-form">
+<form class="contact-form" @onsubmit="HandleSubmit">
         <div class="form-row">
           <div class="input-group">
             <label class="form-label">First Name</label>
@@ -12,6 +23,7 @@
                 type="text"
                 placeholder="Enter First Name"
                 class="form-input"
+                @bind="firstName"
               />
             </div>
           </div>
@@ -22,6 +34,7 @@
                 type="text"
                 placeholder="Enter Last Name"
                 class="form-input"
+                @bind="lastName"
               />
             </div>
           </div>
@@ -35,6 +48,7 @@
                 type="email"
                 placeholder="Enter your Email"
                 class="form-input"
+                @bind="email"
               />
             </div>
           </div>
@@ -46,6 +60,7 @@
                   type="tel"
                   placeholder="Enter Phone Number"
                   class="form-input"
+                  @bind="phoneNumber"
                 />
               </div>
             </div>
@@ -58,18 +73,144 @@
             <textarea
               placeholder="Enter your Message"
               class="form-textarea"
+              @bind="message"
             ></textarea>
           </div>
         </div>
       
         <div class="form-footer">
           <div class="terms-group">
-            <div class="checkbox-wrapper"></div>
+            <div class="checkbox-wrapper">
+              <input type="checkbox" @bind="agreeToTerms" />
+            </div>
             <p class="terms-text">I agree with Terms of Use and Privacy Policy</p>
           </div>
-          <button class="submit-button">Send Message</button>
+          <button class="submit-button" type="submit">Send Message</button>
         </div>
+        @if (!string.IsNullOrEmpty(feedbackMessage))
+        {
+            <p class="@((isError ? "error-message" : "success-message"))">@feedbackMessage</p>
+        }
       </form> 
  <Faq/>    
-<Footer/> 
+<Footer/>
 
+@code {
+    private string firstName        = string.Empty;
+    private string lastName         = string.Empty;
+    private string email            = string.Empty;
+    private string phoneNumber      = string.Empty;
+    private string message          = string.Empty;
+    private bool agreeToTerms       = false;
+    private string feedbackMessage  = string.Empty;
+    private bool isError            = false;
+    private GetWatchContext? Context;
+    private IRepositoryFactory? Factory;
+    private IUnitOfWork? UnitOfWork;
+    private IRepository<DbUser>? UserRepository;
+
+    private async Task HandleSubmit(){
+      CheckErrors(); 
+        try
+        {
+          Context = new GetWatchContext();
+          Context.Database.EnsureCreated();
+              
+          Factory = new RepositoryFactory(Context);
+          UnitOfWork = new UnitOfWork(Context, Factory);
+
+          UserRepository = UnitOfWork.GetRepository<DbUser>();
+
+
+          var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+          var user = authState.User;
+          
+          var userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+          Console.WriteLine($"User Email: {userEmail}"); // Debugging line to check the user email
+
+          if (string.IsNullOrEmpty(userEmail))
+          {
+              feedbackMessage = "Error: Could not retrieve user email from authentication claims.";
+              isError = true;
+              return;
+          }
+
+          var TicketUser = UserRepository.GetAll().Find(x => x.Email == userEmail);
+          if (TicketUser == null)
+          {
+              feedbackMessage = "Error: User not found in the database.";
+              isError = true;
+              return;
+          }
+          
+
+          Console.WriteLine($"Ticket User: {TicketUser.Id}"); // Debugging line to check the user object
+                  // Attach the user to the context to ensure it's treated as an existing entity
+            Context.Attach(TicketUser);
+            var supportTicket = new DbSupportTickets
+            { 
+                UserId = TicketUser.Id,
+                User = TicketUser , // Assuming you have a user object to associate with the ticket
+                Subject = $"Support Request from {firstName} {lastName} ({email})", // Create a subject
+                Description = message, // Map form's message to Description
+                IsResolved = false // Default to not resolved
+
+            };
+            Console.WriteLine($"Support Ticket: {supportTicket.Subject}"); // Debugging line to check the support ticket object
+            
+            
+            
+            
+            var ticketService = new SupportTicketService(); // Ensure the service is properly referenced
+            //SupportTicketService ticketService = new SupportTicketService(); // Assuming you have a service to handle ticket creation 
+            await ticketService.CreateSupportTicketAsync(supportTicket); // Call the service to create the ticket
+            feedbackMessage = "Support ticket submitted successfully!";
+            isError = false;
+
+            
+            
+            
+            
+            // Clear the form
+            firstName = string.Empty;
+            lastName = string.Empty;
+            email = string.Empty;
+            phoneNumber = string.Empty;
+            message = string.Empty;
+            agreeToTerms = false;
+        }
+        catch (Exception ex)
+        {
+            feedbackMessage = $"An error occurred while submitting the ticket: {ex.Message}";
+            isError = true;
+        }
+        StateHasChanged();
+    }
+
+    private void CheckErrors(){
+        feedbackMessage = string.Empty;
+        isError = false;
+
+        if (string.IsNullOrWhiteSpace(firstName) ||
+            string.IsNullOrWhiteSpace(lastName) ||
+            string.IsNullOrWhiteSpace(email) ||
+            string.IsNullOrWhiteSpace(message))
+        {
+            feedbackMessage = "Please fill in all required fields (First Name, Last Name, Email, Message).";
+            isError = true;
+            return;
+        }
+
+        if (!agreeToTerms)
+        {
+            feedbackMessage = "You must agree to the Terms of Use and Privacy Policy.";
+            isError = true;
+            return;
+        }
+
+        
+
+    }
+}
+
+}

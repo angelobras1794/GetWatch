@@ -42,7 +42,8 @@ namespace GetWatch.Services
             var passwordCorrespondence = new PasswordCorrespondenceHandler(storedUser);
             emailExistence.SetNext(passwordCorrespondence);
             emailExistence.Handle(user);
-            await _authStateProvider.NotifyUserAuthentication(user.Email);
+            
+            await _authStateProvider.NotifyUserAuthentication(user.Email, user.Id.ToString());
             Console.WriteLine("User login successful!");
         
         

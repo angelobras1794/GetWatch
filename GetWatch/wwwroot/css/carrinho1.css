@@ -1,0 +1,201 @@
+body {
+    background-color: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.cart-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.item-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-action {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.quantity-btn:hover {
+    background-color: #444;
+}
+
+.item-price {
+    font-weight: bold;
+    min-width: 70px;
+    text-align: right;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+.button {
+    display: inline-block;
+    background-color: #00ff7f;
+    color: black;
+    padding: 12px 24px;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    
+    width: 60%;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #00e676;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    margin: 30px auto;
+    position: relative;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-name {
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+    color: white;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.step-marker {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #aaa;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.progress-bar {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    height: 4px;
+    background-color: #333;
+    width: 100%;
+    z-index: 1;
+}
+
+.progress-completed {
+    height: 100%;
+    background-color: #00ff7f;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.step.completed .step-marker {
+    background-color: #00ff7f;
+    color: black;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+    .cart-container {
+        padding: 15px;
+    }
+    
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .item-quantity {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .item-price {
+        text-align: left;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .step-name {
+        font-size: 0.7em;
+    }
+    
+    .step-marker {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8em;
+    }
+    
+    .progress-bar {
+        top: 12px;
+    }
+}
