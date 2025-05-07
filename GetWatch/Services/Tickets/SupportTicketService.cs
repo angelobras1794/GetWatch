@@ -12,13 +12,10 @@ namespace GetWatch.Services.Tickets
         private IUnitOfWork? UnitOfWork;
         private IRepository<DbSupportTickets>? TicketsRepository;
         
-
-        
-
         public async Task CreateSupportTicketAsync(DbSupportTickets ticket)
         {   
             Context = new GetWatchContext();
-            Context.Database.EnsureCreated();
+            await Context.Database.EnsureCreatedAsync();
                     
             Factory = new RepositoryFactory(Context);
             UnitOfWork = new UnitOfWork(Context, Factory);
@@ -26,52 +23,43 @@ namespace GetWatch.Services.Tickets
                 
             TicketsRepository = UnitOfWork.GetRepository<DbSupportTickets>();
 
-            // Print the ticket details to the console
-            Console.WriteLine($"Ticket ID: {ticket.Id}");
-            Console.WriteLine($"User ID: {ticket.UserId}");
-            Console.WriteLine($"Subject: {ticket.Subject}");
-            Console.WriteLine($"Description: {ticket.Description}");
-            Console.WriteLine($"Is Resolved: {ticket.IsResolved}");
+                try
+                {
+                    var userEmail = ticket.User?.Email; 
+                    if (string.IsNullOrEmpty(userEmail))
+                    {
+                        throw new Exception("User email is required to associate the ticket with a user.");
+                    }
 
-            try
-{
-    // Retrieve the user by email or another unique identifier
-    var userEmail = ticket.User?.Email; // Assuming the ticket has a User object with an Email property
-    if (string.IsNullOrEmpty(userEmail))
-    {
-        throw new Exception("User email is required to associate the ticket with a user.");
-    }
+                    var userRepository = UnitOfWork.GetRepository<DbUser>();
+                    var user = userRepository.GetAll().FirstOrDefault(u => u.Email == userEmail);
+                    if (user == null)
+                    {
+                        throw new Exception($"No user found with email: {userEmail}");
+                    }
 
-    var userRepository = UnitOfWork.GetRepository<DbUser>();
-    var user = userRepository.GetAll().FirstOrDefault(u => u.Email == userEmail);
-    if (user == null)
-    {
-        throw new Exception($"No user found with email: {userEmail}");
-    }
+                    if (Context.Entry(user).State == EntityState.Detached)
+                    {
+                        Context.Attach(user);
+                    }
 
-    // Attach the user to the context to ensure it's treated as an existing entity
-    if (Context.Entry(user).State == EntityState.Detached)
-    {
-        Context.Attach(user);
-    }
+                    ticket.UserId = user.Id;
+                    ticket.User = user;
 
-    // Associate the ticket with the retrieved user
-    ticket.UserId = user.Id;
-    ticket.User = user;
-
-    UnitOfWork.Begin();
-    Console.WriteLine($"Inserting support ticket: {ticket.Id}");
-    TicketsRepository.Insert(ticket);
-    Console.WriteLine($"Saving changes for support ticket: {ticket.Id}");
-    UnitOfWork.SaveChanges();
-    Console.WriteLine($"Committing changes for support ticket: {ticket.Id}");
-    UnitOfWork.Commit();
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"An error occurred: {ex.Message}");
-    throw;
-}
+                    UnitOfWork.Begin();
+                    if (TicketsRepository == null)
+                    {
+                        throw new InvalidOperationException("TicketsRepository is not initialized.");
+                    }
+                    TicketsRepository.Insert(ticket);
+                    UnitOfWork.SaveChanges();
+                    UnitOfWork.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
             }
         }
     }

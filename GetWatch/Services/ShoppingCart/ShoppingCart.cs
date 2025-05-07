@@ -16,7 +16,6 @@ public class ShoppingCart : IDiscountable, IShoppingCart
 
     public List<ICartItem> GetItems() {return _items;}
 
-    
     public void AddItem(ICartItem item)
     {
         _items.Add(item);
