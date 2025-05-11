@@ -11,5 +11,6 @@ public interface IShoppingCart
     List<ICartItem> GetItems();
 
     double Price { get; set; }
+    Guid Id { get; set; }
 
 }

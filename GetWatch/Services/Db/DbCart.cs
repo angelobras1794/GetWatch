@@ -14,7 +14,7 @@ namespace GetWatch.Services.Db
         public DbUser? User { get; set; } 
 
         public List<DbCartItem> CartItems { get; set; } = new List<DbCartItem>();
-        public decimal TotalPrice { get; set; } = 0.0m;
+        public double TotalPrice { get; set; } = 0.0;
         
 
 

@@ -142,10 +142,6 @@
               isError = true;
               return;
           }
-          
-
-          Console.WriteLine($"Ticket User: {TicketUser.Id}"); // Debugging line to check the user object
-                  // Attach the user to the context to ensure it's treated as an existing entity
             Context.Attach(TicketUser);
             var supportTicket = new DbSupportTickets
             { 
@@ -156,10 +152,6 @@
                 IsResolved = false // Default to not resolved
 
             };
-            Console.WriteLine($"Support Ticket: {supportTicket.Subject}"); // Debugging line to check the support ticket object
-            
-            
-            
             
             var ticketService = new SupportTicketService(); // Ensure the service is properly referenced
             //SupportTicketService ticketService = new SupportTicketService(); // Assuming you have a service to handle ticket creation 
@@ -167,17 +159,6 @@
             feedbackMessage = "Support ticket submitted successfully!";
             isError = false;
 
-            
-            
-            
-            
-            // Clear the form
-            firstName = string.Empty;
-            lastName = string.Empty;
-            email = string.Empty;
-            phoneNumber = string.Empty;
-            message = string.Empty;
-            agreeToTerms = false;
         }
         catch (Exception ex)
         {

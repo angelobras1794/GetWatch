@@ -35,7 +35,7 @@ namespace GetWatch.Services.ShoppingCart
                     case DbRentItem rentalCartItem:
                         return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id);
                     case DbTicketCart movieTicketCartItem:
-                        return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats);    
+                        return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>());    
                     default:
                         throw new InvalidOperationException($"Unhandled DbCartItem type: {dbCartItem.GetType().Name}");
                 }
@@ -64,7 +64,7 @@ namespace GetWatch.Services.ShoppingCart
                 case DbRentItem rentalCartItem:
                     return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id);
                 case DbTicketCart movieTicketCartItem:
-                    return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats);
+                    return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>());
                 default:
                     throw new InvalidOperationException($"Unhandled DbCartItem type: {dbCartItem.GetType().Name}");
             }
