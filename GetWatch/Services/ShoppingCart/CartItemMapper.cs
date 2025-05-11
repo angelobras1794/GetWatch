@@ -23,8 +23,11 @@ namespace GetWatch.Services.ShoppingCart
             var repository = _unitOfWork.GetRepository<DbCartItem>();
             if (repository == null)
             {
-                throw new InvalidOperationException("Repository for DbCartItem is null.");
+                Console.WriteLine("Repository for DbCartItem is null.");
+                return new List<ICartItem>();
+                
             }
+
             var dbCartItems = repository.GetAll()?.Where(x => x.CartId == cartId).ToList() ?? new List<DbCartItem>();
 
              var cartItems = dbCartItems.Select(dbCartItem =>
