@@ -1,18 +1,24 @@
 using GetWatch.Services.ShoppingCart;
+using GetWatch.Enums;
 public class Product : ICartItem
 {
-    public int Id{ get; set; }
-    public string Name { get; set; }
+    public Guid Id{ get; set; }
     public double Price { get; set; }
 
     public int Quantity { get; set; } = 1;
+
+    public int movieId { get; set; }
+    
     PricingStrategyContext _pricingStrategyContext;
 
-    public Product(int id, string title, double price)
+    
+
+    public Product (double price, int movieId,Guid id = new Guid())
     {
         Id = id;
-        Name = title;
+        this.movieId = movieId;
         Price = price;
+       
         _pricingStrategyContext = new PricingStrategyContext(new NoDiscountStrategy());
     }
  

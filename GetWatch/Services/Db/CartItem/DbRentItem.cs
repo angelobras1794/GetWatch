@@ -9,5 +9,6 @@ namespace GetWatch.Services.Db.CartItem
     public class DbRentItem : DbCartItem
     {
         PurchaseType PurchaseType { get; set; } = PurchaseType.Rental;
+        DateTime RentDate { get; set; }
     }
 }
