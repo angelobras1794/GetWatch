@@ -14,7 +14,9 @@ namespace GetWatch.Services.Db.CartItem
         
         public int MovieId { get; set; }
         
-        public decimal Price { get; set; } = 0.0m;
+        public double Price { get; set; } = 0.0;
+
+        public int Quantity { get; set; } = 1;
         
         
         

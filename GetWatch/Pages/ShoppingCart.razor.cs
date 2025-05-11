@@ -11,8 +11,8 @@ public partial class ShoppingCartService : ComponentBase
     {
         // Ensure cart items are added or fetched
 
-        ShoppingCarts.AddItem(new Product(1, "Product 1", 10.0));
-        ShoppingCarts.AddItem(new Product(2, "Product 2", 20.0));
+        ShoppingCarts.AddItem(new Product(10, 1, new Guid()));
+        ShoppingCarts.AddItem(new Product(10, 2, new Guid()));
 
     }
 
