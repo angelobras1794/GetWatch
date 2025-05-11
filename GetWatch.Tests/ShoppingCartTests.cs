@@ -14,8 +14,8 @@ namespace GetWatch.Tests
         {
             // Arrange
             var cart = new ShoppingCart();
-            var item1 = new Product(1, "Test Product 1", 10.0);
-            var item2 = new Product(2, "Test Product 2", 20.0);
+            var item1 = new Product(10,414124,new Guid());
+            var item2 = new Product(20, 492523,new Guid());
             // Act
             cart.AddItem(item1);
             cart.AddItem(item2);
@@ -29,13 +29,13 @@ namespace GetWatch.Tests
             // Arrange
             var cart = new ShoppingCart();
             var bundle = new Bundle("Test Bundle");
-            bundle.AddProduct(new Product(1, "Test Product 1", 10.0));
-            bundle.AddProduct(new Product(2, "Test Product 2", 20.0));
+            bundle.AddProduct(new Product(10,414124,new Guid()));
+            bundle.AddProduct(new Product(10,414124,new Guid()));
             // Act
             cart.AddItem(bundle);
 
             // Assert
-            Assert.Equal(30.0, cart.Price);
+            Assert.Equal(20.0, cart.Price);
         }
 
         [Fact]
@@ -43,13 +43,13 @@ namespace GetWatch.Tests
         {
             // Arrange
             var cart = new ShoppingCart();
-            var item = new Product(1, "Test Product", 100.0);
+            var item = new Product(10,414124,new Guid());
             cart.AddItem(item);
             var discountStrategy = new PercentageDiscount(0.10); // 10% discount
             // Act
             cart.SetDiscountStrategy(discountStrategy);
             // Assert
-            Assert.Equal(90.0, cart.GetFinalPrice());
+            Assert.Equal(9, cart.GetFinalPrice());
         }
 
         [Fact]
@@ -57,15 +57,15 @@ namespace GetWatch.Tests
         {
             // Arrange
             var bundle = new Bundle("Test Bundle");
-            var item1 = new Product(1, "Test Product 1", 50.0);
-            var item2 = new Product(2, "Test Product 2", 50.0);
+            var item1 = new Product(10,414124,new Guid());
+            var item2 = new Product(10,414124,new Guid());
             bundle.AddProduct(item1);
             bundle.AddProduct(item2);
             var discountStrategy = new PercentageDiscount(0.20); // 20% discount
             // Act
             bundle.SetDiscountStrategy(discountStrategy);
             // Assert
-            Assert.Equal(80.0, bundle.GetFinalPrice());
+            Assert.Equal(16, bundle.GetFinalPrice());
         }
 
         [Fact]
@@ -75,15 +75,15 @@ namespace GetWatch.Tests
             var discountStrategy = new PercentageDiscount(0.10); // 10% discount
             var cart = new ShoppingCart();
             var bundle = new Bundle("Test Bundle");
-            var item1 = new Product(1, "Test Product 1", 50.0);
-            var item2 = new Product(2, "Test Product 2", 50.0);
+            var item1 = new Product(10,414124,new Guid());
+            var item2 = new Product(10,414124,new Guid());
             bundle.AddProduct(item1);
             bundle.AddProduct(item2);
             bundle.SetDiscountStrategy(discountStrategy);
 
             cart.AddItem(bundle);
             cart.SetDiscountStrategy(discountStrategy);
-            Assert.Equal(81.0, cart.GetFinalPrice());
+            Assert.Equal(16.2, cart.GetFinalPrice());
         }
     }
 }

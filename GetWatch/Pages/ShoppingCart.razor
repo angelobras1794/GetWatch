@@ -40,7 +40,7 @@
     {
     <div class="cart-item">
         <div class="item-info">
-            <div class="item-title">@item.Name</div>
+            <div class="item-title">@item.movieId</div>
             @* <div class="item-action">@item.Action</div> *@
         </div>
         <div class="item-quantity">
@@ -75,7 +75,7 @@
     {
         // Ensure cart items are added or fetched
 
-        ShoppingCarts.AddItem(new Product(1, "Product 1", 10.0));
+        ShoppingCarts.AddItem(new Product(10,323523, new Guid()));
 
     }
 

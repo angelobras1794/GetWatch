@@ -34,7 +34,7 @@ namespace GetWatch.Services.ShoppingCart
                 {
                     Id = dbCarts.Id,
                     Price = dbCarts.TotalPrice,
-                    _items = _cartItemMapper.GetAll(dbCarts.Id)
+                    _items = _cartItemMapper.GetAll(dbCarts.Id) 
                     
                 }
                 ).ToList();
