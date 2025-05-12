@@ -31,9 +31,9 @@ namespace GetWatch.Services
             UnitOfWork = new UnitOfWork(Context, Factory);
 
             UserRepository = UnitOfWork.GetRepository<DbUser>();
-            var existingEmails = UserRepository?.GetAll().Select(u => u.Email).ToList() ?? new List<string>();
+            var existingEmails = UserRepository?.GetAll().Select(u => (string?)u.Email).ToList() ?? new List<string?>();
 
-            var emailExistence = new EmailExistenceHandler(existingEmails);
+            var emailExistence = new EmailExistenceHandler(existingEmails.Where(email => email != null).Cast<string>().ToList());
             var storedUser = UserRepository?.GetAll().FirstOrDefault(u => u.Email == user.Email);
             if (storedUser == null)
             {
@@ -43,6 +43,10 @@ namespace GetWatch.Services
             emailExistence.SetNext(passwordCorrespondence);
             emailExistence.Handle(user);
             
+            if (string.IsNullOrEmpty(user.Email))
+            {
+                throw new ArgumentNullException(nameof(user.Email), "User email cannot be null or empty.");
+            }
             await _authStateProvider.NotifyUserAuthentication(user.Email, user.Id.ToString());
             Console.WriteLine("User login successful!");
         
