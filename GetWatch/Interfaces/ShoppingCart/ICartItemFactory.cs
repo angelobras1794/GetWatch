@@ -10,7 +10,7 @@ namespace GetWatch.Interfaces.ShoppingCart
     public interface ICartItemFactory
     {
         ICartItem CreateBluRayItem(double price, int movieId, Guid id);
-        ICartItem CreateRentalItem(double price, int movieId, Guid id);
+        ICartItem CreateRentalItem(double price, int movieId, Guid id, DateTime date);
         ICartItem CreateTicketItem(double price, int movieId, Guid id,int personAmount,string [] seats);
         
         

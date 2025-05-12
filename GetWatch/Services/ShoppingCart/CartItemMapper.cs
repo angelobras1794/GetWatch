@@ -36,7 +36,7 @@ namespace GetWatch.Services.ShoppingCart
                     case DbBluRayCart bluRayCartItem:
                         return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId, dbCartItem.Id);
                     case DbRentItem rentalCartItem:
-                        return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id);
+                        return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id, rentalCartItem.RentDate);
                     case DbTicketCart movieTicketCartItem:
                         return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>());    
                     default:
@@ -65,7 +65,7 @@ namespace GetWatch.Services.ShoppingCart
                 case DbBluRayCart bluRayCartItem:
                     return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId, dbCartItem.Id);
                 case DbRentItem rentalCartItem:
-                    return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id);
+                    return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id,rentalCartItem.RentDate);
                 case DbTicketCart movieTicketCartItem:
                     return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>());
                 default:
