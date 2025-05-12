@@ -30,9 +30,8 @@ namespace GetWatch.Services
         {
             throw new InvalidOperationException("UserRepository is not initialized.");
         }
-
-        var existingEmails = UserRepository.GetAll().Select(u => u.Email).ToList();
-        var existingUsernames = UserRepository.GetAll().Select(u => u.Name).ToList();
+        var existingEmails = UserRepository.GetAll().Select(u => u.Email).Where(email => email != null).Cast<string>().ToList();
+        var existingUsernames = UserRepository.GetAll().Select(u => u.Name).Where(name => name != null).Cast<string>().ToList();
 
         var usernameValidation = new UsernameDuplicationHandler(existingUsernames);
         var emailValidation = new EmailValidationHandler();
