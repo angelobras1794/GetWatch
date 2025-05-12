@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GetWatch.Interfaces.ShoppingCart;
 using GetWatch.Enums;
+using GetWatch.Interfaces.Compra;
 
 namespace GetWatch.Services.ShoppingCart
 {

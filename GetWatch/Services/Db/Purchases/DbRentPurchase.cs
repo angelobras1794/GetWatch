@@ -10,6 +10,6 @@ namespace GetWatch.Services.Db.Purchases
     {
         PurchaseType PurchaseType { get; set; } = PurchaseType.Rental;
 
-        public DateTime RentalEndDate { get; set; } = DateTime.UtcNow.AddDays(30); // Default to 1 day from now
+        public DateTime RentalEndDate { get; set; }
     }
 }

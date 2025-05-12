@@ -10,7 +10,7 @@ namespace GetWatch.Services.Db.Purchases
     {
          public Guid UserId { get; set; } // Foreign key to DbUser
         public DbUser? User { get; set; } // Navigation property
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
 
         public int MovieId { get; set; } 
         
