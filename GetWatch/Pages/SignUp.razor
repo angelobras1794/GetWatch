@@ -101,8 +101,28 @@
     {
         try
         {
-            // Validate the form data
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            validateFormData();
+            var user = new DbUser
+            {
+                Name = username,
+                Email = email,
+                Password = password
+            };
+
+             UserCreationService.CreateUser(user);
+            feedbackMessage = "Account created successfully! Redirecting to login...";
+            isError = false;
+            NavigationManager.NavigateTo("/Login", true);
+        }
+        catch (Exception ex)
+        {
+            feedbackMessage = $"Error: {ex.Message}";
+            isError = true;
+        }
+    }
+
+    public void validateFormData(){
+       if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
                 feedbackMessage = "All fields are required.";
                 isError = true;
@@ -115,30 +135,6 @@
                 isError = true;
                 return;
             }
-
-            // Create a new user object
-            var user = new DbUser
-            {
-                Name = username,
-                Email = email,
-                Password = password
-            };
-
-            // Call the UserCreationService to create the user
-             UserCreationService.CreateUser(user);
-
-            // If successful, show success message and redirect
-            feedbackMessage = "Account created successfully! Redirecting to login...";
-            isError = false;
-
-            NavigationManager.NavigateTo("/Login", true);
-        }
-        catch (Exception ex)
-        {
-            // Handle the exception and show an error message
-            feedbackMessage = $"Error: {ex.Message}";
-            isError = true;
-        }
     }
     
 }        
