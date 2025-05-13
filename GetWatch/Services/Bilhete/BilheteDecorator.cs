@@ -6,6 +6,23 @@ public abstract class BilheteDecorator : IBilhete
 {
         public IBilhete _bilhete;
 
+        public int PersonAmount
+        {
+            get => _bilhete.PersonAmount;
+            set => _bilhete.PersonAmount = value;
+        }
+        public string[]? Seats
+        {
+            get => _bilhete.Seats;
+            set => _bilhete.Seats = value;
+        }
+
+        public Guid Id
+        {
+            get => _bilhete.Id;
+            set => _bilhete.Id = value;
+        }
+
         public BilheteDecorator(IBilhete bilhete)
         {
             _bilhete = bilhete;

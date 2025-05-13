@@ -9,11 +9,11 @@ namespace GetWatch.Services.Compra
         {
             switch (tipo.ToLower())
             {
-                case "bilhete":
+                case "Ticket":
                     return new ReservarBilhete();
-                case "comprar":
+                case "BlueRay":
                     return new ComprarFilme();
-                case "alugar":
+                case "Rent":
                     return new AluguarFilme();
                 default:
                     throw new ArgumentException($"Tipo de compra inválido: {tipo}");
