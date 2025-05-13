@@ -9,10 +9,11 @@ using GetWatch.Interfaces.SupportTickets;
 using GetWatch.Services.Db;
 using GetWatch.Interfaces.ShoppingCart;
 using GetWatch.Services.Compra;
+using GetWatch.Interfaces.User;
 
 namespace GetWatch.Services.User
 {
-    public class User
+    public class User: IUser
     {
         public Guid Id { get; set; }
         public string ?Name { get; set; }
