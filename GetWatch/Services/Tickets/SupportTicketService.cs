@@ -11,33 +11,30 @@ namespace GetWatch.Services.Tickets
         private IRepositoryFactory? Factory;
         private IUnitOfWork? UnitOfWork;
         private IRepository<DbSupportTickets>? TicketsRepository;
+
+        private SupportTicketMapper supportTicketMapper;
+
+        public SupportTicketService(GetWatchContext context, IRepositoryFactory factory, IUnitOfWork unitOfWork,
+            SupportTicketMapper supportTicketMapper)
+        {
+            Context = context;
+            Factory = factory;
+            UnitOfWork = unitOfWork;
+            TicketsRepository = unitOfWork.GetRepository<DbSupportTickets>();
+            this.supportTicketMapper = supportTicketMapper;
+        }
         
         public async Task CreateSupportTicketAsync(DbSupportTickets ticket)
         {   
-            Context = new GetWatchContext();
-            await Context.Database.EnsureCreatedAsync();
-                    
-            Factory = new RepositoryFactory(Context);
-            UnitOfWork = new UnitOfWork(Context, Factory);
-
-                
-            TicketsRepository = UnitOfWork.GetRepository<DbSupportTickets>();
-
+           
                 try
                 {
                     var userEmail = ticket.User?.Email; 
-                    if (string.IsNullOrEmpty(userEmail))
-                    {
-                        throw new Exception("User email is required to associate the ticket with a user.");
-                    }
+                    
 
                     var userRepository = UnitOfWork.GetRepository<DbUser>();
                     var user = userRepository.GetAll().FirstOrDefault(u => u.Email == userEmail);
-                    if (user == null)
-                    {
-                        throw new Exception($"No user found with email: {userEmail}");
-                    }
-
+        
                     if (Context.Entry(user).State == EntityState.Detached)
                     {
                         Context.Attach(user);
