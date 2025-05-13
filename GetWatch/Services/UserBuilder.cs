@@ -31,6 +31,12 @@ namespace GetWatch.Services
         return this;
     }
 
+    public IUserBuilder SetUserPhone(string phone)
+    {
+        _user.Phone = phone;
+        return this;
+    }
+
     public DbUser BuildUser()
     {
         return _user;

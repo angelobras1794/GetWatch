@@ -12,6 +12,7 @@ namespace GetWatch.Interfaces
         public IUserBuilder SetUserName(string name);
         public IUserBuilder SetUserPassword(string password);
         public IUserBuilder SetUserEmail(string email);
+        public IUserBuilder SetUserPhone(string phone);
         
         public DbUser BuildUser();
 

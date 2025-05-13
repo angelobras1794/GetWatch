@@ -15,10 +15,11 @@ namespace GetWatch.Services.ShoppingCart
             return new BluRayProduct(price, movieId, id);
         }
 
-        public ICartItem CreateRentalItem(double price, int movieId, Guid id)
+        public ICartItem CreateRentalItem(double price, int movieId, Guid id, DateTime rentalDate)
         {
-            return new RentalProduct(price, movieId, id);
+            return new RentalProduct(price, movieId, id, rentalDate);
         }
+        
 
         public ICartItem CreateTicketItem(double price, int movieId, Guid id,int personAmount,string [] seats)
         {
