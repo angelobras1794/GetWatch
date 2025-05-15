@@ -16,12 +16,15 @@ namespace GetWatch.Services.Db
         public DbSet<DbSupportTickets> DbSupportTickets { get; set; }
         public DbSet<DbPurchases> DbPurchases { get; set; }
         public DbSet<DbCartItem> DbCartItem{ get; set; }
+        public DbSet<DbBluRayCart> BluRayCarts { get; set; }
+        public DbSet<DbRentItem> RentItems { get; set; }
+        public DbSet<DbTicketCart> TicketCarts { get; set; }
        
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite("Data Source=GetWatch.db"); 
-            
+            options.UseSqlite("Data Source=GetWatch.db");
+
 
         }
 

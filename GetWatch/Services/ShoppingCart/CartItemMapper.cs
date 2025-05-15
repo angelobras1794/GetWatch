@@ -35,11 +35,11 @@ namespace GetWatch.Services.ShoppingCart
              {
                 switch (dbCartItem){
                     case DbBluRayCart bluRayCartItem:
-                        return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId, dbCartItem.Id);
+                        return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId,bluRayCartItem.Quantity ,dbCartItem.Id);
                     case DbRentItem rentalCartItem:
-                        return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id, rentalCartItem.RentDate);
+                        return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId,rentalCartItem.Quantity,rentalCartItem.RentDate,dbCartItem.Id);
                     case DbTicketCart movieTicketCartItem:
-                        return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>());    
+                        return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId,movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>(),movieTicketCartItem.Quantity ,dbCartItem.Id );    
                     default:
                         throw new InvalidOperationException($"Unhandled DbCartItem type: {dbCartItem.GetType().Name}");
                 }
@@ -64,11 +64,11 @@ namespace GetWatch.Services.ShoppingCart
             switch (dbCartItem)
             {
                 case DbBluRayCart bluRayCartItem:
-                    return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId, dbCartItem.Id);
+                    return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId,bluRayCartItem.Quantity ,dbCartItem.Id);
                 case DbRentItem rentalCartItem:
-                    return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, dbCartItem.Id,rentalCartItem.RentDate);
+                    return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId,rentalCartItem.Quantity,rentalCartItem.RentDate,dbCartItem.Id);
                 case DbTicketCart movieTicketCartItem:
-                    return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, dbCartItem.Id, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>());
+                    return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId,  movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>(),movieTicketCartItem.Quantity,dbCartItem.Id);
                 default:
                     throw new InvalidOperationException($"Unhandled DbCartItem type: {dbCartItem.GetType().Name}");
             }
@@ -85,34 +85,46 @@ namespace GetWatch.Services.ShoppingCart
             var repositoryCart = _unitOfWork.GetRepository<DbCart>();
             var Cart = repositoryCart.Get(cartId);
 
-            var dbCartItem = cartItem switch
+            DbCartItem dbCartItem = null;
+            switch (cartItem)
             {
-                BluRayProduct bluRayCart => (DbCartItem)new DbBluRayCart
-                {
-                    MovieId = bluRayCart.movieId,
-                    Price = bluRayCart.Price,
-                    CartId = Cart.Id,
-                    Cart = Cart
-                },
-                RentalProduct rentalCart => (DbCartItem)new DbRentItem
-                {
-                    MovieId = rentalCart.movieId,
-                    Price = rentalCart.Price,
-                    CartId = Cart.Id,
-                    Cart = Cart
-                },
-                MovieTicketProduct ticketCart => (DbCartItem)new DbTicketCart
-                {
-                    MovieId = ticketCart.movieId,
-                    Price = ticketCart.Price,
-                    PersonAmount = ticketCart.getPersonAmount(),
-                    Seats = ticketCart.getSeats(),
-                    CartId = Cart.Id,
-                    Cart = Cart
-                },
-                _ => throw new InvalidOperationException($"Unhandled ICartItem type: {cartItem.GetType().Name}")
-            };
-            
+                case BluRayProduct bluRayCartItem:
+                    dbCartItem = new DbBluRayCart
+                    {
+                        Id = bluRayCartItem.Id,
+                        CartId = cartId,
+                        Price = bluRayCartItem.Price,
+                        MovieId = bluRayCartItem.movieId,
+                        Quantity = bluRayCartItem.Quantity
+                    };
+                    break;
+                case RentalProduct rentCartItem:
+                    dbCartItem = new DbRentItem
+                    {
+                        Id = rentCartItem.Id,
+                        CartId = cartId,
+                        Price = rentCartItem.Price,
+                        MovieId = rentCartItem.movieId,
+                        RentDate = rentCartItem.RentDate,
+                        Quantity = rentCartItem.Quantity
+                    };
+                    break;
+                case MovieTicketProduct ticketCartItem:
+                    dbCartItem = new DbTicketCart
+                    {
+                        Id = ticketCartItem.Id,
+                        CartId = cartId,
+                        Price = ticketCartItem.Price,
+                        MovieId = ticketCartItem.movieId,
+                        PersonAmount = ticketCartItem.getPersonAmount(),
+                        Seats = ticketCartItem.getSeats(),
+                        Quantity = ticketCartItem.Quantity
+                    };
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unhandled ICartItem type: {cartItem.GetType().Name}");
+            }
+
             _unitOfWork.Begin();
             repository.Insert(dbCartItem);
             _unitOfWork.SaveChanges();

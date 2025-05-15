@@ -2,11 +2,22 @@
 @using GetWatch.Pages.Layout
 @layout MoviePageLayout
 @using GetWatch.Services.Db
+@using System.Security.Claims
 @using GetWatch.Services.Movies
 @using GetWatch.Services.Movies.Strategy
+@using GetWatch.Services.ShoppingCart;
 @using GetWatch.Interfaces.Movies
-@inject IMovieRepository MovieRepository
+@using GetWatch.Interfaces.User;
+@using GetWatch.Interfaces.ShoppingCart
+@using GetWatch.Interfaces.Db
+@using GetWatch.Services
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider ;
 
+@inject IMovieRepository MovieRepository
+@inject IUnitOfWork UnitOfWork
+@inject IUserMapper UserMapper
+@inject ICartItemFactory CartItemFactory
+@inject NavigationManager NavigationManager
 <NavBar/>
         @if (movie != null)
         {
@@ -21,13 +32,11 @@
             <span>Buy Tickets</span>
             </button>
           }else{
-            <button class="primary-button" id="purchase-button">
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Play" class="button-icon" />
-            <span>Purchase</span>
+            <button class="primary-button" id="purchase-button" @onclick="() => addToCartBluRay(movie.Id!.Value)">
+            <span>Purchase (19.99)</span>
             </button>
-            <button class="primary-button" id="rent-button">
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Play" class="button-icon" />
-            <span>Rent</span>
+            <button class="primary-button" id="rent-button" @onclick="() => addToCartRental(movie.Id!.Value)">
+            <span>Rent (7.99)</span>
             </button>
           }
           
@@ -95,9 +104,12 @@
                 <p class="rating-value">@movie.Popularity</p>
               </div>  
               <div class="rating-item">
+    
                 
                 <p class="rating-value">Runtime(minutes): @movie.Runtime</p>
+    
               </div>  
+    
             </div>
           </div>
       
@@ -141,8 +153,68 @@
 
     private PopularApiMovie? movie;
 
+    private IRepository<DbUser>? UserRepository;
+    private IUser realUser;
+    private bool isAuthenticated = false;
+
+
     protected override async Task OnInitializedAsync()
     {
+        await getMovie();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity != null && authState.User.Identity.IsAuthenticated;
+
+        if (isAuthenticated)
+        {
+            var user = await GetAuthenticatedUserAsync();
+            if (user != null)
+            {
+                Console.WriteLine($"User ID: {user.Id}");
+                realUser = UserMapper.Get(user.Id);
+            }
+        }
+        else
+        {
+            realUser = null;
+            Console.WriteLine("No authenticated user.");
+        }
+    }
+
+    private async Task<DbUser?> GetAuthenticatedUserAsync()
+  {
+      var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+      isAuthenticated = authState.User.Identity != null && authState.User.Identity.IsAuthenticated;
+      var userPrincipal = authState.User;
+
+      if (userPrincipal?.Identity == null || !userPrincipal.Identity.IsAuthenticated)
+      {
+          return null; // User is not authenticated
+      }
+
+      var userEmail = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+      if (string.IsNullOrEmpty(userEmail))
+      {
+          return null;
+      }
+
+      UserRepository = UnitOfWork.GetRepository<DbUser>();
+      return UserRepository.GetAll().FirstOrDefault(x => x.Email == userEmail);
+  }
+
+      public bool IsPlayingInCinemas(PopularApiMovie movie)
+      {
+        if (DateTime.TryParse(movie.ReleaseDate, out var releaseDate))
+        {
+            var currentDate = DateTime.UtcNow;
+            // Check if the movie was released within the last 3 months
+            return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-3);
+        }
+        return false;
+    }
+    
+
+    public async Task getMovie(){
       Console.WriteLine($"Movie ID: {id}");
         try
         {
@@ -164,17 +236,32 @@
         {
             Console.WriteLine($"Error fetching movie details: {ex.Message}");
         }
+
+    }
+    public Task addToCartBluRay(int movieId)
+    {
+        if (!isAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+            return Task.CompletedTask;
+        }
+        ICartItem cartItem = CartItemFactory.CreateBluRayItem(19.99, movieId, 1);
+        realUser.AddtoCart(cartItem);
+        return Task.CompletedTask;
     }
 
-      public bool IsPlayingInCinemas(PopularApiMovie movie)
-      {
-      if (DateTime.TryParse(movie.ReleaseDate, out var releaseDate))
-      {
-          var currentDate = DateTime.UtcNow;
-          // Check if the movie was released within the last 3 months
-          return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-3);
-      }
-      return false;
-  }
+    public Task addToCartRental(int movieId)
+    {
+        if (!isAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+            return Task.CompletedTask;
+        }
+        DateTime rentalDate = DateTime.UtcNow;
+        ICartItem cartItem = CartItemFactory.CreateRentalItem(7.99, movieId, 1);
+        realUser.AddtoCart(cartItem);
+        return Task.CompletedTask;
+    }
+
     
 }

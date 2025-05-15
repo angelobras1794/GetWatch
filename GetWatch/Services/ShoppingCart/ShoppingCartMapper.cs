@@ -42,18 +42,19 @@ namespace GetWatch.Services.ShoppingCart
             return carts;
         }
 
-        public IShoppingCart? Get(Guid id)
+        public IShoppingCart? Get(Guid userId)
         {
             var repository = _unitOfWork.GetRepository<DbCart>();
             if (repository == null)
             {
                 throw new InvalidOperationException("Repository for DbCart is null.");
             }
-            var dbCart = repository.Get(id);
+            DbCart dbCart = repository.GetAll()?.FirstOrDefault(x => x.UserId == userId);
             if (dbCart == null)
             {
                 return null;
             }
+            Console.WriteLine($"Found cart with ID: {dbCart.Id}");
 
             var cart = new ShoppingCart
             {

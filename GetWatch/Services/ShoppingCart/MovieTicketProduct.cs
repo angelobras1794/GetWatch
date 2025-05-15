@@ -14,7 +14,7 @@ namespace GetWatch.Services.ShoppingCart
         private string []? Seats { get; set; }
 
         public  PurchaseType PurchaseType { get; set; } = PurchaseType.Ticket;
-        public MovieTicketProduct(double price, int movieId, Guid id,int personAmount,string [] seats) : base(price, movieId, id)
+        public MovieTicketProduct(double price, int movieId,int Quantity ,Guid id,int personAmount,string [] seats) : base(price, movieId,Quantity ,id)
         {
             PersonAmount = personAmount;
             Seats = seats;
