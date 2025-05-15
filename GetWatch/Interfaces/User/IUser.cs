@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using GetWatch.Services.Tickets;
+using GetWatch.Interfaces.SupportTickets;
 using GetWatch.Services.ShoppingCart;
+
 
 
 namespace GetWatch.Interfaces.User
@@ -14,7 +16,7 @@ namespace GetWatch.Interfaces.User
         string? Password { get; set; }
         string? Phone { get; set; }
         IShoppingCart? Cart { get; set; }
-        List<SupportTicket>? SupportTickets { get; set; }
+        List<ISupportTicket>? SupportTickets { get; set; }
         List<ICartItem>? Transactions { get; set; }
 
         void AddtoCart(ICartItem item);

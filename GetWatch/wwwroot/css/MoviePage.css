@@ -114,6 +114,9 @@ body {
     font-weight: 600;
     cursor: pointer;
   }
+  .primary-button:hover {
+    background-color: #4a43e0;
+  }
   
   .button-icon {
     width: 28px;

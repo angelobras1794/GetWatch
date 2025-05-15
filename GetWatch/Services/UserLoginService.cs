@@ -11,26 +11,27 @@ namespace GetWatch.Services
     public class UserLoginService
     {
         private readonly CustomAuthenticationStateProvider _authStateProvider;
-
-        public UserLoginService(CustomAuthenticationStateProvider authStateProvider)
-        {
-            _authStateProvider = authStateProvider;
-        }
-        
         private GetWatchContext? Context;
         private IRepositoryFactory? Factory;
         private IUnitOfWork? UnitOfWork;
         private IRepository<DbUser>? UserRepository;
 
-        public async Task Userlogin(DbUser user)
-    {
+        public UserLoginService(CustomAuthenticationStateProvider authStateProvider)
+        {
+            _authStateProvider = authStateProvider;
             Context = new GetWatchContext();
             Context.Database.EnsureCreated();
-
             Factory = new RepositoryFactory(Context);
             UnitOfWork = new UnitOfWork(Context, Factory);
-
             UserRepository = UnitOfWork.GetRepository<DbUser>();
+
+        }
+        
+        
+
+        public async Task Userlogin(DbUser user)
+    {
+            
             var existingEmails = UserRepository?.GetAll().Select(u => (string?)u.Email).ToList() ?? new List<string?>();
 
             var emailExistence = new EmailExistenceHandler(existingEmails.Where(email => email != null).Cast<string>().ToList());
@@ -51,7 +52,7 @@ namespace GetWatch.Services
             Console.WriteLine("User login successful!");
         
         
-    }
+        }
     
         
     }

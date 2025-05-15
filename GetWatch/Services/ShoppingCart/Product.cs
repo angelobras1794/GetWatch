@@ -13,11 +13,12 @@ public class Product : ICartItem
 
     
 
-    public Product (double price, int movieId,Guid id = new Guid())
+    public Product (double price, int movieId,int Quantity,Guid id = new Guid())
     {
         Id = id;
         this.movieId = movieId;
         Price = price;
+        this.Quantity = Quantity;
        
         _pricingStrategyContext = new PricingStrategyContext(new NoDiscountStrategy());
     }

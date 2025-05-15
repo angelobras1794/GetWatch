@@ -16,42 +16,46 @@ namespace GetWatch.Services
         private IUnitOfWork? UnitOfWork;
         private IRepository<DbUser>? UserRepository;
 
-         public void CreateUser(DbUser user)
-        {
-    
-        Context = new GetWatchContext();
-        Context.Database.EnsureCreated();
+        public UserCreationService(){
+            Context = new GetWatchContext();
+            Context.Database.EnsureCreated();
             
-        Factory = new RepositoryFactory(Context);
-        UnitOfWork = new UnitOfWork(Context, Factory);
+            Factory = new RepositoryFactory(Context);
+            UnitOfWork = new UnitOfWork(Context, Factory);
 
-        UserRepository = UnitOfWork.GetRepository<DbUser>();
-        if (UserRepository == null)
-        {
-            throw new InvalidOperationException("UserRepository is not initialized.");
+            UserRepository = UnitOfWork.GetRepository<DbUser>();
         }
-        var existingEmails = UserRepository.GetAll().Select(u => u.Email).Where(email => email != null).Cast<string>().ToList();
-        var existingUsernames = UserRepository.GetAll().Select(u => u.Name).Where(name => name != null).Cast<string>().ToList();
 
-        var usernameValidation = new UsernameDuplicationHandler(existingUsernames);
-        var emailValidation = new EmailValidationHandler();
-        var emailDuplication = new EmailDuplicationHandler(existingEmails);
-        var passwordValidation = new PasswordValidationHandler();
+         public void CreateUser(DbUser user)
+         {
+    
+            userValidation(user);
 
-        usernameValidation.SetNext(emailValidation);
-        emailValidation.SetNext(emailDuplication);
-        emailDuplication.SetNext(passwordValidation);
-
-        usernameValidation.Handle(user);
-        UnitOfWork.Begin();
-        UserRepository.Insert(user);    
-        UnitOfWork.SaveChanges();
-        UnitOfWork.Commit();
+           
+            UnitOfWork.Begin();
+            UserRepository.Insert(user);    
+            UnitOfWork.SaveChanges();
+            UnitOfWork.Commit();
        
-    
-        
-    
-    }
+       }
+
+       public void userValidation(DbUser user)
+       {
+           var existingEmails = UserRepository.GetAll().Select(u => u.Email).Where(email => email != null).Cast<string>().ToList();
+           var existingUsernames = UserRepository.GetAll().Select(u => u.Name).Where(name => name != null).Cast<string>().ToList();
+
+           UserHandler usernameValidation = new UsernameDuplicationHandler(existingUsernames);
+           UserHandler emailValidation = new EmailValidationHandler();
+           UserHandler emailDuplication = new EmailDuplicationHandler(existingEmails);
+           UserHandler passwordValidation = new PasswordValidationHandler();
+
+           usernameValidation.SetNext(emailValidation);
+           emailValidation.SetNext(emailDuplication);
+           emailDuplication.SetNext(passwordValidation);
+
+           usernameValidation.Handle(user);
+       }
+       
 
         
     }

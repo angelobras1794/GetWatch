@@ -5,12 +5,16 @@
 @using GetWatch.Services.Tickets
 @using GetWatch.Services.Db
 @using GetWatch.Services
-@using GetWatch.Services.Tickets
-@using global::GetWatch.Services.Tickets
+@using GetWatch.Interfaces.SupportTickets
 @using GetWatch.Interfaces.Db
 
 @inject NavigationManager NavigationManager
+@inject IUnitOfWork UnitOfWork
+@inject ISupportTicketMapper SupportTicketMapper
+@inject IRepositoryFactory RepositoryFactory
+@inject GetWatchContext Context
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider 
+
 
 @layout SuportPageLayout
 <NavBar/>
@@ -104,71 +108,42 @@
     private bool agreeToTerms       = false;
     private string feedbackMessage  = string.Empty;
     private bool isError            = false;
-    private GetWatchContext? Context;
-    private IRepositoryFactory? Factory;
-    private IUnitOfWork? UnitOfWork;
+    
     private IRepository<DbUser>? UserRepository;
+    private SupportTicketService? TicketService;
 
-    private async Task HandleSubmit(){
-      CheckErrors(); 
+    protected override void OnInitialized()
+    {
+        TicketService = new SupportTicketService(Context, RepositoryFactory, UnitOfWork,SupportTicketMapper);
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (!CheckErrors())
+        {
+            return;
+        }
+
         try
         {
-          Context = new GetWatchContext();
-          Context.Database.EnsureCreated();
-              
-          Factory = new RepositoryFactory(Context);
-          UnitOfWork = new UnitOfWork(Context, Factory);
+            var user = await GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                SetError("Error: User not found in the database.");
+                return;
+            }
+            Console.WriteLine($"User found: {user.Email}");
 
-          UserRepository = UnitOfWork.GetRepository<DbUser>();
-
-
-          var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-          var user = authState.User;
-          
-          var userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
-          Console.WriteLine($"User Email: {userEmail}"); // Debugging line to check the user email
-
-          if (string.IsNullOrEmpty(userEmail))
-          {
-              feedbackMessage = "Error: Could not retrieve user email from authentication claims.";
-              isError = true;
-              return;
-          }
-
-          var TicketUser = UserRepository.GetAll().Find(x => x.Email == userEmail);
-          if (TicketUser == null)
-          {
-              feedbackMessage = "Error: User not found in the database.";
-              isError = true;
-              return;
-          }
-            Context.Attach(TicketUser);
-            var supportTicket = new DbSupportTickets
-            { 
-                UserId = TicketUser.Id,
-                User = TicketUser , // Assuming you have a user object to associate with the ticket
-                Subject = $"Support Request from {firstName} {lastName} ({email})", // Create a subject
-                Description = message, // Map form's message to Description
-                IsResolved = false // Default to not resolved
-
-            };
-            
-            var ticketService = new SupportTicketService(); // Ensure the service is properly referenced
-            //SupportTicketService ticketService = new SupportTicketService(); // Assuming you have a service to handle ticket creation 
-            await ticketService.CreateSupportTicketAsync(supportTicket); // Call the service to create the ticket
-            feedbackMessage = "Support ticket submitted successfully!";
-            isError = false;
-
+            await CreateSupportTicketAsync(user);
+            SetSuccess("Support ticket submitted successfully!");
         }
         catch (Exception ex)
         {
-            feedbackMessage = $"An error occurred while submitting the ticket: {ex.Message}";
-            isError = true;
+            SetError($"An error occurred while submitting the ticket: {ex.Message}");
         }
-        StateHasChanged();
     }
 
-    private void CheckErrors(){
+    private bool CheckErrors(){
         feedbackMessage = string.Empty;
         isError = false;
 
@@ -177,21 +152,58 @@
             string.IsNullOrWhiteSpace(email) ||
             string.IsNullOrWhiteSpace(message))
         {
-            feedbackMessage = "Please fill in all required fields (First Name, Last Name, Email, Message).";
-            isError = true;
-            return;
+            SetError("All fields are required.");
+            return false;
         }
 
         if (!agreeToTerms)
         {
-            feedbackMessage = "You must agree to the Terms of Use and Privacy Policy.";
-            isError = true;
-            return;
+            SetError("You must agree to the terms and conditions.");
+            return false;
         }
+        return true;
 
-        
-
+      
     }
-}
+    private async Task<DbUser?> GetAuthenticatedUserAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userEmail = authState.User.FindFirst(ClaimTypes.Email)?.Value;
+        UserRepository = UnitOfWork.GetRepository<DbUser>();
 
+        if (string.IsNullOrEmpty(userEmail))
+        {
+            SetError("Error: Could not retrieve user email from authentication claims.");
+            return null;
+        }
+        var user = UserRepository.GetAll().FirstOrDefault(x => x.Email == userEmail);
+        return user;
+    }
+
+    private async Task CreateSupportTicketAsync(DbUser user)
+    {
+        var supportTicket = new SupportTicket
+        {
+            Subject = $"Support Request from {firstName} {lastName} ({email})",
+            Description = message,
+            IsResolved = false
+        };
+
+
+        await TicketService.CreateSupportTicketAsync(supportTicket, user);
+    }
+
+    private void SetError(string message)
+    {
+        feedbackMessage = message;
+        isError = true;
+        StateHasChanged();
+    }
+
+    private void SetSuccess(string message)
+    {
+        feedbackMessage = message;
+        isError = false;
+        StateHasChanged();
+    }
 }

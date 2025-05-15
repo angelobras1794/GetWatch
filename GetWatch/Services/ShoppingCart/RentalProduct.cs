@@ -10,7 +10,7 @@ namespace GetWatch.Services.ShoppingCart
     {
         private PurchaseType PurchaseType { get; set; } = PurchaseType.Rental;
         public DateTime RentDate { get; set; }
-        public RentalProduct(double price, int movieId, Guid id, DateTime? date = null) : base(price, movieId, id)
+        public RentalProduct(double price, int movieId,int Quantity ,Guid id, DateTime? date = null) : base(price, movieId,Quantity ,id)
         {
             RentDate = date ?? DateTime.Now + TimeSpan.FromDays(14);
         }

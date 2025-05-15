@@ -75,14 +75,7 @@
     {
         try
         {
-            // Validate the form data
-            if ( string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-            {
-                feedbackMessage = "All fields are required.";
-                isError = true;
-                return;
-            }
-            // Create a new user object
+            validateFormData();
             var user = new DbUser
             {
                 Email = email,
@@ -90,8 +83,6 @@
             };
 
             UserLoginService.Userlogin(user);
-
-            // If successful, show success message and redirect
             feedbackMessage = "Account logged in successfully!";
             isError = false;
 
@@ -99,9 +90,17 @@
         }
         catch (Exception ex)
         {
-            // Handle the exception and show an error message
             feedbackMessage = $"Error: {ex.Message}";
             isError = true;
+        }
+    }
+    private void validateFormData()
+    {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            feedbackMessage = "All fields are required.";
+            isError = true;
+            return;
         }
     }
 }      

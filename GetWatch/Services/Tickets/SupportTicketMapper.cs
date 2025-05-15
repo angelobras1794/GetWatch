@@ -61,25 +61,37 @@ namespace GetWatch.Services.Tickets
             return supportTicket;
         }
 
-        public void Insert(ISupportTicket supportTicket,Guid userId)
+        public void Insert(ISupportTicket supportTicket, DbUser dbUser)
         {
-            var repository = _unitOfWork.GetRepository<DbSupportTickets>();
-            if (repository == null)
+            var userId = dbUser.Id;
+            if (userId == Guid.Empty)
             {
-                throw new InvalidOperationException("Repository for DbServer is null.");
+                throw new ArgumentException("User ID cannot be empty.", nameof(userId));
             }
-            var dbSupportTicket = new DbSupportTickets
+            if (supportTicket == null)
             {
-                Id = supportTicket.Id,
-                Subject = supportTicket.Subject,
-                Description = supportTicket.Description,
-                IsResolved = supportTicket.IsResolved,
-                UserId = userId // Assuming ISupportTicket has a UserId property
-            };
-            _unitOfWork.Begin();
-            repository.Insert(dbSupportTicket);
-            _unitOfWork.SaveChanges();
-            _unitOfWork.Commit();
+                throw new ArgumentNullException(nameof(supportTicket), "Support ticket cannot be null.");
+            }
+            {
+                var repository = _unitOfWork.GetRepository<DbSupportTickets>();
+                if (repository == null)
+                {
+                    throw new InvalidOperationException("Repository for DbServer is null.");
+                }
+                var dbSupportTicket = new DbSupportTickets
+                {
+                    Id = supportTicket.Id,
+                    Subject = supportTicket.Subject,
+                    Description = supportTicket.Description,
+                    IsResolved = supportTicket.IsResolved,
+                    UserId = dbUser.Id, // Assuming ISupportTicket has a UserId property
+                    User = dbUser
+                };
+                _unitOfWork.Begin();
+                repository.Insert(dbSupportTicket);
+                _unitOfWork.SaveChanges();
+                _unitOfWork.Commit();
+            }
         }
 
         public void Remove(ISupportTicket supportTicket)
