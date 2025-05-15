@@ -175,13 +175,14 @@ public class UserMapper : IUserMapper
     }
     public void InsertSupportTickets(IUser user)
     {
-        if (user.SupportTickets == null)
-        {
-            throw new InvalidOperationException("User's support tickets are null.");
-        }
+        
+        var userRepository = _unitOfWork.GetRepository<DbUser>();
+        
+        var dbUser = userRepository.Get(user.Id);
+        
         foreach (var ticket in user.SupportTickets)
         {
-            _supportTicketMapper.Insert(ticket, user.Id);
+            _supportTicketMapper.Insert(ticket, dbUser);
         }
     }
     public void InsertTransactions(IUser user)

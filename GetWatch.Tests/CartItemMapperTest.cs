@@ -5,6 +5,7 @@ using Xunit;
 using GetWatch.Interfaces.Db;
 using GetWatch.Interfaces.ShoppingCart;
 using GetWatch.Services.Db.CartItem;
+using GetWatch.Services.Db;
 using GetWatch.Services.ShoppingCart;
 
 namespace GetWatch.Tests
@@ -14,12 +15,21 @@ namespace GetWatch.Tests
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IRepository<DbCartItem>> _mockRepository;
         private readonly CartItemMapper _cartItemMapper;
+        private readonly Mock<IRepository<DbCart>> _mockCartRepository;
 
         public CartItemMapperTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockRepository = new Mock<IRepository<DbCartItem>>();
+            _mockCartRepository = new Mock<IRepository<DbCart>>();
+
             _mockUnitOfWork.Setup(uow => uow.GetRepository<DbCartItem>()).Returns(_mockRepository.Object);
+            _mockUnitOfWork.Setup(uow => uow.GetRepository<DbCart>()).Returns(_mockCartRepository.Object);
+
+            // Setup the cart repository to return a cart for any ID
+            _mockCartRepository.Setup(repo => repo.Get(It.IsAny<Guid>()))
+                .Returns((Guid id) => new DbCart { Id = id });
+
             _cartItemMapper = new CartItemMapper(_mockUnitOfWork.Object);
         }
 

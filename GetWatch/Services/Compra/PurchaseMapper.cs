@@ -77,6 +77,8 @@ namespace GetWatch.Services.Compra
             {
                 throw new InvalidOperationException("Repository for DbPurchase is null.");
             }
+            var userRepository = _unitOfWork.GetRepository<DbUser>();
+            var user = userRepository.Get(userId);
             var dbPurchase = item switch
             {
                 BluRayProduct bluRayItem => (DbPurchases)new DbBluRayPurchase
@@ -84,7 +86,8 @@ namespace GetWatch.Services.Compra
                     Amount = bluRayItem.Price,
                     MovieId = bluRayItem.movieId,
                     Id = bluRayItem.Id,
-                    UserId = userId
+                    UserId = userId,
+                    User = user
                 },
                 RentalProduct rentalItem => (DbPurchases)new DbRentPurchase
                 {
@@ -92,7 +95,8 @@ namespace GetWatch.Services.Compra
                     MovieId = rentalItem.movieId,
                     Id = rentalItem.Id,
                     UserId = userId,
-                    RentalEndDate = rentalItem.RentDate
+                    RentalEndDate = rentalItem.RentDate,
+                    User = user
                 },
                 MovieTicketProduct ticketItem => (DbPurchases)new DbTicketPurchase
                 {
@@ -101,7 +105,8 @@ namespace GetWatch.Services.Compra
                     Id = ticketItem.Id,
                     UserId = userId,
                     PersonAmount = ticketItem.getPersonAmount(),
-                    Seats = ticketItem.getSeats()
+                    Seats = ticketItem.getSeats(),
+                    User = user
                 },
                 _ => throw new InvalidOperationException($"Unhandled ICartItem type: {item.GetType().Name}")
             };

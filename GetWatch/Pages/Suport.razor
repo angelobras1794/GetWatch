@@ -5,15 +5,16 @@
 @using GetWatch.Services.Tickets
 @using GetWatch.Services.Db
 @using GetWatch.Services
-@using GetWatch.Services.Tickets
-@using global::GetWatch.Services.Tickets
+@using GetWatch.Interfaces.SupportTickets
 @using GetWatch.Interfaces.Db
 
 @inject NavigationManager NavigationManager
 @inject IUnitOfWork UnitOfWork
+@inject ISupportTicketMapper SupportTicketMapper
 @inject IRepositoryFactory RepositoryFactory
 @inject GetWatchContext Context
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider 
+
 
 @layout SuportPageLayout
 <NavBar/>
@@ -109,7 +110,12 @@
     private bool isError            = false;
     
     private IRepository<DbUser>? UserRepository;
-    private SupportTicketService? TicketService = new SupportTicketService(Context, UnitOfWork, RepositoryFactory);
+    private SupportTicketService? TicketService;
+
+    protected override void OnInitialized()
+    {
+        TicketService = new SupportTicketService(Context, RepositoryFactory, UnitOfWork,SupportTicketMapper);
+    }
 
     private async Task HandleSubmit()
     {
@@ -176,16 +182,15 @@
 
     private async Task CreateSupportTicketAsync(DbUser user)
     {
-        var supportTicket = new DbSupportTickets
+        var supportTicket = new SupportTicket
         {
-            UserId = user.Id,
-            User = user,
             Subject = $"Support Request from {firstName} {lastName} ({email})",
             Description = message,
             IsResolved = false
         };
 
-        await TicketService.CreateSupportTicketAsync(supportTicket);
+
+        await TicketService.CreateSupportTicketAsync(supportTicket, user);
     }
 
     private void SetError(string message)

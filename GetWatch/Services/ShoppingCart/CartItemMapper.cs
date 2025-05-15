@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GetWatch.Interfaces.ShoppingCart;
 using GetWatch.Interfaces.Db;
+using GetWatch.Services.Db;
 using GetWatch.Services.Db.CartItem;
 
 namespace GetWatch.Services.ShoppingCart
@@ -81,19 +82,24 @@ namespace GetWatch.Services.ShoppingCart
             {
                 throw new InvalidOperationException("Repository for DbCartItem is null.");
             }
+            var repositoryCart = _unitOfWork.GetRepository<DbCart>();
+            var Cart = repositoryCart.Get(cartId);
+
             var dbCartItem = cartItem switch
             {
                 BluRayProduct bluRayCart => (DbCartItem)new DbBluRayCart
                 {
                     MovieId = bluRayCart.movieId,
                     Price = bluRayCart.Price,
-                    CartId = cartId
+                    CartId = Cart.Id,
+                    Cart = Cart
                 },
                 RentalProduct rentalCart => (DbCartItem)new DbRentItem
                 {
                     MovieId = rentalCart.movieId,
                     Price = rentalCart.Price,
-                    CartId = cartId
+                    CartId = Cart.Id,
+                    Cart = Cart
                 },
                 MovieTicketProduct ticketCart => (DbCartItem)new DbTicketCart
                 {
@@ -101,7 +107,8 @@ namespace GetWatch.Services.ShoppingCart
                     Price = ticketCart.Price,
                     PersonAmount = ticketCart.getPersonAmount(),
                     Seats = ticketCart.getSeats(),
-                    CartId = cartId
+                    CartId = Cart.Id,
+                    Cart = Cart
                 },
                 _ => throw new InvalidOperationException($"Unhandled ICartItem type: {cartItem.GetType().Name}")
             };
