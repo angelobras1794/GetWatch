@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aluguer de Filme</title>
+  <link rel="stylesheet" href="Modal_TimeRent.css" />
+</head>
+<body>
+
+ 
+  <div class="modal-overlay" id="aluguerModal">
+    <div class="modal">
+      <h2>Escolha o tempo de aluguer</h2>
+      <p>Por quanto tempo deseja alugar o filme?</p>
+      
+      <div class="options">
+        <button class="option-button" onclick="selecionarAluguer(2)">2 semanas</button>
+        <button class="option-button" onclick="selecionarAluguer(3)">3 semanas</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function selecionarAluguer(semanas) {
+      alert(`Você selecionou alugar por ${semanas} semana${semanas > 1 ? 's' : ''}.`);
+      // fechar o modal ao clicar na opção 
+      const modal = document.getElementById('aluguerModal');
+      modal.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
