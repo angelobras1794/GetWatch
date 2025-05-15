@@ -49,9 +49,7 @@ public class UserMapper : IUserMapper
         )
         {
             Cart = _cartMapper.Get(dbUser.Cart.Id), 
-           SupportTickets = _supportTicketMapper.GetAll(dbUser.Id)
-            .Select(st => (SupportTicket)st)
-            .ToList(),
+           SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
             Transactions = _transactionMapper.GetAll(dbUser.Id) 
         }).ToList();
 
@@ -82,12 +80,11 @@ public class UserMapper : IUserMapper
             dbUser.Id
         )
         {
-            Cart = _cartMapper.Get(dbUser.Cart.Id),
-             SupportTickets = _supportTicketMapper.GetAll(dbUser.Id)
-            .Select(st => (SupportTicket)st)
-            .ToList(), 
-            Transactions = _transactionMapper.GetAll(dbUser.Id) 
+            Cart = _cartMapper.Get(dbUser.Id),
+            SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
+            Transactions = _transactionMapper.GetAll(dbUser.Id)
         };
+    
     }
     
 

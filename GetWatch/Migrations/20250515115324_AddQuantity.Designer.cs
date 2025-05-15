@@ -3,6 +3,7 @@ using System;
 using GetWatch.Services.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GetWatch.Migrations
 {
     [DbContext(typeof(GetWatchContext))]
-    partial class GetWatchContextModelSnapshot : ModelSnapshot
+    [Migration("20250515115324_AddQuantity")]
+    partial class AddQuantity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -27,11 +30,6 @@ namespace GetWatch.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MovieId")
@@ -51,10 +49,6 @@ namespace GetWatch.Migrations
                     b.HasIndex("CartId");
 
                     b.ToTable("DbCartItem");
-
-                    b.HasDiscriminator().HasValue("DbCartItem");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("GetWatch.Services.Db.DbCart", b =>
@@ -178,57 +172,6 @@ namespace GetWatch.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("DbPurchases");
-                });
-
-            modelBuilder.Entity("GetWatch.Services.Db.CartItem.DbBluRayCart", b =>
-                {
-                    b.HasBaseType("GetWatch.Services.Db.CartItem.DbCartItem");
-
-                    b.Property<int>("PurchaseType")
-                        .HasColumnType("INTEGER");
-
-                    b.HasDiscriminator().HasValue("DbBluRayCart");
-                });
-
-            modelBuilder.Entity("GetWatch.Services.Db.CartItem.DbRentItem", b =>
-                {
-                    b.HasBaseType("GetWatch.Services.Db.CartItem.DbCartItem");
-
-                    b.Property<int>("PurchaseType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("RentDate")
-                        .HasColumnType("TEXT");
-
-                    b.ToTable("DbCartItem", t =>
-                        {
-                            t.Property("PurchaseType")
-                                .HasColumnName("DbRentItem_PurchaseType");
-                        });
-
-                    b.HasDiscriminator().HasValue("DbRentItem");
-                });
-
-            modelBuilder.Entity("GetWatch.Services.Db.CartItem.DbTicketCart", b =>
-                {
-                    b.HasBaseType("GetWatch.Services.Db.CartItem.DbCartItem");
-
-                    b.Property<int>("PersonAmount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PurchaseType")
-                        .HasColumnType("INTEGER");
-
-                    b.PrimitiveCollection<string>("Seats")
-                        .HasColumnType("TEXT");
-
-                    b.ToTable("DbCartItem", t =>
-                        {
-                            t.Property("PurchaseType")
-                                .HasColumnName("DbTicketCart_PurchaseType");
-                        });
-
-                    b.HasDiscriminator().HasValue("DbTicketCart");
                 });
 
             modelBuilder.Entity("GetWatch.Services.Db.CartItem.DbCartItem", b =>

@@ -22,7 +22,7 @@ namespace GetWatch.Services.User
         public string ?Phone { get; set; }
         public IShoppingCart ?Cart { get; set; }
 
-        public List<SupportTicket> ?SupportTickets { get; set; }
+        public List<ISupportTicket> SupportTickets { get; set; }
 
         public List<ICartItem> ?Transactions { get; set; }
 
@@ -30,8 +30,10 @@ namespace GetWatch.Services.User
         private ICartItemMapper cartItemMapper;
         private ISupportTicketMapper supportTicketMapper;
         private PurchaseMapper purchaseMapper;
+        
+        private ShoppingCartMapper cartMapper;
 
-        public User(IUnitOfWork unitOfWork,string name, string email, string password, string phone,Guid id)
+        public User(IUnitOfWork unitOfWork, string name, string email, string password, string phone, Guid id)
         {
             _unitOfWork = unitOfWork;
             Name = name;
@@ -39,19 +41,30 @@ namespace GetWatch.Services.User
             Password = password;
             Phone = phone;
             Id = id;
+            cartMapper = new ShoppingCartMapper(_unitOfWork);
             cartItemMapper = new CartItemMapper(_unitOfWork);
             supportTicketMapper = new SupportTicketMapper(_unitOfWork);
             purchaseMapper = new PurchaseMapper(_unitOfWork);
-        }
-        
+            Cart = cartMapper.Get(Id);
+            SupportTickets = supportTicketMapper.GetAll(Id);
+            Transactions = purchaseMapper.GetAll(Id);
 
-        public void AddtoCart(ICartItem item){
+        }
+
+
+        public void AddtoCart(ICartItem item)
+        {
+            if (Cart == null)
+            {
+                throw new InvalidOperationException("Cart cannot be null.");
+            }
+            cartItemMapper.Insert(item, Cart.Id);
 
         }
 
         public void RemoveFromCart(ICartItem item)
         {
-            // Logic to remove item from cart
+            cartItemMapper.Remove(item);
         }
         public void Checkout()
         {
@@ -59,7 +72,7 @@ namespace GetWatch.Services.User
         }
         public void AddSupportTicket(SupportTicket ticket)
         {
-            // Logic to add support ticket
+           //
         }
 
 

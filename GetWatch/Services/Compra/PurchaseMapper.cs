@@ -36,11 +36,11 @@ namespace GetWatch.Services.Compra
              {
                 switch (dbPurchase){
                     case DbBluRayPurchase bluRayPurchase:
-                        return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId, bluRayPurchase.Id);
+                        return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId,bluRayPurchase.Quantity ,bluRayPurchase.Id);
                     case DbRentPurchase rentalPurchase:
-                        return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId, rentalPurchase.Id, rentalPurchase.RentalEndDate);
+                        return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId,rentalPurchase.Quantity ,rentalPurchase.RentalEndDate,rentalPurchase.Id);
                     case DbTicketPurchase movieTicketPurchase:
-                        return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId, movieTicketPurchase.Id, movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>());
+                        return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId,  movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>(),movieTicketPurchase.Quantity,movieTicketPurchase.Id);
                     default:
                         throw new InvalidOperationException($"Unhandled DbCartItem type: {dbPurchase.GetType().Name}");
                 }
@@ -61,11 +61,11 @@ namespace GetWatch.Services.Compra
             }
             switch (dbPurchase){
                 case DbBluRayPurchase bluRayPurchase:
-                    return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId, bluRayPurchase.Id);
+                    return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId,bluRayPurchase.Quantity ,bluRayPurchase.Id);
                 case DbRentPurchase rentalPurchase:
-                    return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId, rentalPurchase.Id, rentalPurchase.RentalEndDate);
+                    return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId,rentalPurchase.Quantity,rentalPurchase.RentalEndDate,rentalPurchase.Id);
                 case DbTicketPurchase movieTicketPurchase:
-                    return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId, movieTicketPurchase.Id, movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>());
+                    return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId,  movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>(),movieTicketPurchase.Quantity,movieTicketPurchase.Id);
                 default:
                     throw new InvalidOperationException($"Unhandled DbCartItem type: {dbPurchase.GetType().Name}");
             }
