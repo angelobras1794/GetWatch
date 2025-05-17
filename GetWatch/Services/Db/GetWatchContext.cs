@@ -38,19 +38,16 @@ namespace GetWatch.Services.Db
                 .WithOne(c => c.User)
                 .HasForeignKey<DbCart>(c => c.UserId);
 
-            // Example: One-to-Many relationship between DbUser and DbSupportTickets
             modelBuilder.Entity<DbUser>()
                 .HasMany(u => u.SupportTickets)
                 .WithOne(t => t.User)
                 .HasForeignKey(t => t.UserId);
 
-            // Example: One-to-Many relationship between DbUser and DbPurchases
             modelBuilder.Entity<DbUser>()
                 .HasMany(u => u.Transactions)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId);
 
-            // Example: One-to-Many relationship between DbCart and DbCartItem
             modelBuilder.Entity<DbCart>()
                 .HasMany(c => c.CartItems)
                 .WithOne(tp => tp.Cart)
