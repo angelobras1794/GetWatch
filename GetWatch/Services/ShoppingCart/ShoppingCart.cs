@@ -1,4 +1,6 @@
 using GetWatch.Services.ShoppingCart;
+using GetWatch.Interfaces.ShoppingCart;
+using GetWatch.Services.Db;
 
 namespace GetWatch.Services.ShoppingCart
 {
@@ -8,8 +10,10 @@ namespace GetWatch.Services.ShoppingCart
         private PricingStrategyContext _pricingStrategyContext;
         public double Price { get; set; }
         public Guid Id { get; set; }
+        
 
-        public ShoppingCart(double price = 0,Guid id = new Guid())
+
+        public ShoppingCart(double price = 0, Guid id = new Guid())
         {
             _items = new List<ICartItem>();
             _pricingStrategyContext = new PricingStrategyContext(new NoDiscountStrategy());

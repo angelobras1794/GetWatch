@@ -18,6 +18,7 @@
 @inject IUserMapper UserMapper
 @inject ICartItemFactory CartItemFactory
 @inject NavigationManager NavigationManager
+@inject UserService UserService
 <NavBar/>
         @if (movie != null)
         {
@@ -144,7 +145,22 @@
           <p class="loading-text">Loading movie details...</p>
         </div>
       }
+      @if(showSuccessModal){
+        <div class="modal-overlay" id="modalSucesso">
+      <div class="modal">
+      <button class="close-button" @onclick="HideSuccessModal"> X</button>
+        <div class="icon-success">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Item Adicionado ao carrinho com  sucesso!</h2>
+      </div>
+    </div>
+    }
       <Footer/>
+    
+      
+      
+
 
 @code {
     [Parameter]
@@ -154,8 +170,9 @@
     private PopularApiMovie? movie;
 
     private IRepository<DbUser>? UserRepository;
-    private IUser realUser;
+    private IUser? realUser = null;
     private bool isAuthenticated = false;
+    private bool showSuccessModal = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -167,48 +184,25 @@
 
         if (isAuthenticated)
         {
-            var user = await GetAuthenticatedUserAsync();
+            var user = await UserService.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                Console.WriteLine($"User ID: {user.Id}");
-                realUser = UserMapper.Get(user.Id);
+                realUser = UserMapper.Get(user.Id)!;
             }
         }
         else
         {
             realUser = null;
-            Console.WriteLine("No authenticated user.");
         }
     }
 
-    private async Task<DbUser?> GetAuthenticatedUserAsync()
-  {
-      var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-      isAuthenticated = authState.User.Identity != null && authState.User.Identity.IsAuthenticated;
-      var userPrincipal = authState.User;
-
-      if (userPrincipal?.Identity == null || !userPrincipal.Identity.IsAuthenticated)
-      {
-          return null; // User is not authenticated
-      }
-
-      var userEmail = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-      if (string.IsNullOrEmpty(userEmail))
-      {
-          return null;
-      }
-
-      UserRepository = UnitOfWork.GetRepository<DbUser>();
-      return UserRepository.GetAll().FirstOrDefault(x => x.Email == userEmail);
-  }
 
       public bool IsPlayingInCinemas(PopularApiMovie movie)
       {
         if (DateTime.TryParse(movie.ReleaseDate, out var releaseDate))
         {
             var currentDate = DateTime.UtcNow;
-            // Check if the movie was released within the last 3 months
-            return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-3);
+            return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-1);
         }
         return false;
     }
@@ -221,7 +215,6 @@
             var httpclient = new HttpClient();
             var MovieIdStrategy = new MovieByIdFetchStrategy(id);
             var movieFetcher = new SingleMovieFetcher(MovieIdStrategy);
-            // Fetch popular movies using the injected MovieRepository
             movie = await movieFetcher.FetchMovieAsync(httpclient);
             if (movie == null)
             {
@@ -247,6 +240,8 @@
         }
         ICartItem cartItem = CartItemFactory.CreateBluRayItem(19.99, movieId, 1);
         realUser.AddtoCart(cartItem);
+        showSuccessModal = true;
+        StateHasChanged();
         return Task.CompletedTask;
     }
 
@@ -260,8 +255,16 @@
         DateTime rentalDate = DateTime.UtcNow;
         ICartItem cartItem = CartItemFactory.CreateRentalItem(7.99, movieId, 1);
         realUser.AddtoCart(cartItem);
+        showSuccessModal = true;
+        StateHasChanged();
         return Task.CompletedTask;
     }
+
+      private void HideSuccessModal()
+  {
+      showSuccessModal = false;
+      StateHasChanged();
+  }
 
     
 }

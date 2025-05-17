@@ -47,6 +47,7 @@ builder.Services.AddScoped<ISupportTicketMapper, SupportTicketMapper>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 
 builder.Services.AddScoped<ICartItemFactory, CartItemFactory>();
+builder.Services.AddScoped<UserService>();
 
 
 

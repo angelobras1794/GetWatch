@@ -65,6 +65,7 @@ namespace GetWatch.Services.User
         public void RemoveFromCart(ICartItem item)
         {
             cartItemMapper.Remove(item);
+            Cart?.RemoveItem(item);
         }
         public void Checkout()
         {
