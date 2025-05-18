@@ -1,0 +1,50 @@
+@if (Visible)
+{
+    <div class="modal-overlay">
+        <div class="modal">
+            <button class="close-button" @onclick="OnClose">×</button>
+            <h2>Selecionar localização :</h2>
+
+            <div class="form-group">
+                <label>Madeira</label>
+                <select @bind="SelectedCinema">
+                    <option disabled selected value="">Selecione cinema</option>
+                    <option>Cinema Forum Madeira</option>
+                    <option>Cinema Madeira</option>
+                    <option>Cinema Canja Shopping</option>
+                    <option>Cinema Madeira Shopping</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Opções</label>
+                <select @bind="SelectedOption">
+                    <option disabled selected value="">Selecionar opção</option>
+                    <option>IMAX</option>
+                    <option>3D</option>
+                    <option>Multiplex</option>
+                    <option>4DX</option>
+                </select>
+            </div>
+
+            <button class="submit-button" @onclick="OnSubmit">Seguinte</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<(string Cinema, string Option)> OnSubmitSelection { get; set; }
+
+    private string SelectedCinema { get; set; } = "";
+    private string SelectedOption { get; set; } = "";
+
+    private async Task OnSubmit()
+    {
+        if (!string.IsNullOrEmpty(SelectedCinema) && !string.IsNullOrEmpty(SelectedOption))
+        {
+            await OnSubmitSelection.InvokeAsync((SelectedCinema, SelectedOption));
+        }
+    }
+}

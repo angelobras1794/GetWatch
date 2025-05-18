@@ -26,27 +26,28 @@ namespace GetWatch.Services.ShoppingCart
             {
                 Console.WriteLine("Repository for DbCartItem is null.");
                 return new List<ICartItem>();
-                
+
             }
 
             var dbCartItems = repository.GetAll()?.Where(x => x.CartId == cartId).ToList() ?? new List<DbCartItem>();
 
-             var cartItems = dbCartItems.Select(dbCartItem =>
-             {
-                switch (dbCartItem){
+            var cartItems = dbCartItems.Select(dbCartItem =>
+            {
+                switch (dbCartItem)
+                {
                     case DbBluRayCart bluRayCartItem:
-                        return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId,bluRayCartItem.Quantity ,dbCartItem.Id);
+                        return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId, bluRayCartItem.Quantity, dbCartItem.Id);
                     case DbRentItem rentalCartItem:
-                        return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId,rentalCartItem.Quantity,rentalCartItem.RentDate,dbCartItem.Id);
+                        return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, rentalCartItem.Quantity, rentalCartItem.RentDate, dbCartItem.Id);
                     case DbTicketCart movieTicketCartItem:
-                        return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId,movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>(),movieTicketCartItem.Quantity ,dbCartItem.Id );    
+                        return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>(), movieTicketCartItem.Quantity, dbCartItem.Id);
                     default:
                         throw new InvalidOperationException($"Unhandled DbCartItem type: {dbCartItem.GetType().Name}");
                 }
-             }).ToList();
+            }).ToList();
             return cartItems;
-        }    
-                
+        }
+
 
         public ICartItem? Get(Guid id)
         {
@@ -64,15 +65,15 @@ namespace GetWatch.Services.ShoppingCart
             switch (dbCartItem)
             {
                 case DbBluRayCart bluRayCartItem:
-                    return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId,bluRayCartItem.Quantity ,dbCartItem.Id);
+                    return _cartItemFactory.CreateBluRayItem(bluRayCartItem.Price, bluRayCartItem.MovieId, bluRayCartItem.Quantity, dbCartItem.Id);
                 case DbRentItem rentalCartItem:
-                    return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId,rentalCartItem.Quantity,rentalCartItem.RentDate,dbCartItem.Id);
+                    return _cartItemFactory.CreateRentalItem(rentalCartItem.Price, rentalCartItem.MovieId, rentalCartItem.Quantity, rentalCartItem.RentDate, dbCartItem.Id);
                 case DbTicketCart movieTicketCartItem:
-                    return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId,  movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>(),movieTicketCartItem.Quantity,dbCartItem.Id);
+                    return _cartItemFactory.CreateTicketItem(movieTicketCartItem.Price, movieTicketCartItem.MovieId, movieTicketCartItem.PersonAmount, movieTicketCartItem.Seats ?? Array.Empty<string>(), movieTicketCartItem.Quantity, dbCartItem.Id);
                 default:
                     throw new InvalidOperationException($"Unhandled DbCartItem type: {dbCartItem.GetType().Name}");
             }
-            
+
         }
 
         public void Insert(ICartItem cartItem, Guid cartId)
@@ -129,7 +130,7 @@ namespace GetWatch.Services.ShoppingCart
             repository.Insert(dbCartItem);
             _unitOfWork.SaveChanges();
             _unitOfWork.Commit();
-            
+
         }
 
         public void Remove(ICartItem cartItem)
@@ -144,12 +145,32 @@ namespace GetWatch.Services.ShoppingCart
             {
                 throw new KeyNotFoundException($"Cart item with ID {cartItem.Id} not found.");
             }
-            
+
             _unitOfWork.Begin();
             repository.Delete(dbCartItem);
             _unitOfWork.SaveChanges();
             _unitOfWork.Commit();
-            
+
+        }
+        
+        public void Update(ICartItem cartItem)
+        {
+            var repository = _unitOfWork.GetRepository<DbCartItem>();
+            if (repository == null)
+            {
+                throw new InvalidOperationException("Repository for DbCartItem is null.");
+            }
+            var dbCartItem = repository.Get(cartItem.Id);
+            if (dbCartItem == null)
+            {
+                throw new KeyNotFoundException($"Cart item with ID {cartItem.Id} not found.");
+            }
+
+            _unitOfWork.Begin();
+            dbCartItem.Quantity = cartItem.Quantity;
+            repository.Update(dbCartItem);
+            _unitOfWork.SaveChanges();
+            _unitOfWork.Commit();
         }
         
     }

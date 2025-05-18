@@ -11,6 +11,8 @@
 @using GetWatch.Interfaces.ShoppingCart
 @using GetWatch.Interfaces.Db
 @using GetWatch.Services
+@using GetWatch.Services.MovieTicket;
+@using GetWatch.Interfaces.Compra;
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider ;
 
 @inject IMovieRepository MovieRepository
@@ -18,6 +20,8 @@
 @inject IUserMapper UserMapper
 @inject ICartItemFactory CartItemFactory
 @inject NavigationManager NavigationManager
+@inject UserService UserService
+@inject ICartItemFactory CartItemFactory
 <NavBar/>
         @if (movie != null)
         {
@@ -27,10 +31,17 @@
         <h1 class="movie-title">@movie.Title</h1>
         <div class="hero-actions">
           @if (IsPlayingInCinemas(movie)){
-            <button class="primary-button" id="buy-tickets-button">
+            <button class="primary-button" id="buy-tickets-button" @onclick="() => showTicketModal()">
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a0a40d3feafbecc147030129826490c0ee592808?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Ticket" class="button-icon" />
             <span>Buy Tickets</span>
             </button>
+            <ModalReserveTicket Visible="@showReservarBilheteModal" OnClose="@HideReservarBilheteModal"
+            OnSubmitSelection="@HandleBilheteSelection" />
+            <ModalSeatTicket 
+            Visible="@showLugarBilheteModal"
+            OnClose="@HideLugarBilheteModal"
+            OnAddToCart="@HandleAddToCart" 
+            Price="movieTicket.CalculatePrice()"/>
           }else{
             <button class="primary-button" id="purchase-button" @onclick="() => addToCartBluRay(movie.Id!.Value)">
             <span>Purchase (19.99)</span>
@@ -108,6 +119,7 @@
                 
                 <p class="rating-value">Runtime(minutes): @movie.Runtime</p>
     
+    using GetWatch.Interfaces.Compra;
               </div>  
     
             </div>
@@ -144,7 +156,22 @@
           <p class="loading-text">Loading movie details...</p>
         </div>
       }
+      @if(showSuccessModal){
+        <div class="modal-overlay" id="modalSucesso">
+      <div class="modal">
+      <button class="close-button" @onclick="HideSuccessModal"> X</button>
+        <div class="icon-success">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Item Adicionado ao carrinho com  sucesso!</h2>
+      </div>
+    </div>
+    }
       <Footer/>
+    
+      
+      
+
 
 @code {
     [Parameter]
@@ -154,12 +181,19 @@
     private PopularApiMovie? movie;
 
     private IRepository<DbUser>? UserRepository;
-    private IUser realUser;
+    private IUser? realUser = null;
     private bool isAuthenticated = false;
+    private bool showSuccessModal = false;
+    private bool showReservarBilheteModal = false;
+    private bool showLugarBilheteModal = false;
+
+
+    private IMovieTicket? movieTicket = null;
 
 
     protected override async Task OnInitializedAsync()
     {
+        movieTicket = new BaseMovieTicket();
         await getMovie();
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -167,48 +201,25 @@
 
         if (isAuthenticated)
         {
-            var user = await GetAuthenticatedUserAsync();
+            var user = await UserService.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                Console.WriteLine($"User ID: {user.Id}");
-                realUser = UserMapper.Get(user.Id);
+                realUser = UserMapper.Get(user.Id)!;
             }
         }
         else
         {
             realUser = null;
-            Console.WriteLine("No authenticated user.");
         }
     }
 
-    private async Task<DbUser?> GetAuthenticatedUserAsync()
-  {
-      var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-      isAuthenticated = authState.User.Identity != null && authState.User.Identity.IsAuthenticated;
-      var userPrincipal = authState.User;
-
-      if (userPrincipal?.Identity == null || !userPrincipal.Identity.IsAuthenticated)
-      {
-          return null; // User is not authenticated
-      }
-
-      var userEmail = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-      if (string.IsNullOrEmpty(userEmail))
-      {
-          return null;
-      }
-
-      UserRepository = UnitOfWork.GetRepository<DbUser>();
-      return UserRepository.GetAll().FirstOrDefault(x => x.Email == userEmail);
-  }
 
       public bool IsPlayingInCinemas(PopularApiMovie movie)
       {
         if (DateTime.TryParse(movie.ReleaseDate, out var releaseDate))
         {
             var currentDate = DateTime.UtcNow;
-            // Check if the movie was released within the last 3 months
-            return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-3);
+            return releaseDate <= currentDate && releaseDate >= currentDate.AddMonths(-1);
         }
         return false;
     }
@@ -221,7 +232,6 @@
             var httpclient = new HttpClient();
             var MovieIdStrategy = new MovieByIdFetchStrategy(id);
             var movieFetcher = new SingleMovieFetcher(MovieIdStrategy);
-            // Fetch popular movies using the injected MovieRepository
             movie = await movieFetcher.FetchMovieAsync(httpclient);
             if (movie == null)
             {
@@ -246,7 +256,9 @@
             return Task.CompletedTask;
         }
         ICartItem cartItem = CartItemFactory.CreateBluRayItem(19.99, movieId, 1);
-        realUser.AddtoCart(cartItem);
+        realUser?.AddtoCart(cartItem);
+        showSuccessModal = true;
+        StateHasChanged();
         return Task.CompletedTask;
     }
 
@@ -259,9 +271,86 @@
         }
         DateTime rentalDate = DateTime.UtcNow;
         ICartItem cartItem = CartItemFactory.CreateRentalItem(7.99, movieId, 1);
-        realUser.AddtoCart(cartItem);
+        realUser?.AddtoCart(cartItem);
+        showSuccessModal = true;
+        StateHasChanged();
         return Task.CompletedTask;
     }
+
+      private void HideSuccessModal()
+  {
+      showSuccessModal = false;
+      StateHasChanged();
+  }
+  
+
+    private void HideReservarBilheteModal()
+    {
+        showReservarBilheteModal = false;
+        StateHasChanged();
+    }
+
+    private void HandleBilheteSelection((string Cinema, string Option) selection)
+    {
+        movieTicket = new BaseMovieTicket();
+        Console.WriteLine($"Option: {selection.Option}");
+        GetMovieTicket(selection.Option);
+        showReservarBilheteModal = false;
+        showLugarBilheteModal = true;
+        StateHasChanged();
+    }
+    private void showTicketModal()
+    {
+        showReservarBilheteModal = true;
+        StateHasChanged();
+    }
+
+    private void GetMovieTicket(string option)
+    {
+        if (option == "IMAX")
+        {
+            movieTicket = new IMAX(movieTicket);
+        }
+        else if (option == "3D")
+        {
+            movieTicket = new View3D(movieTicket);
+        }
+        else if (option == "Multiplex")
+        {
+            movieTicket = new Multiplex(movieTicket);
+        }
+        else if (option == "4DX")
+        {
+            movieTicket = new FourDX(movieTicket);
+        }
+        else
+        {
+            throw new ArgumentException("Invalid option");
+        }
+       
+    }
+    private void HideLugarBilheteModal()
+    {
+        showLugarBilheteModal = false;
+        StateHasChanged();
+
+    }
+
+    private Task HandleAddToCart((int Adults, List<string> Seats) data)
+    {
+        // Handle add to cart logic
+        movieTicket = new MultiplePersonTicket(movieTicket,data.Adults);
+        var realMovieTicket = CartItemFactory.CreateTicketItem(movieTicket.CalculatePrice(), id, data.Adults, data.Seats.ToArray(), 1);
+        realUser?.AddtoCart(realMovieTicket);
+        showLugarBilheteModal = false;
+        showSuccessModal = true;
+        StateHasChanged();
+        
+
+        return Task.CompletedTask;
+    }
+
+
 
     
 }

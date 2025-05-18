@@ -1,10 +1,25 @@
 @page "/ShoppingCart"
+@attribute [Authorize]
 @using GetWatch.Pages.Layout
 @using GetWatch.Pages
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @layout ShoppingCartPageLayout
-@inject ProtectedSessionStorage SessionStorage
 @using GetWatch.Services.ShoppingCart
+@using GetWatch.Services.Db
+@using System.Security.Claims
+@using GetWatch.Services.Movies
+@using GetWatch.Services.Movies.Strategy
+@using GetWatch.Interfaces.Movies
+@using GetWatch.Interfaces.User
+@using GetWatch.Interfaces.ShoppingCart
+@using GetWatch.Interfaces.Db
+@using GetWatch.Services
+@inject CustomAuthenticationStateProvider AuthenticationStateProvider ;
+
+@inject IMovieRepository MovieRepository
+@inject IUnitOfWork UnitOfWork
+@inject IUserMapper UserMapper
+@inject ICartItemFactory CartItemFactory
+@inject UserService UserService
 
 <NavBar />
 <div class="progress-container">
@@ -36,31 +51,43 @@
 </div>
 
 <div class="cart-container">
-    @foreach (var item in cartItems)
+    @if (realUser?.Cart != null && realUser.Cart.GetItems().Any() )
     {
-    <div class="cart-item">
-        <div class="item-info">
-            <div class="item-title">@item.movieId</div>
-            @* <div class="item-action">@item.Action</div> *@
-        </div>
-        <div class="item-quantity">
-            <button class="quantity-btn" @onclick="@(() => Decrease(item))">-</button>
-            <span>@item.Quantity</span>
-            <button class="quantity-btn" @onclick="@(() => Increase(item))">+</button>
-        </div>
-        <div class="item-price">€@((item.Price * item.Quantity).ToString("0.00"))</div>
-        <button class="remove-btn" @onclick="@(() => Remove(item))">Remove</button>
-    </div>
+        @foreach (var item in realUser.Cart.GetItems())
+        {
+            <div class="cart-item">
+                <div class="item-info">
+                    <div class="item-title">@getItemType(item)</div>
+                </div>
+                <div class="item-quantity">
+                    <button class="quantity-btn">-</button>
+                    <span>@item.Quantity</span>
+                    <button class="quantity-btn">+</button>
+                </div>
+                <div class="item-price">€@(item.Price )</div>
+                <button class="remove-btn" @onclick="() => RemoveItem(item)" >Remove</button>
+            </div>
+            
+        }
     }
+    else
+    {
+        <div class="cart-empty">O seu carrinho está vazio.</div>
+    }
+    @if (realUser?.Cart != null)
+    {
+        <div class="cart-total">
+            <span>Total</span>
+            <span>@realUser.Cart.Price.ToString("0.00")</span>
+        </div>
+    }
+    
 
     
-    <div class="cart-total">
-    <span>Total</span>
-    <span>€@Total.ToString("0.00")</span>
-    </div>
+    
 
     <button class="button">Próximo Passo </button>
-    <a href="/GetWatch/html/homePage.html" class="back">Voltar</a>
+    <a href="/" class="button">Voltar</a>
 </div>
 <Footer/>
 
@@ -68,20 +95,59 @@
 
 
 @code{
-    [Inject]
-    private IShoppingCart ShoppingCarts { get; set; }
+    
+    private IRepository<DbUser>? UserRepository;
+    private IUser? realUser;
+    private bool isAuthenticated = false;
+    private Dictionary<int, string> movieTitles = new();
 
-    protected override void OnInitialized()
-    {
-        // Ensure cart items are added or fetched
+    protected override async Task OnInitializedAsync(){
+        var user = await UserService.GetAuthenticatedUserAsync();
+        Console.WriteLine($"User32323 ID: {user.Id}");
+        realUser = UserMapper.Get(user.Id);
+        if (realUser?.Cart != null)
+        {
+            var ids = realUser.Cart.GetItems().Select(i => i.movieId).Distinct();
+            foreach (var id in ids)
+            {
+                var movie = await getMovie(id);
+                movieTitles[id] = movie?.Title ?? "Unknown";
+            }
+        }
 
-        ShoppingCarts.AddItem(new Product(10,323523, 1,new Guid()));
+        
+    }
+    public async Task<PopularApiMovie> getMovie(int id){
+            var httpclient = new HttpClient();
+            var MovieIdStrategy = new MovieByIdFetchStrategy(id);
+            var movieFetcher = new SingleMovieFetcher(MovieIdStrategy);
+            var movie = await movieFetcher.FetchMovieAsync(httpclient);
+            return movie;
+        
+        
 
     }
+        public string getItemType(ICartItem item)
+    {
+        var title = movieTitles.TryGetValue(item.movieId, out var t) ? t : "Unknown";
+        return item switch
+        {
+            RentalProduct => $"Rental Purchase  to {title}",
+            BluRayProduct => $"Bluray Purchase to {title}",
+            MovieTicketProduct mtp => $"Ticket for {mtp.getPersonAmount()} with seats {string.Join(", ", mtp.getSeats() ?? Array.Empty<string>())} to {title}",
+            _ => "Unknown"
+        };
+    }
+    public Task RemoveItem(ICartItem item)
+    {
+        if (realUser != null)
+        {
+            realUser.RemoveFromCart(item);
+            StateHasChanged();
+        }
+        return Task.CompletedTask;
+    }
 
-    public List<ICartItem> cartItems => ShoppingCarts.GetItems();
-    public void Increase(ICartItem item) => ShoppingCarts.IncreaseQuantity(item);
-    public void Decrease(ICartItem item) => ShoppingCarts.DecreaseQuantity(item);
-    public void Remove(ICartItem item) => ShoppingCarts.RemoveItem(item);
-    public double Total => ShoppingCarts.Price;
+
+
 }
