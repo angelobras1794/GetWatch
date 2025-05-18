@@ -21,6 +21,7 @@
 @inject ICartItemFactory CartItemFactory
 @inject NavigationManager NavigationManager
 @inject UserService UserService
+@inject ICartItemFactory CartItemFactory
 <NavBar/>
         @if (movie != null)
         {
@@ -36,6 +37,11 @@
             </button>
             <ModalReserveTicket Visible="@showReservarBilheteModal" OnClose="@HideReservarBilheteModal"
             OnSubmitSelection="@HandleBilheteSelection" />
+            <ModalSeatTicket 
+            Visible="@showLugarBilheteModal"
+            OnClose="@HideLugarBilheteModal"
+            OnAddToCart="@HandleAddToCart" 
+            Price="movieTicket.CalculatePrice()"/>
           }else{
             <button class="primary-button" id="purchase-button" @onclick="() => addToCartBluRay(movie.Id!.Value)">
             <span>Purchase (19.99)</span>
@@ -179,12 +185,15 @@
     private bool isAuthenticated = false;
     private bool showSuccessModal = false;
     private bool showReservarBilheteModal = false;
+    private bool showLugarBilheteModal = false;
+
 
     private IMovieTicket? movieTicket = null;
 
 
     protected override async Task OnInitializedAsync()
     {
+        movieTicket = new BaseMovieTicket();
         await getMovie();
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -284,8 +293,10 @@
     private void HandleBilheteSelection((string Cinema, string Option) selection)
     {
         movieTicket = new BaseMovieTicket();
-        GetMovieTicket(selection.Option, movieTicket);
+        Console.WriteLine($"Option: {selection.Option}");
+        GetMovieTicket(selection.Option);
         showReservarBilheteModal = false;
+        showLugarBilheteModal = true;
         StateHasChanged();
     }
     private void showTicketModal()
@@ -294,7 +305,7 @@
         StateHasChanged();
     }
 
-    private void GetMovieTicket(string option,IMovieTicket movieTicket)
+    private void GetMovieTicket(string option)
     {
         if (option == "IMAX")
         {
@@ -318,6 +329,28 @@
         }
        
     }
+    private void HideLugarBilheteModal()
+    {
+        showLugarBilheteModal = false;
+        StateHasChanged();
+
+    }
+
+    private Task HandleAddToCart((int Adults, List<string> Seats) data)
+    {
+        // Handle add to cart logic
+        movieTicket = new MultiplePersonTicket(movieTicket,data.Adults);
+        var realMovieTicket = CartItemFactory.CreateTicketItem(movieTicket.CalculatePrice(), id, data.Adults, data.Seats.ToArray(), 1);
+        realUser?.AddtoCart(realMovieTicket);
+        showLugarBilheteModal = false;
+        showSuccessModal = true;
+        StateHasChanged();
+        
+
+        return Task.CompletedTask;
+    }
+
+
 
     
 }

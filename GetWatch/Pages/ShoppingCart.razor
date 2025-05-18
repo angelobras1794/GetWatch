@@ -78,7 +78,7 @@
     {
         <div class="cart-total">
             <span>Total</span>
-            <span>@realUser.Cart.Price</span>
+            <span>@realUser.Cart.Price.ToString("0.00")</span>
         </div>
     }
     
@@ -87,7 +87,7 @@
     
 
     <button class="button">Próximo Passo </button>
-    <a href="/GetWatch/html/homePage.html" class="back">Voltar</a>
+    <a href="/" class="button">Voltar</a>
 </div>
 <Footer/>
 
@@ -132,9 +132,9 @@
         var title = movieTitles.TryGetValue(item.movieId, out var t) ? t : "Unknown";
         return item switch
         {
-            RentalProduct => $"Rental Purchase  for {title}",
-            BluRayProduct => $"Bluray Purchase for {title}",
-            MovieTicketProduct => $"Ticket for {title}",
+            RentalProduct => $"Rental Purchase  to {title}",
+            BluRayProduct => $"Bluray Purchase to {title}",
+            MovieTicketProduct mtp => $"Ticket for {mtp.getPersonAmount()} with seats {string.Join(", ", mtp.getSeats() ?? Array.Empty<string>())} to {title}",
             _ => "Unknown"
         };
     }

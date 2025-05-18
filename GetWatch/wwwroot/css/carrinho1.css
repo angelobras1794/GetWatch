@@ -164,6 +164,27 @@ body {
     color: black;
 }
 
+.remove-btn {
+    background: #ff4d4f;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-left: 12px;
+    box-shadow: 0 2px 8px rgba(255,77,79,0.08);
+}
+
+.remove-btn:hover,
+.remove-btn:focus {
+    background: #d9363e;
+    transform: scale(1.05);
+    outline: none;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 480px) {
     .cart-container {

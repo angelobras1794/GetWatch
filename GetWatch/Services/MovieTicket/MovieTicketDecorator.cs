@@ -6,11 +6,7 @@ public abstract class MovieTicketDecorator : IMovieTicket
 {
         public IMovieTicket _bilhete;
 
-        public int PersonAmount
-        {
-            get => _bilhete.PersonAmount;
-            set => _bilhete.PersonAmount = value;
-        }
+        
 
 
         public MovieTicketDecorator(IMovieTicket bilhete)
