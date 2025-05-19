@@ -32,19 +32,20 @@ namespace GetWatch.Services.Compra
             }
             var dbPurchases = repository.GetAll()?.Where(x => x.UserId == userId).ToList() ?? new List<DbPurchases>();
 
-             var PurchaseItems = dbPurchases.Select(dbPurchase =>
-             {
-                switch (dbPurchase){
+            var PurchaseItems = dbPurchases.Select(dbPurchase =>
+            {
+                switch (dbPurchase)
+                {
                     case DbBluRayPurchase bluRayPurchase:
-                        return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId,bluRayPurchase.Quantity ,bluRayPurchase.Id);
+                        return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId, bluRayPurchase.Quantity, bluRayPurchase.Id);
                     case DbRentPurchase rentalPurchase:
-                        return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId,rentalPurchase.Quantity ,rentalPurchase.RentalEndDate,rentalPurchase.Id);
+                        return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId, rentalPurchase.Quantity, rentalPurchase.RentalEndDate, rentalPurchase.Id);
                     case DbTicketPurchase movieTicketPurchase:
-                        return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId,  movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>(),movieTicketPurchase.Quantity,movieTicketPurchase.Id);
+                        return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId, movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>(), movieTicketPurchase.Quantity, movieTicketPurchase.Id);
                     default:
                         throw new InvalidOperationException($"Unhandled DbCartItem type: {dbPurchase.GetType().Name}");
                 }
-             }).ToList();
+            }).ToList();
             return PurchaseItems;
         }
         public ICartItem? Get(Guid id)
@@ -59,18 +60,19 @@ namespace GetWatch.Services.Compra
             {
                 return null;
             }
-            switch (dbPurchase){
+            switch (dbPurchase)
+            {
                 case DbBluRayPurchase bluRayPurchase:
-                    return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId,bluRayPurchase.Quantity ,bluRayPurchase.Id);
+                    return _cartItemFactory.CreateBluRayItem(bluRayPurchase.Amount, bluRayPurchase.MovieId, bluRayPurchase.Quantity, bluRayPurchase.Id);
                 case DbRentPurchase rentalPurchase:
-                    return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId,rentalPurchase.Quantity,rentalPurchase.RentalEndDate,rentalPurchase.Id);
+                    return _cartItemFactory.CreateRentalItem(rentalPurchase.Amount, rentalPurchase.MovieId, rentalPurchase.Quantity, rentalPurchase.RentalEndDate, rentalPurchase.Id);
                 case DbTicketPurchase movieTicketPurchase:
-                    return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId,  movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>(),movieTicketPurchase.Quantity,movieTicketPurchase.Id);
+                    return _cartItemFactory.CreateTicketItem(movieTicketPurchase.Amount, movieTicketPurchase.MovieId, movieTicketPurchase.PersonAmount, movieTicketPurchase.Seats ?? Array.Empty<string>(), movieTicketPurchase.Quantity, movieTicketPurchase.Id);
                 default:
                     throw new InvalidOperationException($"Unhandled DbCartItem type: {dbPurchase.GetType().Name}");
             }
         }
-        public void Insert(ICartItem item,Guid userId)
+        public void Insert(ICartItem item, Guid userId)
         {
             var repository = _unitOfWork.GetRepository<DbPurchases>();
             if (repository == null)
@@ -133,6 +135,24 @@ namespace GetWatch.Services.Compra
             _unitOfWork.SaveChanges();
             _unitOfWork.Commit();
 
+        }
+        public void Update(ICartItem item)
+        {
+            var repository = _unitOfWork.GetRepository<DbPurchases>();
+            if (repository == null)
+            {
+                throw new InvalidOperationException("Repository for DbPurchase is null.");
+            }
+            var dbPurchase = repository.Get(item.Id);
+            if (dbPurchase == null)
+            {
+                return;
+            }
+            _unitOfWork.Begin();
+            dbPurchase.Quantity = item.Quantity;
+            repository.Update(dbPurchase);
+            _unitOfWork.SaveChanges();
+            _unitOfWork.Commit();
         }
         
     }

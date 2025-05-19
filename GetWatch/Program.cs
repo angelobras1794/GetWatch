@@ -17,9 +17,9 @@ using GetWatch.Services.Tickets;
 using GetWatch.Interfaces.SupportTickets;
 using Microsoft.AspNetCore.Authentication.Cookies; // Add this at the top
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using GetWatch.Services.Proxy;
-using GetWatch.Interfaces.Proxy;
 using GetWatch.Interfaces.Compra;
+using GetWatch.Interfaces.Mediator;
+using GetWatch.Services.Mediator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,9 +51,8 @@ builder.Services.AddScoped<IUserMapper, UserMapper>();
 
 builder.Services.AddScoped<ICartItemFactory, CartItemFactory>();
 builder.Services.AddScoped<UserService>();
-
-
 builder.Services.AddScoped<ICommandManager, CommandManager>();
+builder.Services.AddScoped<IGetWatchMediator,GetWatchMediator>();
 
 
 

@@ -14,6 +14,8 @@ namespace GetWatch.Interfaces.ShoppingCart
 
         void Insert(ICartItem cartItem, Guid cartId);
         void Remove(ICartItem cartItem);
+
+        void Update(ICartItem cartItem);
         
         
     }

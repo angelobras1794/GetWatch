@@ -8,6 +8,7 @@
 @using GetWatch.Services.ShoppingCart;
 @using GetWatch.Interfaces.Movies
 @using GetWatch.Interfaces.User;
+@using GetWatch.Services.Proxy;
 @using GetWatch.Interfaces.ShoppingCart
 @using GetWatch.Interfaces.Db
 @using GetWatch.Services
@@ -22,6 +23,8 @@
 @inject NavigationManager NavigationManager
 @inject UserService UserService
 @inject ICartItemFactory CartItemFactory
+@inject IShoppingCartMapper ShoppingCartMapper
+@inject ICartItemMapper CartItemMapper
 <NavBar/>
         @if (movie != null)
         {
@@ -119,7 +122,6 @@
                 
                 <p class="rating-value">Runtime(minutes): @movie.Runtime</p>
     
-    using GetWatch.Interfaces.Compra;
               </div>  
     
             </div>
@@ -179,6 +181,7 @@
 
 
     private PopularApiMovie? movie;
+    private ProxyCart ?cartItemList;
 
     private IRepository<DbUser>? UserRepository;
     private IUser? realUser = null;
@@ -211,6 +214,7 @@
         {
             realUser = null;
         }
+        cartItemList = new ProxyCart(realUser?.Cart, CartItemMapper, ShoppingCartMapper);
     }
 
 
@@ -256,7 +260,7 @@
             return Task.CompletedTask;
         }
         ICartItem cartItem = CartItemFactory.CreateBluRayItem(19.99, movieId, 1);
-        realUser?.AddtoCart(cartItem);
+        cartItemList?.AddItem(cartItem);
         showSuccessModal = true;
         StateHasChanged();
         return Task.CompletedTask;
@@ -271,7 +275,7 @@
         }
         DateTime rentalDate = DateTime.UtcNow;
         ICartItem cartItem = CartItemFactory.CreateRentalItem(7.99, movieId, 1);
-        realUser?.AddtoCart(cartItem);
+        cartItemList?.AddItem(cartItem);
         showSuccessModal = true;
         StateHasChanged();
         return Task.CompletedTask;
@@ -346,7 +350,7 @@
         // Handle add to cart logic
         movieTicket = new MultiplePersonTicket(movieTicket,data.Adults);
         var realMovieTicket = CartItemFactory.CreateTicketItem(movieTicket.CalculatePrice(), id, data.Adults, data.Seats.ToArray(), 1);
-        realUser?.AddtoCart(realMovieTicket);
+        cartItemList?.AddItem(realMovieTicket);
         showLugarBilheteModal = false;
         showSuccessModal = true;
         StateHasChanged();

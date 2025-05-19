@@ -4,33 +4,36 @@ using GetWatch.Interfaces.Compra;
 public class CommandManager: ICommandManager
 {
     private readonly List<ICommand> Commands = new List<ICommand>();
-    private int Position = 0;
+    private int Position = -1;
 
-    public bool HasUndo => Position > 0;
-    public bool HasRedo => Position < Commands.Count;
+    public bool HasUndo => Position >= 0;
+    public bool HasRedo => Position < Commands.Count -1;
 
-    // Executa um novo comando
     public void Execute(ICommand command)
     {
-        // Limpa qualquer comando que esteja à frente (não mais válido para redo)
+
         if (HasRedo)
         {
-            Commands.RemoveRange(Position, Commands.Count - Position);
+            Commands.RemoveRange(Position + 1, Commands.Count - Position - 1);
         }
 
-        // Adiciona e executa
+
         Commands.Add(command);
+        command.Execute();
         Position++;
+        Console.WriteLine($"Position: {Position}"); 
     }
 
-    // Desfaz o comando atual
+
     public void Undo()
     {
+        Console.WriteLine($"Position: {Position}");
         if (HasUndo)
         {
-            Position--;
             Commands[Position].Undo();
+            Position--;
         }
+        Console.WriteLine($"Position: {Position}");
     }
 
     // Refaz o comando seguinte
@@ -38,8 +41,9 @@ public class CommandManager: ICommandManager
     {
         if (HasRedo)
         {
-            Commands[Position].Redo();
             Position++;
+            Commands[Position].Redo();
+            
         }
     }
 
