@@ -11,8 +11,10 @@ namespace GetWatch.Interfaces.ShoppingCart
     {
         List<IShoppingCart> GetAll();
         IShoppingCart? Get(Guid id);
-        void Insert(IShoppingCart shoppingCart,Guid userId);
+        void Insert(IShoppingCart shoppingCart, Guid userId);
         void Remove(IShoppingCart shoppingCart);
+        
+        void Update(IShoppingCart shoppingCart);
 
         
     }

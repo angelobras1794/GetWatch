@@ -34,8 +34,8 @@ namespace GetWatch.Services.ShoppingCart
                 {
                     Id = dbCarts.Id,
                     Price = dbCarts.TotalPrice,
-                    _items = _cartItemMapper.GetAll(dbCarts.Id) 
-                    
+                    _items = _cartItemMapper.GetAll(dbCarts.Id)
+
                 }
                 ).ToList();
 
@@ -61,7 +61,7 @@ namespace GetWatch.Services.ShoppingCart
                 Id = dbCart.Id,
                 Price = dbCart.TotalPrice,
                 _items = _cartItemMapper.GetAll(dbCart.Id)
-                
+
             };
             return cart;
         }
@@ -98,9 +98,28 @@ namespace GetWatch.Services.ShoppingCart
             {
                 throw new KeyNotFoundException($"Shopping cart with ID {shoppingCart.Id} not found.");
             }
-            
+
             _unitOfWork.Begin();
             repository.Delete(dbCart);
+            _unitOfWork.SaveChanges();
+            _unitOfWork.Commit();
+        }
+        public void Update(IShoppingCart shoppingCart)
+        {
+            var repository = _unitOfWork.GetRepository<DbCart>();
+            if (repository == null)
+            {
+                throw new InvalidOperationException("Repository for DbCart is null.");
+            }
+            var dbCart = repository.Get(shoppingCart.Id);
+            if (dbCart == null)
+            {
+                throw new KeyNotFoundException($"Shopping cart with ID {shoppingCart.Id} not found.");
+            }
+
+            dbCart.TotalPrice = shoppingCart.Price;
+            _unitOfWork.Begin();
+            repository.Update(dbCart);
             _unitOfWork.SaveChanges();
             _unitOfWork.Commit();
         }

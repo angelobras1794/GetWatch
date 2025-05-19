@@ -13,6 +13,10 @@
 @using GetWatch.Interfaces.ShoppingCart
 @using GetWatch.Interfaces.Db
 @using GetWatch.Services
+@using GetWatch.Services.Proxy
+@using GetWatch.Interfaces.Proxy
+@using GetWatch.Interfaces.Compra
+@using GetWatch.Interfaces.Mediator
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider ;
 
 @inject IMovieRepository MovieRepository
@@ -20,6 +24,11 @@
 @inject IUserMapper UserMapper
 @inject ICartItemFactory CartItemFactory
 @inject UserService UserService
+@inject IShoppingCartMapper ShoppingCartMapper
+@inject ICommandManager CommandManager
+@inject IGetWatchMediator GetWatchMediator
+@inject ICartItemMapper CartItemMapper
+
 
 <NavBar />
 <div class="progress-container">
@@ -60,9 +69,9 @@
                     <div class="item-title">@getItemType(item)</div>
                 </div>
                 <div class="item-quantity">
-                    <button class="quantity-btn">-</button>
+                    <button class="quantity-btn" @onclick="() => removeQuantity(item)">-</button>
                     <span>@item.Quantity</span>
-                    <button class="quantity-btn">+</button>
+                    <button class="quantity-btn" @onclick="() => addQuantity(item)">+</button>
                 </div>
                 <div class="item-price">€@(item.Price )</div>
                 <button class="remove-btn" @onclick="() => RemoveItem(item)" >Remove</button>
@@ -78,13 +87,13 @@
     {
         <div class="cart-total">
             <span>Total</span>
-            <span>@realUser.Cart.Price.ToString("0.00")</span>
+            <span>@realUser.Cart.Price</span>
+        </div>
+        <div class="div-container">
+            <button disabled="@UndoDisabled" class="round-button grey-button" @onclick="Undo">Undo</button>
+            <button disabled="@RedoDisabled" class="round-button grey-button" @onclick="Redo">Redo</button>
         </div>
     }
-    
-
-    
-    
 
     <button class="button">Próximo Passo </button>
     <a href="/" class="button">Voltar</a>
@@ -101,9 +110,11 @@
     private bool isAuthenticated = false;
     private Dictionary<int, string> movieTitles = new();
 
+    private ProxyCart ?cartItemList;
+
     protected override async Task OnInitializedAsync(){
         var user = await UserService.GetAuthenticatedUserAsync();
-        Console.WriteLine($"User32323 ID: {user.Id}");
+
         realUser = UserMapper.Get(user.Id);
         if (realUser?.Cart != null)
         {
@@ -114,8 +125,7 @@
                 movieTitles[id] = movie?.Title ?? "Unknown";
             }
         }
-
-        
+        cartItemList = new ProxyCart(realUser.Cart,CartItemMapper,ShoppingCartMapper);
     }
     public async Task<PopularApiMovie> getMovie(int id){
             var httpclient = new HttpClient();
@@ -140,11 +150,44 @@
     }
     public Task RemoveItem(ICartItem item)
     {
-        if (realUser != null)
+        GetWatchMediator.RemoveFromCart(item,realUser.Cart);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    void Redo()
+    {
+        CommandManager.Redo();
+        StateHasChanged();
+    }
+    void Undo()
+    {
+        CommandManager.Undo();
+        StateHasChanged();
+    }
+
+    public bool UndoDisabled => !CommandManager.HasUndo;
+    public bool RedoDisabled => !CommandManager.HasRedo;
+
+    public Task addQuantity(ICartItem item)
+    {
+        item.Quantity++;
+        cartItemList.UpdateItem(item);
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    public Task removeQuantity(ICartItem item)
+    {
+        if (item.Quantity > 1)
         {
-            realUser.RemoveFromCart(item);
-            StateHasChanged();
+            item.Quantity--;
+            cartItemList.UpdateItem(item);
         }
+        else
+        {
+            GetWatchMediator.RemoveFromCart(item,realUser.Cart);
+        }
+        StateHasChanged();
         return Task.CompletedTask;
     }
 

@@ -13,22 +13,22 @@ public class RemoveCartItemCommand : ICommand
 
     public ICartItemList _cartItemList;
 
-    public RemoveCartItemCommand(IShoppingCart carrinho, ICartItem item, CartItemMapper cartItemMapper)
+    public RemoveCartItemCommand(IShoppingCart carrinho, ICartItem item, ICartItemMapper cartItemMapper, IShoppingCartMapper shoppingCartMapper)
     {
         _item = item;
-        _cartItemList = new ProxyCart(carrinho, cartItemMapper);
+        _cartItemList = new ProxyCart(carrinho, cartItemMapper, shoppingCartMapper);
         
 
     }
 
     public void Execute()
     {
-        _cartItemList.RemoveItem(_item); // Remove do carrinho
+        _cartItemList.RemoveItem(_item); 
     }
 
     public void Undo()
     {
-        _cartItemList.AddItem(_item); // Recoloca no carrinho
+        _cartItemList.AddItem(_item); 
     }
 
     public void Redo()
