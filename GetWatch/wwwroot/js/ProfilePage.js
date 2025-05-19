@@ -1,9 +1,12 @@
-var menuItens = document.querySelectorAll('.menu-item');
+
+window.menuItensInit = function(){
+    var menuItens = document.querySelectorAll('.menu-item');
 var infoItens = document.querySelectorAll('.info-item');
 
 menuItens.forEach((header, index) => {
     header.addEventListener('click', () => {
         // Remove a classe 'active' de todos os itens
+        console.log('clicou');
         menuItens.forEach(item => item.classList.remove('active'));
         infoItens.forEach(item => {
             item.classList.remove('active');
@@ -25,3 +28,4 @@ menuItens.forEach((header, index) => {
         });
     });
 });
+}

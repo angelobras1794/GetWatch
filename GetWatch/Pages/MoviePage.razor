@@ -300,7 +300,12 @@
         StateHasChanged();
     }
     private void showTicketModal()
-    {
+    { 
+        if (!isAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
         showReservarBilheteModal = true;
         StateHasChanged();
     }

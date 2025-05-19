@@ -200,3 +200,35 @@
     margin: 0;
     margin-left: 10%; /* Espaçamento entre os detalhes e o preço */
 }
+.logout-button {
+    background: linear-gradient(90deg, #ff5858 0%, #f857a6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(248, 87, 166, 0.15);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    margin: 12px 0;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.logout-button:hover,
+.logout-button:focus {
+    background: linear-gradient(90deg, #f857a6 0%, #ff5858 100%);
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(248, 87, 166, 0.25);
+    outline: none;
+}
+
+.logout-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    position: relative;
+}
