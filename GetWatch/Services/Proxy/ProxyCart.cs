@@ -1,0 +1,58 @@
+using System;
+using GetWatch.Interfaces.Proxy;
+using GetWatch.Services.ShoppingCart;
+namespace GetWatch.Services.Proxy;
+
+public class ProxyCart : ICartItemList
+{
+
+
+    private readonly CartItemMapper _cartItemMapper;
+
+    private readonly IShoppingCart _shoppingCart;
+
+
+
+    public ProxyCart(IShoppingCart _shoppingCart, CartItemMapper cartItemMapper)
+    {
+        this._shoppingCart = _shoppingCart;
+        _cartItemMapper = cartItemMapper;
+
+    }
+
+    public void AddItem(ICartItem item)
+    {
+        _shoppingCart.AddItem(item);
+        _cartItemMapper.Insert(item, _shoppingCart.Id);
+    }
+
+    public void RemoveItem(ICartItem item)
+    {
+        _shoppingCart.RemoveItem(item);
+        _cartItemMapper.Remove(item);
+    }
+    
+    public void UpdateItem(ICartItem item)
+    {
+        var existingItem = _shoppingCart.GetItems().FirstOrDefault(i => i.Id == item.Id);
+        if (existingItem == null)
+        {
+            
+            return;
+        }
+
+        if (item.Quantity > existingItem.Quantity)
+        {
+            _shoppingCart.IncreaseQuantity(item);
+        }
+        else if (item.Quantity < existingItem.Quantity)
+        {
+            _shoppingCart.DecreaseQuantity(item);
+        }
+        _cartItemMapper.Update(item);
+       
+    }
+
+
+
+}

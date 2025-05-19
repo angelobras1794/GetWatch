@@ -1,10 +1,11 @@
 using GetWatch.Services.ShoppingCart;
 using GetWatch.Interfaces.ShoppingCart;
 using GetWatch.Services.Db;
+using GetWatch.Interfaces.Proxy;
 
 namespace GetWatch.Services.ShoppingCart
 {
-    public class ShoppingCart : IDiscountable, IShoppingCart
+    public class ShoppingCart : IDiscountable, IShoppingCart, ICartItemList
     {
         public List<ICartItem> _items { get; set; }
         private PricingStrategyContext _pricingStrategyContext;
