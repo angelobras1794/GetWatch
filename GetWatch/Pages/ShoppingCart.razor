@@ -95,14 +95,14 @@
         <PaymentCard realUser="realUser" OnCardSelected="(cardNum) => SelectedCardNumber = cardNum"/>
     }
     else if(step == 3){
-        <FinalCart Cart="realUser.Cart" GetItemType="getItemType"/>
+        <FinalCart realUser="realUser" GetItemType="getItemType"/>
     }
           
     @if(step !=3){
-        <button class="button" @onclick="nextStep">Próximo Passo </button>
+        <button class="button" @onclick="nextStep">Next step</button>
     }
     @if(step != 1){
-        <button class="button" @onclick="previousStep">Voltar</button>
+        <button class="button" @onclick="previousStep">Back</button>
     }
     
 </div>
