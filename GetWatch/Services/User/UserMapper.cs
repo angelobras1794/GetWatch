@@ -9,15 +9,18 @@ using GetWatch.Services.Db;
 using GetWatch.Services.ShoppingCart;
 using GetWatch.Interfaces.SupportTickets;
 using GetWatch.Services.Tickets;
+using GetWatch.Interfaces.Cards;
+using GetWatch.Services.Cards;
 
 
 
 public class UserMapper : IUserMapper
 {
     private readonly IUnitOfWork _unitOfWork;
-    public  IShoppingCartMapper _cartMapper;
-    public  ISupportTicketMapper _supportTicketMapper;
-    public  ICartItemMapper _transactionMapper;
+    public IShoppingCartMapper _cartMapper;
+    public ISupportTicketMapper _supportTicketMapper;
+    public ICartItemMapper _transactionMapper;
+    public ICardMapper _cardMapper;
     private UserBuilder _userBuilder;
     public UserMapper(IUnitOfWork unitOfWork)
     {
@@ -25,6 +28,7 @@ public class UserMapper : IUserMapper
         _cartMapper = new ShoppingCartMapper(unitOfWork);
         _supportTicketMapper = new SupportTicketMapper(unitOfWork);
         _transactionMapper = new CartItemMapper(unitOfWork);
+        _cardMapper = new CardMapper(unitOfWork);
         _userBuilder = new UserBuilder();
     }
 
@@ -39,18 +43,12 @@ public class UserMapper : IUserMapper
         var dbUsers = repository.GetAll()?.ToList() ?? new List<DbUser>();
 
         var users = dbUsers.Select(dbUser => new User
-        (
-            _unitOfWork,
-            dbUser.Name ?? string.Empty,
-            dbUser.Email ?? string.Empty,
-            dbUser.Password ?? string.Empty,
-            dbUser.Phone,
-            dbUser.Id
-        )
+        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone, dbUser.Id)
         {
-            Cart = _cartMapper.Get(dbUser.Cart.Id), 
-           SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
-            Transactions = _transactionMapper.GetAll(dbUser.Id) 
+            Cart = _cartMapper.Get(dbUser.Cart.Id),
+            SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
+            Transactions = _transactionMapper.GetAll(dbUser.Id),
+            Cards = _cardMapper.GetAll(dbUser.Id)
         }).ToList();
 
         return users.Cast<IUser>().ToList();
@@ -71,22 +69,16 @@ public class UserMapper : IUserMapper
         }
 
         return new User
-        (
-            _unitOfWork,
-            dbUser.Name ?? string.Empty,
-            dbUser.Email ?? string.Empty,
-            dbUser.Password ?? string.Empty,
-            dbUser.Phone,
-            dbUser.Id
-        )
+        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone, dbUser.Id)
         {
             Cart = _cartMapper.Get(dbUser.Id),
             SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
-            Transactions = _transactionMapper.GetAll(dbUser.Id)
+            Transactions = _transactionMapper.GetAll(dbUser.Id),
+            Cards = _cardMapper.GetAll(dbUser.Id)
         };
-    
+
     }
-    
+
 
     public void Insert(IUser user)
     {
@@ -96,17 +88,12 @@ public class UserMapper : IUserMapper
             throw new InvalidOperationException("Repository for DbUser is null.");
         }
 
-        var dbUser = _userBuilder.SetUserEmail(user.Email?? string.Empty).SetUserName(user.Name ?? string.Empty)
-            .SetUserPassword(user.Password ?? string.Empty).SetUserPhone(user.Phone?? string.Empty).BuildUser();
+        var dbUser = _userBuilder.SetUserEmail(user.Email ?? string.Empty).SetUserName(user.Name ?? string.Empty)
+            .SetUserPassword(user.Password ?? string.Empty).SetUserPhone(user.Phone ?? string.Empty).BuildUser();
 
         _unitOfWork.Begin();
         repository.Insert(dbUser);
         _unitOfWork.SaveChanges();
-
-        
-        InsertCart(user);
-        InsertSupportTickets(user);
-        InsertTransactions(user);
         _unitOfWork.Commit();
     }
 
@@ -127,6 +114,7 @@ public class UserMapper : IUserMapper
         RemoveCart(dbUser);
         RemoveSupportTickets(dbUser);
         RemoveTransactions(dbUser);
+        RemoveCards(dbUser);
 
         _unitOfWork.Begin();
         repository.Delete(dbUser);
@@ -161,37 +149,14 @@ public class UserMapper : IUserMapper
             _transactionMapper.Remove(transaction);
         }
     }
+    private void RemoveCards(DbUser dbUser)
+    {
+        var cards = _cardMapper.GetAll(dbUser.Id);
+        foreach (var card in cards)
+        {
+            _cardMapper.Remove(card);
+        }
+    }
 
-    public void InsertCart(IUser user)
-    {
-        if (user.Cart == null)
-        {
-            throw new InvalidOperationException("User's cart is null.");
-        }
-        _cartMapper.Insert(user.Cart, user.Id);
-    }
-    public void InsertSupportTickets(IUser user)
-    {
-        
-        var userRepository = _unitOfWork.GetRepository<DbUser>();
-        
-        var dbUser = userRepository.Get(user.Id);
-        
-        foreach (var ticket in user.SupportTickets)
-        {
-            _supportTicketMapper.Insert(ticket, dbUser);
-        }
-    }
-    public void InsertTransactions(IUser user)
-    {
-        if (user.Transactions == null)
-        {
-            throw new InvalidOperationException("User's transactions are null.");
-        }
-        foreach (var transaction in user.Transactions)
-        {
-            _transactionMapper.Insert(transaction, user.Id);
-        }
-    }
 
 }

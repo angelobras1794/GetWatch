@@ -37,7 +37,7 @@ namespace GetWatch.Tests
         public void Insert_ShouldInsertBluRayProductSuccessfully()
         {
             // Arrange
-            var bluRayProduct = new BluRayProduct (19.99,646464,new Guid());
+            var bluRayProduct = new BluRayProduct (19.99,646464,1,new Guid());
             var cartId = Guid.NewGuid();
 
             // Act
@@ -58,7 +58,7 @@ namespace GetWatch.Tests
         public void Insert_ShouldInsertRentalProductSuccessfully()
         {
             // Arrange
-            var rentalProduct = new RentalProduct (19.99,646464,new Guid());
+            var rentalProduct = new RentalProduct (19.99,646464,1,new Guid());
             var cartId = Guid.NewGuid();
 
             // Act
@@ -79,7 +79,7 @@ namespace GetWatch.Tests
         public void Insert_ShouldInsertMovieTicketProductSuccessfully()
         {
             // Arrange
-            var ticketProduct = new MovieTicketProduct(19.99,646464,new Guid(), 2, new[] { "A1", "A2" });
+            var ticketProduct = new MovieTicketProduct(19.99,646464,1,new Guid(), 2, new[] { "A1", "A2" });
             var cartId = Guid.NewGuid();
 
             // Act
@@ -103,7 +103,7 @@ namespace GetWatch.Tests
         {
             // Arrange
             _mockUnitOfWork.Setup(uow => uow.GetRepository<DbCartItem>()).Returns((IRepository<DbCartItem>?)null);
-            var bluRayProduct = new BluRayProduct (19.99,646464,new Guid());
+            var bluRayProduct = new BluRayProduct (19.99,646464,1,new Guid());
             var cartId = Guid.NewGuid();
 
             // Act & Assert

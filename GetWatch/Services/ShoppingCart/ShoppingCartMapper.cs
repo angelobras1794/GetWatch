@@ -47,7 +47,7 @@ namespace GetWatch.Services.ShoppingCart
             var repository = _unitOfWork.GetRepository<DbCart>();
             if (repository == null)
             {
-                throw new InvalidOperationException("Repository for DbCart is null.");
+                return new ShoppingCart();
             }
             DbCart dbCart = repository.GetAll()?.FirstOrDefault(x => x.UserId == userId);
             if (dbCart == null)

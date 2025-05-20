@@ -18,7 +18,6 @@
 @using GetWatch.Interfaces.Compra
 @using GetWatch.Interfaces.Mediator
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider ;
-
 @inject IMovieRepository MovieRepository
 @inject IUnitOfWork UnitOfWork
 @inject IUserMapper UserMapper
@@ -42,61 +41,66 @@
             <div class="step-name">Cart</div>
         </div>
 
+
         <div class="step" data-step="2">
             <div class="step-marker">2</div>
-            <div class="step-name">Adresses</div>
+            <div class="step-name">Payment</div>
         </div>
 
         <div class="step" data-step="3">
             <div class="step-marker">3</div>
-            <div class="step-name">Payment</div>
-        </div>
-
-        <div class="step" data-step="4">
-            <div class="step-marker">4</div>
             <div class="step-name">Confirm</div>
         </div>
     </div>
 </div>
 
 <div class="cart-container">
-    @if (realUser?.Cart != null && realUser.Cart.GetItems().Any() )
-    {
-        @foreach (var item in realUser.Cart.GetItems())
-        {
-            <div class="cart-item">
-                <div class="item-info">
-                    <div class="item-title">@getItemType(item)</div>
-                </div>
-                <div class="item-quantity">
-                    <button class="quantity-btn" @onclick="() => removeQuantity(item)">-</button>
-                    <span>@item.Quantity</span>
-                    <button class="quantity-btn" @onclick="() => addQuantity(item)">+</button>
-                </div>
-                <div class="item-price">€@(item.Price )</div>
-                <button class="remove-btn" @onclick="() => RemoveItem(item)" >Remove</button>
-            </div>
-            
-        }
-    }
-    else
-    {
-        <div class="cart-empty">O seu carrinho está vazio.</div>
-    }
-    @if (realUser?.Cart != null)
-    {
-        <div class="cart-total">
-            <span>Total</span>
-            <span>@realUser.Cart.Price</span>
-        </div>
-        <div class="div-container">
-            <button disabled="@UndoDisabled" class="round-button grey-button" @onclick="Undo">Undo</button>
-            <button disabled="@RedoDisabled" class="round-button grey-button" @onclick="Redo">Redo</button>
-        </div>
-    }
+    @if(step == 1){
 
-    <button class="button">Próximo Passo </button>
-    <a href="/" class="button">Voltar</a>
+        @if (realUser?.Cart != null && realUser.Cart.GetItems().Any() )
+        {
+            @foreach (var item in realUser.Cart.GetItems())
+            {
+                <div class="cart-item">
+                    <div class="item-info">
+                        <div class="item-title">@getItemType(item)</div>
+                    </div>
+                    <div class="item-quantity">
+                        <button class="quantity-btn" @onclick="() => removeQuantity(item)">-</button>
+                        <span>@item.Quantity</span>
+                        <button class="quantity-btn" @onclick="() => addQuantity(item)">+</button>
+                    </div>
+                    <div class="item-price">€@(item.Price )</div>
+                    <button class="remove-btn" @onclick="() => RemoveItem(item)" >Remove</button>
+                </div>
+                
+            }
+        }
+        else
+        {
+            <div class="cart-empty">O seu carrinho está vazio.</div>
+        }
+        @if (realUser?.Cart != null)
+        {
+            <div class="cart-total">
+                <span>Total</span>
+                <span>@realUser.Cart.Price</span>
+            </div>
+            <div class="div-container">
+                <button disabled="@UndoDisabled" class="round-button grey-button" @onclick="Undo">Undo</button>
+                <button disabled="@RedoDisabled" class="round-button grey-button" @onclick="Redo">Redo</button>
+            </div>
+        }
+    }else if(step == 2){
+        <PaymentCard/>
+    }
+    else if(step == 3){
+        <FinalCart Cart="realUser.Cart" GetItemType="getItemType"/>
+    }
+          
+
+    <button class="button" @onclick="nextStep">Próximo Passo </button>
+    <button class="button" @onclick="previousStep">Voltar</button>
 </div>
 <Footer/>
 
@@ -111,6 +115,8 @@
     private Dictionary<int, string> movieTitles = new();
 
     private ProxyCart ?cartItemList;
+
+    int step = 1;
 
     protected override async Task OnInitializedAsync(){
         var user = await UserService.GetAuthenticatedUserAsync();
@@ -171,8 +177,7 @@
 
     public Task addQuantity(ICartItem item)
     {
-        item.Quantity++;
-        cartItemList.UpdateItem(item);
+        cartItemList.UpdateItem(item,true);
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -180,13 +185,26 @@
     {
         if (item.Quantity > 1)
         {
-            item.Quantity--;
-            cartItemList.UpdateItem(item);
+            
+            cartItemList.UpdateItem(item,false);
         }
         else
         {
             GetWatchMediator.RemoveFromCart(item,realUser.Cart);
         }
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    public Task nextStep()
+    {
+        step++;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    public Task previousStep()
+    {
+        step--;
         StateHasChanged();
         return Task.CompletedTask;
     }

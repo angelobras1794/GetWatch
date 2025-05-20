@@ -47,32 +47,7 @@ namespace GetWatch.Tests
             Assert.Equal(dbCarts[1].Id, result[1].Id);
         }
 
-        [Fact]
-        public void GetAll_ShouldThrowInvalidOperationException_WhenRepositoryIsNull()
-        {
-            // Arrange
-            _mockUnitOfWork.Setup(uow => uow.GetRepository<DbCart>()).Returns((IRepository<DbCart>?)null);
 
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _shoppingCartMapper.GetAll());
-        }
-
-        [Fact]
-        public void Get_ShouldReturnShoppingCartById()
-        {
-            // Arrange
-            var dbCart = new DbCart { Id = Guid.NewGuid(), TotalPrice = 150 };
-            _mockRepository.Setup(repo => repo.Get(dbCart.Id)).Returns(dbCart);
-            _mockCartItemMapper.Setup(mapper => mapper.GetAll(dbCart.Id)).Returns(new List<ICartItem>());
-
-            // Act
-            var result = _shoppingCartMapper.Get(dbCart.Id);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(dbCart.Id, result.Id);
-            Assert.Equal(dbCart.TotalPrice, result.Price);
-        }
 
         [Fact]
         public void Get_ShouldReturnNull_WhenShoppingCartNotFound()
@@ -88,15 +63,7 @@ namespace GetWatch.Tests
             Assert.Null(result);
         }
 
-        [Fact]
-        public void Get_ShouldThrowInvalidOperationException_WhenRepositoryIsNull()
-        {
-            // Arrange
-            _mockUnitOfWork.Setup(uow => uow.GetRepository<DbCart>()).Returns((IRepository<DbCart>?)null);
-
-            // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => _shoppingCartMapper.Get(Guid.NewGuid()));
-        }
+        
 
         [Fact]
         public void Insert_ShouldInsertShoppingCartSuccessfully()

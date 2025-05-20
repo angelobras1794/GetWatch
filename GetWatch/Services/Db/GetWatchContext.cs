@@ -23,6 +23,10 @@ namespace GetWatch.Services.Db
         public DbSet<DbBluRayCart> BluRayCarts { get; set; }
         public DbSet<DbRentItem> RentItems { get; set; }
         public DbSet<DbTicketCart> TicketCarts { get; set; }
+
+        public DbSet<DbCard> DbCards { get; set; }
+
+        public DbSet<DbMovieSession> DbMovieSessions { get; set; }
        
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -32,11 +36,12 @@ namespace GetWatch.Services.Db
 
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder){
-             modelBuilder.Entity<DbUser>()
-                .HasOne(u => u.Cart)
-                .WithOne(c => c.User)
-                .HasForeignKey<DbCart>(c => c.UserId);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbUser>()
+               .HasOne(u => u.Cart)
+               .WithOne(c => c.User)
+               .HasForeignKey<DbCart>(c => c.UserId);
 
             modelBuilder.Entity<DbUser>()
                 .HasMany(u => u.SupportTickets)
@@ -48,10 +53,17 @@ namespace GetWatch.Services.Db
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId);
 
+            modelBuilder.Entity<DbUser>()
+                .HasMany(u => u.Cards)
+                .WithOne(c => c.User)
+                .HasForeignKey(c => c.UserId);     
+
             modelBuilder.Entity<DbCart>()
                 .HasMany(c => c.CartItems)
                 .WithOne(tp => tp.Cart)
                 .HasForeignKey(tp => tp.CartId);
+
+               
         }
 
 

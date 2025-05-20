@@ -3,6 +3,7 @@ using System;
 using GetWatch.Services.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GetWatch.Migrations
 {
     [DbContext(typeof(GetWatchContext))]
-    partial class GetWatchContextModelSnapshot : ModelSnapshot
+    [Migration("20250520125019_YourMigrationName")]
+    partial class YourMigrationName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -117,35 +120,6 @@ namespace GetWatch.Migrations
                         .IsUnique();
 
                     b.ToTable("DbCarts");
-                });
-
-            modelBuilder.Entity("GetWatch.Services.Db.DbMovieSession", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.PrimitiveCollection<string>("AvailableSeats")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CinemaName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("MovieType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DbMovieSessions");
                 });
 
             modelBuilder.Entity("GetWatch.Services.Db.DbSupportTickets", b =>
