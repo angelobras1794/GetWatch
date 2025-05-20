@@ -24,7 +24,7 @@ namespace GetWatch.Services.Tickets
             var repository = _unitOfWork.GetRepository<DbSupportTickets>();
             if (repository == null)
             {
-                throw new InvalidOperationException("Repository for DbSupportTickets is null.");
+                return new List<ISupportTicket>();
             }
             // fetch all support tickets of the user
             var dbSupportTickets = repository.GetAll()?.Where(ticket => ticket.UserId == userId).ToList() ?? new List<DbSupportTickets>();
