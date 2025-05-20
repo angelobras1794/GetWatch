@@ -14,8 +14,8 @@ namespace GetWatch.Tests
         {
             // Arrange
             var cart = new ShoppingCart();
-            var item1 = new Product(10,414124,new Guid());
-            var item2 = new Product(20, 492523,new Guid());
+            var item1 = new Product(10,414124,1,new Guid());
+            var item2 = new Product(20, 492523,1,new Guid());
             // Act
             cart.AddItem(item1);
             cart.AddItem(item2);
@@ -29,8 +29,8 @@ namespace GetWatch.Tests
             // Arrange
             var cart = new ShoppingCart();
             var bundle = new Bundle("Test Bundle");
-            bundle.AddProduct(new Product(10,414124,new Guid()));
-            bundle.AddProduct(new Product(10,414124,new Guid()));
+            bundle.AddProduct(new Product(10,414124,1,new Guid()));
+            bundle.AddProduct(new Product(10,414124,1,new Guid()));
             // Act
             cart.AddItem(bundle);
 
@@ -43,7 +43,7 @@ namespace GetWatch.Tests
         {
             // Arrange
             var cart = new ShoppingCart();
-            var item = new Product(10,414124,new Guid());
+            var item = new Product(10,414124,1,new Guid());
             cart.AddItem(item);
             var discountStrategy = new PercentageDiscount(0.10); // 10% discount
             // Act
@@ -57,8 +57,8 @@ namespace GetWatch.Tests
         {
             // Arrange
             var bundle = new Bundle("Test Bundle");
-            var item1 = new Product(10,414124,new Guid());
-            var item2 = new Product(10,414124,new Guid());
+            var item1 = new Product(10,414124,1,new Guid());
+            var item2 = new Product(10,414124,1,new Guid());
             bundle.AddProduct(item1);
             bundle.AddProduct(item2);
             var discountStrategy = new PercentageDiscount(0.20); // 20% discount
@@ -75,8 +75,8 @@ namespace GetWatch.Tests
             var discountStrategy = new PercentageDiscount(0.10); // 10% discount
             var cart = new ShoppingCart();
             var bundle = new Bundle("Test Bundle");
-            var item1 = new Product(10,414124,new Guid());
-            var item2 = new Product(10,414124,new Guid());
+            var item1 = new Product(10,414124,1,new Guid());
+            var item2 = new Product(10,414124,1,new Guid());
             bundle.AddProduct(item1);
             bundle.AddProduct(item2);
             bundle.SetDiscountStrategy(discountStrategy);
