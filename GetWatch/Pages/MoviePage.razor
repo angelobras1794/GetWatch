@@ -43,12 +43,12 @@
                 </button>
                 <ModalReserveTicket Visible="@showReservarBilheteModal" OnClose="@HideReservarBilheteModal"
                     OnSubmitSelection="@HandleBilheteSelection" Sessions="availableSessions" />
-                <ModalSeatTicket 
-                    Visible="@showLugarBilheteModal"
-                    OnClose="@HideLugarBilheteModal"
-                    OnAddToCart="@HandleAddToCart" 
-                    Price="movieTicket.CalculatePrice()"
-                    OccupiedSeats="@selectedSession?.AvailableSeats ?? Array.Empty<string>()" />
+               <ModalSeatTicket 
+                Visible="@showLugarBilheteModal"
+                OnClose="@HideLugarBilheteModal"
+                OnAddToCart="@HandleAddToCart" 
+                Price="movieTicket.CalculatePrice()"
+                OccupiedSeats="OccupiedSeats" />
             }
             else if (IsPlayingInCinemas(movie) && !hasSession)
             {
@@ -185,6 +185,7 @@ else
     private IMovieTicket? movieTicket = null;
     private List<DbMovieSession> availableSessions = new();
     private DbMovieSession? selectedSession;
+    private string[] OccupiedSeats => selectedSession?.AvailableSeats ?? Array.Empty<string>();
 
     protected override async Task OnInitializedAsync()
     {

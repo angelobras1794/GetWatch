@@ -93,6 +93,7 @@
             seatStates[row, col] = "available";
             SelectedSeats.Remove(seatLabel);
         }
+        AdultsCount = SelectedSeats.Count;
     }
 
     private async Task AddToCart()
