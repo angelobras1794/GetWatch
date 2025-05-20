@@ -43,7 +43,7 @@ public class UserMapper : IUserMapper
         var dbUsers = repository.GetAll()?.ToList() ?? new List<DbUser>();
 
         var users = dbUsers.Select(dbUser => new User
-        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone, dbUser.Id)
+        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone,dbUser.IsAdmin, dbUser.Id)
         {
             Cart = _cartMapper.Get(dbUser.Cart.Id),
             SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
@@ -69,7 +69,7 @@ public class UserMapper : IUserMapper
         }
 
         return new User
-        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone, dbUser.Id)
+        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone,dbUser.IsAdmin, dbUser.Id)
         {
             Cart = _cartMapper.Get(dbUser.Id),
             SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),

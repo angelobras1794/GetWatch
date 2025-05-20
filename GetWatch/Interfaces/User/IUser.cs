@@ -16,6 +16,8 @@ namespace GetWatch.Interfaces.User
         string? Email { get; set; }
         string? Password { get; set; }
         string? Phone { get; set; }
+
+        bool IsAdmin { get; set; } 
         IShoppingCart? Cart { get; set; }
         List<ISupportTicket>? SupportTickets { get; set; }
         List<ICartItem>? Transactions { get; set; }

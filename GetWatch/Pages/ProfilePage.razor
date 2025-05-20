@@ -34,6 +34,81 @@
             <p>Loading...</p>
         </div>
     }
+    else if (realUser.IsAdmin == true)
+    {
+        <div class="profile-container">
+                <div class="user-info">
+                    
+                    <div class="image-container">
+                        <img src="/images/poster.jpg" alt="User Image" class="user-image">
+                    </div>
+                    <div class="userInfo-container">
+                        <p class="user-name">@realUser.Name</p>
+                        <p class="user-email">@realUser.Email</p>
+
+                    </div>
+                <div class="logout-container">
+                    <button class="logout-button" @onclick="Logout">Logout</button>
+                </div>
+                </div>
+                <div class="other-user-info">
+                    <div class="userInfo-container">
+                        <p class="user-name">Genero</p>
+                        <p class="user-email">M</p>
+
+                    </div>
+                    <div class="userInfo-container">
+                        <p class="user-name">Country</p>
+                        <p class="user-email">Portugal</p>
+
+                    </div>
+                    <div class="userInfo-container">
+                        <p class="user-name">Language</p>
+                        <p class="user-email">English-US</p>
+
+                    </div>
+
+                </div>
+                
+                <div class="other-info">
+                    <div class="section-container">
+                        <ul class="section-menu">
+                            <button class="menu-item" @onclick="ShowDeleteUserForm"> Eliminar Users </button>
+                            <button class="menu-item" @onclick="ShowCreateSessionForm" >Criar Sessão</button>
+                        </ul>
+                       @if (showDeleteUserForm)
+                        {
+                            <form class="delete-user-form" @onsubmit="HandleDeleteUser">
+                                <h3>Eliminar Utilizador</h3>
+                                <input type="text" placeholder="Coloque o ID do utilizador" @bind="deleteUserId" class="form-control" />
+                                <button type="submit" class="button" >Eliminar</button>
+                                <button type="button" class="button" @onclick="HideDeleteUserForm">Cancelar</button>
+                                @if (!string.IsNullOrEmpty(deleteUserFeedback))
+                                {
+                                    <p>@deleteUserFeedback</p>
+                                }
+                            </form>
+                        }
+                        @if (showCreateSessionForm)
+                        {
+                            <form class="create-session-form" @onsubmit="HandleCreateSession">
+                                <h3>Criar Nova Sessão</h3>
+                                <input type="text" placeholder="ID do Filme" @bind="newMovieId" class="form-control" />
+                                <input type="text" placeholder="Tipo de Filme (ex: 2D, 3D, IMAX)" @bind="newMovieType" class="form-control" />
+                                <input type="text" placeholder="Nome do Cinema" @bind="newCinemaName" class="form-control" />
+                                <button type="submit" class="button">Criar Sessão</button>
+                                <button type="button" class="button" @onclick="HideCreateSessionForm">Cancelar</button>
+                                @if (!string.IsNullOrEmpty(createSessionFeedback))
+                                {
+                                    <p>@createSessionFeedback</p>
+                                }
+                            </form>
+                        }
+
+                    </div>
+                </div>
+            </div>
+    }
     else
     {
         <div class="profile-container">
@@ -144,8 +219,123 @@
 
 @code {
     private IUser? realUser = null;
+
+    private DbMovieSession movieSession ;
+
+
     private List<PopularApiMovie> transactionsMovies = new List<PopularApiMovie>();
     private List<PopularApiMovie> ticketsMovies = new List<PopularApiMovie>();
+
+    // Eliminar o Utilizador
+    private bool showDeleteUserForm = false;
+    private string deleteUserId = "";
+    private string deleteUserFeedback = "";
+
+    // Criar uma sessão 
+    private bool showCreateSessionForm = false;
+    private string newMovieId = "";
+    private string newMovieType = "";
+    private string newCinemaName = "";
+    private string createSessionFeedback = "";
+    
+// eliminar o utilizador
+    private void ShowDeleteUserForm()
+    {
+        showDeleteUserForm = true;
+        deleteUserFeedback = "";
+        deleteUserId = "";
+    }
+
+    private void HideDeleteUserForm()
+    {
+        showDeleteUserForm = false;
+        deleteUserFeedback = "";
+        deleteUserId = "";
+    }
+
+     private void OnDeleteUser()
+    {
+        if(Guid.TryParse(deleteUserId, out Guid userId))
+        {
+            try
+            {
+                UserMapper.Remove(userId);
+                deleteUserFeedback = "Utilizador eliminado com sucesso!";
+            }
+            catch(Exception ex)
+            {
+                deleteUserFeedback = $"Erro ao eliminar utilizador: {ex.Message}";
+            }
+        }
+        else
+        {
+            deleteUserFeedback = "ID inválido.";
+        }
+    }
+
+    private async Task HandleDeleteUser()
+    {
+        OnDeleteUser();
+    }
+
+        // Criar uma sessão
+    private void ShowCreateSessionForm()
+{
+    showCreateSessionForm = true;
+    createSessionFeedback = "";
+    newMovieId = "";
+    newMovieType = "";
+    newCinemaName = "";
+}
+
+    private async Task HandleCreateSession()
+    {
+        if (!int.TryParse(newMovieId, out int movieId))
+        {
+            createSessionFeedback = "ID do filme inválido.";
+            return;
+        }
+
+        var session = new DbMovieSession
+        {
+            MovieId = movieId,
+            MovieType = newMovieType,
+            CinemaName = newCinemaName,
+            Created = DateTime.UtcNow,
+            Updated = DateTime.UtcNow
+        };
+
+        try
+        {
+        
+            var repository = UnitOfWork.GetRepository<DbMovieSession>();
+            if (repository == null)
+            {
+                throw new InvalidOperationException("Repository for DbMovieSession is null.");
+            }
+            
+            UnitOfWork.Begin();
+            repository.Insert(session);
+            UnitOfWork.SaveChanges();
+            UnitOfWork.Commit();
+            createSessionFeedback = "Sessão criada com sucesso!";
+            showCreateSessionForm = false;
+        }
+        catch (Exception ex)
+        {
+            createSessionFeedback = $"Erro ao criar sessão: {ex.Message}";
+        }
+    }
+
+
+
+    // 
+
+    private void HideCreateSessionForm()
+    {
+        showCreateSessionForm = false;
+        createSessionFeedback = "";
+    }
 
     protected override async Task OnInitializedAsync()
     {

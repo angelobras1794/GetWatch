@@ -22,6 +22,8 @@ namespace GetWatch.Services.User
         public string? Email { get; set; }
         public string? Password { get; set; }
         public string? Phone { get; set; }
+
+        public bool IsAdmin { get; set; } = false;
         public IShoppingCart? Cart { get; set; }
 
         public List<ISupportTicket> SupportTickets { get; set; }
@@ -38,13 +40,14 @@ namespace GetWatch.Services.User
 
         private ICardMapper cardMapper;
 
-        public User(IUnitOfWork unitOfWork, string name, string email, string password, string phone, Guid id)
+        public User(IUnitOfWork unitOfWork, string name, string email, string password, string phone,bool IsAdmin, Guid id)
         {
             _unitOfWork = unitOfWork;
             Name = name;
             Email = email;
             Password = password;
             Phone = phone;
+            this.IsAdmin = IsAdmin;
             Id = id;
             cartMapper = new ShoppingCartMapper(_unitOfWork);
             cartItemMapper = new CartItemMapper(_unitOfWork);
