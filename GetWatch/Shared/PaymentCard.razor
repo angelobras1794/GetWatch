@@ -1,0 +1,61 @@
+@using GetWatch.Interfaces.User;
+
+    <div class="form-section">
+        <h4>Registered Cards:</h4>
+      
+        <div class="card-list">
+          <div class="card-item selected">
+            <input type="radio" name="selectedCard" checked>
+            <i class="fas fa-credit-card"></i>
+            <span><strong>Millenium</strong></span>
+            <span><strong>1234</strong></span>
+            <span><strong>Jose Barreiro</strong></span>
+            <span><strong>12/34</strong></span>
+          </div>
+      
+          <div class="card-item">
+            <input type="radio" name="selectedCard">
+            <i class="fas fa-credit-card"></i>
+            <span>Millenium</span>
+            <span>1234</span>
+            <span>Jose Barreiro</span>
+            <span>12/34</span>
+          </div>
+        </div>
+      
+        <h4>Adicionar Cartão:</h4>
+      
+        <div class="add-card-form">
+      
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" class="form-control" placeholder="Enter the 16-digit card number on the card">
+          </div>
+      
+          <div class="form-group">
+            <label>Card Owner</label>
+            <input type="text" class="form-control" placeholder="Enter the name on the card">
+          </div>
+      
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Expiry Date</label>
+              <input type="text" class="form-control" placeholder="MM/YY">
+            </div>
+      
+            <div class="form-group col-md-6">
+              <label>CVV2</label>
+              <input type="text" class="form-control" placeholder="Security Code">
+            </div>
+          </div>
+      
+          <button class="button">Save Card</button>
+      </div>
+    </div>
+
+
+@code{
+    [Parameter]
+    public IUser ? realUser { get; set; }
+    
+}

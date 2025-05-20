@@ -1,0 +1,36 @@
+   
+   @using GetWatch.Services.ShoppingCart;
+   
+   <div class="checkout-section">
+        <div class="cart-items">
+            @foreach (var item in Cart.GetItems()){
+            <div class="cart-item">
+                <img src="poster1.jpg" alt="Movie Poster">
+                <div class="item-info">
+                <p class="item-title">@GetItemType?.Invoke(item)</p>
+                <p class="item-quantity">@item.Quantity</p>
+                </div>
+                <p class="item-price">@item.Price</p>
+            </div>
+          }
+      
+          
+        </div>
+      
+        <div class="cart-total">
+          <p><strong>Total</strong> <span class="total-amount">@Cart.Price</span></p>
+        </div>
+        <button class="finalize-button">Finalizar</button>
+
+        </div>
+
+@code{
+    [Parameter]
+    public int totalPrice { get; set; } = 0;
+
+    [Parameter]
+    public IShoppingCart? Cart { get; set; }
+
+    [Parameter]
+    public Func<ICartItem, string>? GetItemType { get; set; }
+}
