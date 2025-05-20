@@ -25,6 +25,8 @@ namespace GetWatch.Services.Db
         public DbSet<DbTicketCart> TicketCarts { get; set; }
 
         public DbSet<DbCard> DbCards { get; set; }
+
+        public DbSet<DbMovieSession> DbMovieSessions { get; set; }
        
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
