@@ -50,8 +50,6 @@ namespace GetWatch.Services.Movies.Strategy
             totalPages = result?.TotalPages ?? 1;
         }
 
-    //     currentPage++;
-    // } while (currentPage <= totalPages);
 
     return allMovies;
 }

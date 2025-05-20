@@ -86,10 +86,13 @@ namespace GetWatch.Services.User
         {
             if (Cards == null)
             {
+                
                 throw new InvalidOperationException("Cards cannot be null.");
+
             }
             Cards.Add(card);
             cardMapper.Insert(card, Id);
+           
 
         }
 

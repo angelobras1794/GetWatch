@@ -36,13 +36,13 @@
     </div>
 
     <div class="progress-steps">
-        <div class="step completed" data-step="1">
+        <div class="step @(step > 1 ? "completed" : "")" data-step="1">
             <div class="step-marker">1</div>
             <div class="step-name">Cart</div>
         </div>
 
 
-        <div class="step" data-step="2">
+        <div class="step @(step > 2 ? "completed" : "")" data-step="2">
             <div class="step-marker">2</div>
             <div class="step-name">Payment</div>
         </div>
@@ -92,15 +92,19 @@
             </div>
         }
     }else if(step == 2){
-        <PaymentCard/>
+        <PaymentCard realUser="realUser" OnCardSelected="(cardNum) => SelectedCardNumber = cardNum"/>
     }
     else if(step == 3){
         <FinalCart Cart="realUser.Cart" GetItemType="getItemType"/>
     }
           
-
-    <button class="button" @onclick="nextStep">Próximo Passo </button>
-    <button class="button" @onclick="previousStep">Voltar</button>
+    @if(step !=3){
+        <button class="button" @onclick="nextStep">Próximo Passo </button>
+    }
+    @if(step != 1){
+        <button class="button" @onclick="previousStep">Voltar</button>
+    }
+    
 </div>
 <Footer/>
 
@@ -113,6 +117,7 @@
     private IUser? realUser;
     private bool isAuthenticated = false;
     private Dictionary<int, string> movieTitles = new();
+    private string? SelectedCardNumber { get; set; }
 
     private ProxyCart ?cartItemList;
 
@@ -198,15 +203,33 @@
 
     public Task nextStep()
     {
-        step++;
-        StateHasChanged();
+
+        if (step == 2){ 
+            Console.WriteLine("SelectedCardNumber: " + SelectedCardNumber);
+            if (!string.IsNullOrEmpty(SelectedCardNumber))
+            {
+                step++;
+                StateHasChanged();
+                
+            }
+        }
+        else if (step == 1){
+             step++;
+             StateHasChanged();
+        }
         return Task.CompletedTask;
+
     }
     public Task previousStep()
     {
-        step--;
-        StateHasChanged();
+        if (step !=1){
+            SelectedCardNumber = null;
+            step--;
+            StateHasChanged();
+            
+        }
         return Task.CompletedTask;
+        
     }
 
 
