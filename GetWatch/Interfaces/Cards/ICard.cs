@@ -7,7 +7,7 @@ namespace GetWatch.Interfaces.Cards
 {
     public interface ICard
     {
-        public long CardNumber { get; set; }
+        public string CardNumber { get; set; }
         public string CardOwner { get; set; }
         public string ExpiryDate { get; set; }
         public int Cvv { get; set; }

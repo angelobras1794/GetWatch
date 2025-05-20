@@ -89,7 +89,8 @@ namespace GetWatch.Services.Compra
                     MovieId = bluRayItem.movieId,
                     Id = bluRayItem.Id,
                     UserId = userId,
-                    User = user
+                    User = user,
+                    Quantity = bluRayItem.Quantity
                 },
                 RentalProduct rentalItem => (DbPurchases)new DbRentPurchase
                 {
@@ -98,7 +99,8 @@ namespace GetWatch.Services.Compra
                     Id = rentalItem.Id,
                     UserId = userId,
                     RentalEndDate = rentalItem.RentDate,
-                    User = user
+                    User = user,
+                    Quantity = rentalItem.Quantity
                 },
                 MovieTicketProduct ticketItem => (DbPurchases)new DbTicketPurchase
                 {
@@ -108,7 +110,8 @@ namespace GetWatch.Services.Compra
                     UserId = userId,
                     PersonAmount = ticketItem.getPersonAmount(),
                     Seats = ticketItem.getSeats(),
-                    User = user
+                    User = user,
+                    Quantity = ticketItem.Quantity
                 },
                 _ => throw new InvalidOperationException($"Unhandled ICartItem type: {item.GetType().Name}")
             };

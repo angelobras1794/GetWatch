@@ -18,14 +18,11 @@ namespace GetWatch.Services.Db
         public DbSet<DbBluRayPurchase> DbBluRayPurchases { get; set; }
         public DbSet<DbTicketPurchase> DbTicketPurchases { get; set; }
         public DbSet<DbRentPurchase> DbRentPurchases { get; set; }
-        
         public DbSet<DbCartItem> DbCartItem { get; set; }
         public DbSet<DbBluRayCart> BluRayCarts { get; set; }
         public DbSet<DbRentItem> RentItems { get; set; }
         public DbSet<DbTicketCart> TicketCarts { get; set; }
-
         public DbSet<DbCard> DbCards { get; set; }
-
         public DbSet<DbMovieSession> DbMovieSessions { get; set; }
        
 

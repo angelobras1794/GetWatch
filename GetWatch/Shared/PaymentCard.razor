@@ -1,55 +1,63 @@
 @using GetWatch.Interfaces.User;
+@using GetWatch.Services.Handlers.CardHandlers;
+@using GetWatch.Services.Db;
+@using GetWatch.Services.Cards;
+@using GetWatch.Interfaces.Cards;
+
 
     <div class="form-section">
         <h4>Registered Cards:</h4>
       
         <div class="card-list">
-          <div class="card-item selected">
-            <input type="radio" name="selectedCard" checked>
-            <i class="fas fa-credit-card"></i>
-            <span><strong>Millenium</strong></span>
-            <span><strong>1234</strong></span>
-            <span><strong>Jose Barreiro</strong></span>
-            <span><strong>12/34</strong></span>
-          </div>
-      
-          <div class="card-item">
-            <input type="radio" name="selectedCard">
-            <i class="fas fa-credit-card"></i>
-            <span>Millenium</span>
-            <span>1234</span>
-            <span>Jose Barreiro</span>
-            <span>12/34</span>
-          </div>
+          @if (realUser?.Cards == null || realUser.Cards.Count == 0)
+          {
+            <p>No cards registered.</p>
+          }else{
+            @foreach (var card in realUser?.Cards)
+          {
+            <div class="card-item">
+              <input type="radio" name="selectedCard" value="@card.Id" 
+              @onchange="() => CardSelected(card.CardNumber)">
+              <i class="fas fa-credit-card"></i>
+              <span>@card.Cvv</span>
+              <span>@card.CardNumber</span>
+              <span>@card.CardOwner</span>
+              <span>@card.ExpiryDate</span>
+            </div>
+
+          }
+          }
+          
         </div>
       
         <h4>Adicionar Cartão:</h4>
       
         <div class="add-card-form">
+          <span class="text-danger">@ErrorMessage</span>
       
           <div class="form-group">
             <label>Card Number</label>
-            <input type="text" class="form-control" placeholder="Enter the 16-digit card number on the card">
+            <input type="text" class="form-control" placeholder="Enter the 16-digit card number on the card" @bind="CardNumber">
           </div>
       
           <div class="form-group">
             <label>Card Owner</label>
-            <input type="text" class="form-control" placeholder="Enter the name on the card">
+            <input type="text" class="form-control" placeholder="Enter the name on the card" @bind="CardOwner">
           </div>
       
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>Expiry Date</label>
-              <input type="text" class="form-control" placeholder="MM/YY">
+              <input type="text" class="form-control" placeholder="MM/YY" @bind="ExpiryDate">
             </div>
       
             <div class="form-group col-md-6">
               <label>CVV2</label>
-              <input type="text" class="form-control" placeholder="Security Code">
+              <input type="text" class="form-control" placeholder="Security Code" @bind="Cvv">
             </div>
           </div>
       
-          <button class="button">Save Card</button>
+          <button class="button" @onclick="handleFormSubmit">Save Card</button>
       </div>
     </div>
 
@@ -57,5 +65,63 @@
 @code{
     [Parameter]
     public IUser ? realUser { get; set; }
+
+    [Parameter]
+  public EventCallback<string?> OnCardSelected { get; set; }
+
+    [Parameter]
+    public string? SelectedCardNumber { get; set; }
+    private string CardNumber { get; set; } = "";
+    private string CardOwner { get; set; } = "";
+    private string ExpiryDate { get; set; } = "";
+    private string Cvv { get; set; } = "";
+
+    private string ErrorMessage { get; set; } = "";
+
+
+    public void handleFormSubmit()
+    {
+        var cardHandler = createChain();
+        try{
+          var cvv = int.Parse(Cvv);
+          ICard card = new Card(CardNumber,CardOwner,ExpiryDate,cvv);
+          cardHandler.Handle(card);
+          Console.WriteLine("Card number: " + card.CardNumber);
+          realUser?.AddCard(card);
+          ErrorMessage = "Card added successfully!";
+          StateHasChanged();
+        }catch (Exception ex){
+            ErrorMessage = ex.Message;  
+
+        }
+
+      
+
+        
+    }
+
+    public CardHandler createChain()
+    {
+    var cardNumberHandler = new CardNumberHandler();
+    var cardOwnerHandler = new CardOwnerHandler();
+    var expiryDateHandler = new ExpiryDateHandler();
+    var cvvHandler = new CvvHandler();
+
+    cardNumberHandler.SetNext(cardOwnerHandler);
+    cardOwnerHandler.SetNext(expiryDateHandler);
+    expiryDateHandler.SetNext(cvvHandler);
+
+    return cardNumberHandler; // This line ensures all code paths return a value
+        
+           
+    }
+
+    private async Task CardSelected(string? cardNumber)
+{
+    SelectedCardNumber = cardNumber;
+    await OnCardSelected.InvokeAsync(cardNumber);
+}
+    
+
     
 }

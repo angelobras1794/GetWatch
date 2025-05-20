@@ -1,9 +1,20 @@
    
+  
    @using GetWatch.Services.ShoppingCart;
+    @using GetWatch.Services.Proxy;
+    @using GetWatch.Interfaces.User;
+    @using GetWatch.Interfaces.ShoppingCart;
+    @using GetWatch.Services.Compra;
+    @using GetWatch.Interfaces.Db;
+     @inject IUnitOfWork UnitOfWork
+     @inject ICartItemMapper CartItemMapper
+     @inject IShoppingCartMapper ShoppingCartMapper
+     @inject NavigationManager NavigationManager
+
    
    <div class="checkout-section">
         <div class="cart-items">
-            @foreach (var item in Cart.GetItems()){
+            @foreach (var item in realUser.Cart.GetItems()){
             <div class="cart-item">
                 <img src="poster1.jpg" alt="Movie Poster">
                 <div class="item-info">
@@ -18,9 +29,9 @@
         </div>
       
         <div class="cart-total">
-          <p><strong>Total</strong> <span class="total-amount">@Cart.Price</span></p>
+          <p><strong>Total</strong> <span class="total-amount">@realUser.Cart.Price</span></p>
         </div>
-        <button class="finalize-button">Finalizar</button>
+        <button class="finalize-button" @onclick="FinalizePurchase">Finalizar</button>
 
         </div>
 
@@ -29,8 +40,35 @@
     public int totalPrice { get; set; } = 0;
 
     [Parameter]
-    public IShoppingCart? Cart { get; set; }
+    public IUser? realUser { get; set; }
 
     [Parameter]
     public Func<ICartItem, string>? GetItemType { get; set; }
+
+    public ICartItemMapper? cartItemMapper;
+
+    ProxyTransactions? proxyTransacation;
+
+    ProxyCart? proxyCart;
+
+    public void FinalizePurchase()
+    {
+      try{
+        cartItemMapper = new PurchaseMapper(UnitOfWork);
+        proxyTransacation = new ProxyTransactions(cartItemMapper,realUser.Transactions);
+        proxyCart = new ProxyCart(realUser.Cart, CartItemMapper,ShoppingCartMapper);
+        var items = realUser.Cart.GetItems().ToList(); // Make a copy
+        foreach (var item in items)
+        {
+            proxyTransacation.AddItem(item, realUser.Id);
+            proxyCart.RemoveItem(item);
+        }
+        NavigationManager.NavigateTo("/");
+      }catch (Exception ex)
+      {
+        Console.WriteLine("Error: " + ex.Message);
+      }
+      
+        
+    }
 }
