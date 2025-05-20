@@ -10,28 +10,33 @@ using GetWatch.Services.Db;
 using GetWatch.Interfaces.ShoppingCart;
 using GetWatch.Services.Compra;
 using GetWatch.Interfaces.User;
+using GetWatch.Interfaces.Cards;
+using GetWatch.Services.Cards;
 
 namespace GetWatch.Services.User
 {
-    public class User: IUser
+    public class User : IUser
     {
         public Guid Id { get; set; }
-        public string ?Name { get; set; }
-        public string ?Email { get; set; }
-        public string ?Password { get; set; }
-        public string ?Phone { get; set; }
-        public IShoppingCart ?Cart { get; set; }
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? Phone { get; set; }
+        public IShoppingCart? Cart { get; set; }
 
         public List<ISupportTicket> SupportTickets { get; set; }
 
-        public List<ICartItem> ?Transactions { get; set; }
+        public List<ICartItem>? Transactions { get; set; }
+        public List<ICard>? Cards { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
         private ICartItemMapper cartItemMapper;
         private ISupportTicketMapper supportTicketMapper;
         private PurchaseMapper purchaseMapper;
-        
+
         private ShoppingCartMapper cartMapper;
+
+        private ICardMapper cardMapper;
 
         public User(IUnitOfWork unitOfWork, string name, string email, string password, string phone, Guid id)
         {
@@ -45,9 +50,11 @@ namespace GetWatch.Services.User
             cartItemMapper = new CartItemMapper(_unitOfWork);
             supportTicketMapper = new SupportTicketMapper(_unitOfWork);
             purchaseMapper = new PurchaseMapper(_unitOfWork);
+            cardMapper = new CardMapper(_unitOfWork);
             Cart = cartMapper.Get(Id);
             SupportTickets = supportTicketMapper.GetAll(Id);
             Transactions = purchaseMapper.GetAll(Id);
+            Cards = cardMapper.GetAll(Id);
 
         }
 
@@ -69,11 +76,21 @@ namespace GetWatch.Services.User
         }
         public void Checkout()
         {
-            // Logic to checkout
+
         }
         public void AddSupportTicket(SupportTicket ticket)
         {
-           //
+
+        }
+        public void AddCard(ICard card)
+        {
+            if (Cards == null)
+            {
+                throw new InvalidOperationException("Cards cannot be null.");
+            }
+            Cards.Add(card);
+            cardMapper.Insert(card, Id);
+
         }
 
 

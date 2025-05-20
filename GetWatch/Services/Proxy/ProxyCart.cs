@@ -41,7 +41,7 @@ public class ProxyCart : ICartItemList
         _shoppingCartMapper.Update(_shoppingCart);
     }
 
-    public void UpdateItem(ICartItem item)
+    public void UpdateItem(ICartItem item,bool isIncrease)
     {
         var existingItem = _shoppingCart.GetItems().FirstOrDefault(i => i.Id == item.Id);
         if (existingItem == null)
@@ -49,12 +49,12 @@ public class ProxyCart : ICartItemList
 
             return;
         }
-
-        if (item.Quantity > existingItem.Quantity)
+       
+        if (isIncrease)
         {
             _shoppingCart.IncreaseQuantity(item);
         }
-        else if (item.Quantity < existingItem.Quantity)
+        else
         {
             _shoppingCart.DecreaseQuantity(item);
         }

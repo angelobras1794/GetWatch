@@ -41,18 +41,14 @@
             <div class="step-name">Cart</div>
         </div>
 
+
         <div class="step" data-step="2">
             <div class="step-marker">2</div>
-            <div class="step-name">Adresses</div>
+            <div class="step-name">Payment</div>
         </div>
 
         <div class="step" data-step="3">
             <div class="step-marker">3</div>
-            <div class="step-name">Payment</div>
-        </div>
-
-        <div class="step" data-step="4">
-            <div class="step-marker">4</div>
             <div class="step-name">Confirm</div>
         </div>
     </div>
@@ -95,7 +91,7 @@
     }
 
     <button class="button">Próximo Passo </button>
-    <a href="/" class="button">Voltar</a>
+    <button class="button">Voltar</button>
 </div>
 <Footer/>
 
@@ -170,8 +166,7 @@
 
     public Task addQuantity(ICartItem item)
     {
-        item.Quantity++;
-        cartItemList.UpdateItem(item);
+        cartItemList.UpdateItem(item,true);
         StateHasChanged();
         return Task.CompletedTask;
     }
@@ -179,8 +174,8 @@
     {
         if (item.Quantity > 1)
         {
-            item.Quantity--;
-            cartItemList.UpdateItem(item);
+            
+            cartItemList.UpdateItem(item,false);
         }
         else
         {

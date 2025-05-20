@@ -47,6 +47,7 @@ namespace GetWatch.Services.ShoppingCart
                 cartItem.Quantity++;
                 UpdatePrice();
             }
+            Console.WriteLine($"Increased quantity of {item.Id} price: {Price}");
         }
 
         public void DecreaseQuantity(ICartItem item)
@@ -59,6 +60,7 @@ namespace GetWatch.Services.ShoppingCart
                     cartItem.Quantity--;
                     UpdatePrice();
                 }
+                Console.WriteLine($"decreased quantity of {item.Id} price: {Price}");
             }
         }
     }
