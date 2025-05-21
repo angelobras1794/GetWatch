@@ -15,7 +15,6 @@
 @using GetWatch.Services.MovieTicket;
 @using GetWatch.Interfaces.Compra;
 @inject CustomAuthenticationStateProvider AuthenticationStateProvider ;
-
 @inject IMovieRepository MovieRepository
 @inject IUnitOfWork UnitOfWork
 @inject IUserMapper UserMapper
@@ -25,174 +24,168 @@
 @inject ICartItemFactory CartItemFactory
 @inject IShoppingCartMapper ShoppingCartMapper
 @inject ICartItemMapper CartItemMapper
+
 <NavBar/>
-        @if (movie != null)
-        {
-        <header class="movie-hero">
-       
+@if (movie != null)
+{
+    <header class="movie-hero">
         <img src="https://image.tmdb.org/t/p/original/@movie.PosterPath" alt="Movie Background" class="hero-background" />
         <h1 class="movie-title">@movie.Title</h1>
         <div class="hero-actions">
-          @if (IsPlayingInCinemas(movie)){
-            <button class="primary-button" id="buy-tickets-button" @onclick="() => showTicketModal()">
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a0a40d3feafbecc147030129826490c0ee592808?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Ticket" class="button-icon" />
-            <span>Buy Tickets</span>
-            </button>
-            <ModalReserveTicket Visible="@showReservarBilheteModal" OnClose="@HideReservarBilheteModal"
-            OnSubmitSelection="@HandleBilheteSelection" />
-            <ModalSeatTicket 
-            Visible="@showLugarBilheteModal"
-            OnClose="@HideLugarBilheteModal"
-            OnAddToCart="@HandleAddToCart" 
-            Price="movieTicket.CalculatePrice()"/>
-          }else{
-            <button class="primary-button" id="purchase-button" @onclick="() => addToCartBluRay(movie.Id!.Value)">
-            <span>Purchase (19.99)</span>
-            </button>
-            <button class="primary-button" id="rent-button" @onclick="() => addToCartRental(movie.Id!.Value)">
-            <span>Rent (7.99)</span>
-            </button>
-          }
-          
-          <div class="action-buttons">
-            <button class="icon-button">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e44857ca31981cfdf28982666dbb3ff14fe1e0cb?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Action" class="button-icon" />
-            </button>
-          </div>
-        </div>
-      </header>
-      
-      <main class="movie-content">
-        <section class="movie-info">
-          <article class="description-section">
-            <h2 class="section-title">Description</h2>
-            <p class="description-text">@movie.Overview</p>
-          </article>
-      
-          <article class="cast-section">
-    <h2 class="cast-title">Cast</h2>
-    <div class="cast-images">
-        @foreach (var castMember in movie.Credits.Cast.Take(5))
-        {
-            <div class="cast-card" title="@castMember.KnownForDepartment">
-                <img src="https://image.tmdb.org/t/p/w500/@castMember.ProfilePath" alt="@castMember.Name" class="cast-photo fade-in" />
-                <div class="cast-name">@castMember.Name</div>
-                <div class="cast-character">as @castMember.Character</div>
-            </div>
-        }
-    </div>
-</article>
-
-        </section>
-      
-        <aside class="movie-metadata">
-          <div class="metadata-item">
-            <div class="metadata-header">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/14c718d8a29e1f926d9223c936ba4cd260b53661?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Calendar" class="metadata-icon" />
-              <h3 class="metadata-title">Released Date</h3>
-            </div>
-            <p class="metadata-value">@movie.ReleaseDate</p>
-          </div>
-      
-          <div class="metadata-item">
-            <div class="metadata-header">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a95882487758e90773c38e5b0efbf0e386ab56d9?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Language" class="metadata-icon" />
-              <h3 class="metadata-title">Available Languages</h3>
-            </div>
-            <div class="language-tags">
-              <span class="tag">English</span>
-              <span class="tag">Portuguese</span>
-              <span class="tag">Spanish</span>
-              <span class="tag">Russian</span>
-            </div>
-          </div>
-      
-          <div class="metadata-item">
-            <div class="metadata-header">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/25a7186b581d224614de8999be140270bf633361?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="metadata-icon" />
-              <h3 class="metadata-title">Other Information</h3>
-            </div>
-            <div class="ratings-container">
-              <div class="rating-item">
-                
-                <p class="rating-value">@movie.Popularity</p>
-              </div>  
-              <div class="rating-item">
-    
-                
-                <p class="rating-value">Runtime(minutes): @movie.Runtime</p>
-    
-              </div>  
-    
-            </div>
-          </div>
-      
-          <div class="metadata-item">
-            <div class="metadata-header">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ab8163cf5821c1f1ca86a564ed4c14a2856e4392?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Genre" class="metadata-icon" />
-              <h3 class="metadata-title">Gernes</h3>
-            </div>
-            <div class="genre-tags">
-              @foreach (var genre in movie.Genres)
-              {
-                <span class="tag">@genre.Name</span>
-              }
-            </div>
-          </div>
-      
-          <div class="metadata-item">
-            <h3 class="metadata-title">Director</h3>
-            @foreach (var director in movie.Credits.Crew.Where(c => c.Job == "Director").Take(1))
-            {
-            <div class="director-info">
-              <img src="https://image.tmdb.org/t/p/w500/@director.ProfilePath" alt="@director.Name" class="director-photo" />
-              <span class="director-name">@director.Name</span>
-            </div>
+            @{
+                var hasSession = UnitOfWork.GetRepository<DbMovieSession>().GetAll().Any(s => s.MovieId == movie.Id);
             }
-          </div>
+            @if (IsPlayingInCinemas(movie) && hasSession)
+            {
+                <button class="primary-button" id="buy-tickets-button" @onclick="() => showTicketModal()">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a0a40d3feafbecc147030129826490c0ee592808?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Ticket" class="button-icon" />
+                    <span>Buy Tickets</span>
+                </button>
+                <ModalReserveTicket Visible="@showReservarBilheteModal" OnClose="@HideReservarBilheteModal"
+                    OnSubmitSelection="@HandleBilheteSelection" Sessions="availableSessions" />
+               <ModalSeatTicket 
+                Visible="@showLugarBilheteModal"
+                OnClose="@HideLugarBilheteModal"
+                OnAddToCart="@HandleAddToCart" 
+                Price="movieTicket.CalculatePrice()"
+                OccupiedSeats="OccupiedSeats" />
+            }
+            else if (IsPlayingInCinemas(movie) && !hasSession)
+            {
+                <h3 style="color: red">Não existem sessões para este filme!</h3>
+            }
+            else
+            {
+                <button class="primary-button" id="purchase-button" @onclick="() => addToCartBluRay(movie.Id!.Value)">
+                    <span>Purchase (19.99)</span>
+                </button>
+                <button class="primary-button" id="rent-button" @onclick="() => addToCartRental(movie.Id!.Value)">
+                    <span>Rent (7.99)</span>
+                </button>
+            }
+            <div class="action-buttons">
+                <button class="icon-button">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e44857ca31981cfdf28982666dbb3ff14fe1e0cb?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Action" class="button-icon" />
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="movie-content">
+        <section class="movie-info">
+            <article class="description-section">
+                <h2 class="section-title">Description</h2>
+                <p class="description-text">@movie.Overview</p>
+            </article>
+            <article class="cast-section">
+                <h2 class="cast-title">Cast</h2>
+                <div class="cast-images">
+                    @foreach (var castMember in movie.Credits.Cast.Take(5))
+                    {
+                        <div class="cast-card" title="@castMember.KnownForDepartment">
+                            <img src="https://image.tmdb.org/t/p/w500/@castMember.ProfilePath" alt="@castMember.Name" class="cast-photo fade-in" />
+                            <div class="cast-name">@castMember.Name</div>
+                            <div class="cast-character">as @castMember.Character</div>
+                        </div>
+                    }
+                </div>
+            </article>
+        </section>
+        <aside class="movie-metadata">
+            <div class="metadata-item">
+                <div class="metadata-header">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/14c718d8a29e1f926d9223c936ba4cd260b53661?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Calendar" class="metadata-icon" />
+                    <h3 class="metadata-title">Released Date</h3>
+                </div>
+                <p class="metadata-value">@movie.ReleaseDate</p>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-header">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a95882487758e90773c38e5b0efbf0e386ab56d9?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Language" class="metadata-icon" />
+                    <h3 class="metadata-title">Available Languages</h3>
+                </div>
+                <div class="language-tags">
+                    <span class="tag">English</span>
+                    <span class="tag">Portuguese</span>
+                    <span class="tag">Spanish</span>
+                    <span class="tag">Russian</span>
+                </div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-header">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/25a7186b581d224614de8999be140270bf633361?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Star" class="metadata-icon" />
+                    <h3 class="metadata-title">Other Information</h3>
+                </div>
+                <div class="ratings-container">
+                    <div class="rating-item">
+                        <p class="rating-value">@movie.Popularity</p>
+                    </div>  
+                    <div class="rating-item">
+                        <p class="rating-value">Runtime(minutes): @movie.Runtime</p>
+                    </div>  
+                </div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-header">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ab8163cf5821c1f1ca86a564ed4c14a2856e4392?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Genre" class="metadata-icon" />
+                    <h3 class="metadata-title">Gernes</h3>
+                </div>
+                <div class="genre-tags">
+                    @foreach (var genre in movie.Genres)
+                    {
+                        <span class="tag">@genre.Name</span>
+                    }
+                </div>
+            </div>
+            <div class="metadata-item">
+                <h3 class="metadata-title">Director</h3>
+                @foreach (var director in movie.Credits.Crew.Where(c => c.Job == "Director").Take(1))
+                {
+                    <div class="director-info">
+                        <img src="https://image.tmdb.org/t/p/w500/@director.ProfilePath" alt="@director.Name" class="director-photo" />
+                        <span class="director-name">@director.Name</span>
+                    </div>
+                }
+            </div>
         </aside>
-      </main>
-      }else{
-        <div class="loading-container">
-          <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Loading" class="loading-image" />
-          <p class="loading-text">Loading movie details...</p>
-        </div>
-      }
-      @if(showSuccessModal){
-        <div class="modal-overlay" id="modalSucesso">
-      <div class="modal">
-      <button class="close-button" @onclick="HideSuccessModal"> X</button>
-        <div class="icon-success">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <h2>Item Adicionado ao carrinho com  sucesso!</h2>
-      </div>
+    </main>
+}
+else
+{
+    <div class="loading-container">
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0c3f2a4b5d8e7f9b6c3e4a0d8f1e2b3c4d5e6f7g?placeholderIfAbsent=true&apiKey=3839db6e635741deb3068622d1f46e69" alt="Loading" class="loading-image" />
+        <p class="loading-text">Loading movie details...</p>
     </div>
-    }
-      <Footer/>
-    
-      
-      
-
+}
+@if (showSuccessModal)
+{
+    <div class="modal-overlay" id="modalSucesso">
+        <div class="modal">
+            <button class="close-button" @onclick="HideSuccessModal"> X</button>
+            <div class="icon-success">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Item Adicionado ao carrinho com sucesso!</h2>
+        </div>
+    </div>
+}
+<Footer/>
 
 @code {
     [Parameter]
     public int id { get; set; }
 
-
     private PopularApiMovie? movie;
-    private ProxyCart ?cartItemList;
-
+    private ProxyCart? cartItemList;
     private IRepository<DbUser>? UserRepository;
     private IUser? realUser = null;
     private bool isAuthenticated = false;
     private bool showSuccessModal = false;
     private bool showReservarBilheteModal = false;
     private bool showLugarBilheteModal = false;
-
-
     private IMovieTicket? movieTicket = null;
-
+    private List<DbMovieSession> availableSessions = new();
+    private DbMovieSession? selectedSession;
+    private string[] OccupiedSeats => selectedSession?.AvailableSeats ?? Array.Empty<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -215,11 +208,13 @@
             realUser = null;
         }
         cartItemList = new ProxyCart(realUser?.Cart, CartItemMapper, ShoppingCartMapper);
+
+        var repo = UnitOfWork.GetRepository<DbMovieSession>();
+        availableSessions = repo.GetAll().Where(s => s.MovieId == id).ToList();
     }
 
-
-      public bool IsPlayingInCinemas(PopularApiMovie movie)
-      {
+    public bool IsPlayingInCinemas(PopularApiMovie movie)
+    {
         if (DateTime.TryParse(movie.ReleaseDate, out var releaseDate))
         {
             var currentDate = DateTime.UtcNow;
@@ -227,10 +222,10 @@
         }
         return false;
     }
-    
 
-    public async Task getMovie(){
-      Console.WriteLine($"Movie ID: {id}");
+    public async Task getMovie()
+    {
+        Console.WriteLine($"Movie ID: {id}");
         try
         {
             var httpclient = new HttpClient();
@@ -250,8 +245,8 @@
         {
             Console.WriteLine($"Error fetching movie details: {ex.Message}");
         }
-
     }
+
     public Task addToCartBluRay(int movieId)
     {
         if (!isAuthenticated)
@@ -281,12 +276,11 @@
         return Task.CompletedTask;
     }
 
-      private void HideSuccessModal()
-  {
-      showSuccessModal = false;
-      StateHasChanged();
-  }
-  
+    private void HideSuccessModal()
+    {
+        showSuccessModal = false;
+        StateHasChanged();
+    }
 
     private void HideReservarBilheteModal()
     {
@@ -297,12 +291,15 @@
     private void HandleBilheteSelection((string Cinema, string Option) selection)
     {
         movieTicket = new BaseMovieTicket();
-        Console.WriteLine($"Option: {selection.Option}");
+        selectedSession = availableSessions.FirstOrDefault(s =>
+            s.CinemaName == selection.Cinema && s.MovieType == selection.Option);
+
         GetMovieTicket(selection.Option);
         showReservarBilheteModal = false;
         showLugarBilheteModal = true;
         StateHasChanged();
     }
+
     private void showTicketModal()
     { 
         if (!isAuthenticated)
@@ -336,30 +333,37 @@
         {
             throw new ArgumentException("Invalid option");
         }
-       
     }
+
     private void HideLugarBilheteModal()
     {
         showLugarBilheteModal = false;
         StateHasChanged();
-
     }
 
-    private Task HandleAddToCart((int Adults, List<string> Seats) data)
+    public Task HandleAddToCart((int Adults, List<string> Seats) data)
     {
-        // Handle add to cart logic
-        movieTicket = new MultiplePersonTicket(movieTicket,data.Adults);
+        movieTicket = new MultiplePersonTicket(movieTicket, data.Adults);
         var realMovieTicket = CartItemFactory.CreateTicketItem(movieTicket.CalculatePrice(), id, data.Adults, data.Seats.ToArray(), 1);
         cartItemList?.AddItem(realMovieTicket);
+
+        // Guardar lugares ocupados na sessão correta
+        var repository = UnitOfWork.GetRepository<DbMovieSession>();
+        var session = selectedSession;
+        if (session != null)
+        {
+            var ocupados = session.AvailableSeats?.ToList() ?? new List<string>();
+            ocupados.AddRange(data.Seats);
+            session.AvailableSeats = ocupados.Distinct().ToArray();
+
+            repository.Update(session);
+            UnitOfWork.SaveChanges();
+        }
+
         showLugarBilheteModal = false;
         showSuccessModal = true;
         StateHasChanged();
-        
 
         return Task.CompletedTask;
     }
-
-
-
-    
 }

@@ -1,3 +1,5 @@
+@using GetWatch.Services.Db
+
 @if (Visible)
 {
     <div class="modal-overlay">
@@ -6,28 +8,31 @@
             <h2>Selecionar localização :</h2>
 
             <div class="form-group">
-                <label>Madeira</label>
+                <label>Cinema</label>
                 <select @bind="SelectedCinema">
                     <option disabled selected value="">Selecione cinema</option>
-                    <option>Cinema Forum Madeira</option>
-                    <option>Cinema Madeira</option>
-                    <option>Cinema Canja Shopping</option>
-                    <option>Cinema Madeira Shopping</option>
+                    @foreach (var cinema in Sessions.Select(s => s.CinemaName).Distinct().Where(c => !string.IsNullOrEmpty(c)))
+                    {
+                        <option value="@cinema">@cinema</option>
+                    }
                 </select>
             </div>
 
             <div class="form-group">
                 <label>Opções</label>
-                <select @bind="SelectedOption">
+                <select @bind="SelectedOption" disabled="@string.IsNullOrEmpty(SelectedCinema)">
                     <option disabled selected value="">Selecionar opção</option>
-                    <option>IMAX</option>
-                    <option>3D</option>
-                    <option>Multiplex</option>
-                    <option>4DX</option>
+                    @foreach (var tipo in Sessions.Where(s => s.CinemaName == SelectedCinema)
+                                                 .Select(s => s.MovieType)
+                                                 .Distinct()
+                                                 .Where(t => !string.IsNullOrEmpty(t)))
+                    {
+                        <option value="@tipo">@tipo</option>
+                    }
                 </select>
             </div>
 
-            <button class="submit-button" @onclick="OnSubmit">Seguinte</button>
+            <button class="submit-button" @onclick="OnSubmit" disabled="@(!CanSubmit)">Seguinte</button>
         </div>
     </div>
 }
@@ -37,12 +42,15 @@
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public EventCallback<(string Cinema, string Option)> OnSubmitSelection { get; set; }
 
+    [Parameter] public List<DbMovieSession> Sessions { get; set; } = new();
     private string SelectedCinema { get; set; } = "";
     private string SelectedOption { get; set; } = "";
 
+    private bool CanSubmit => !string.IsNullOrEmpty(SelectedCinema) && !string.IsNullOrEmpty(SelectedOption);
+
     private async Task OnSubmit()
     {
-        if (!string.IsNullOrEmpty(SelectedCinema) && !string.IsNullOrEmpty(SelectedOption))
+        if (CanSubmit)
         {
             await OnSubmitSelection.InvokeAsync((SelectedCinema, SelectedOption));
         }
