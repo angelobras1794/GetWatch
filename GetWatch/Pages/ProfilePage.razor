@@ -47,6 +47,7 @@
                         <p class="user-email">@realUser.Email</p>
 
                     </div>
+                    
                 <div class="logout-container">
                     <button class="logout-button" @onclick="Logout">Logout</button>
                 </div>
@@ -72,32 +73,42 @@
                 
                 <div class="other-info">
                     <div class="section-container">
-                        <ul class="section-menu">
-                            <button class="menu-item" @onclick="ShowDeleteUserForm"> Eliminar Users </button>
-                            <button class="menu-item" @onclick="ShowCreateSessionForm" >Criar Sessão</button>
-                        </ul>
+                        <div class="section-menu">
+                            <button class="menu-item" @onclick="ShowDeleteUserForm"> Delete Users </button>
+                            <button class="menu-item" @onclick="ShowCreateSessionForm" >Create Session</button>
+                        </div>
+                    </div>
+                    <br/>
                        @if (showDeleteUserForm)
-                        {
+                        {                            
+                            <div>                            
                             <form class="delete-user-form" @onsubmit="HandleDeleteUser">
-                                <h3>Eliminar Utilizador</h3>
-                                <input type="text" placeholder="Coloque o ID do utilizador" @bind="deleteUserId" class="form-control" />
-                                <button type="submit" class="button" >Eliminar</button>
-                                <button type="button" class="button" @onclick="HideDeleteUserForm">Cancelar</button>
+                                <h3>Delete User</h3>
+                                <input type="text" placeholder="User ID" @bind="deleteUserId" class="form-control" />
+                                <button type="submit" class="button" >Delete</button>
+                                <button type="button" class="button" @onclick="HideDeleteUserForm">Cancel</button>
                                 @if (!string.IsNullOrEmpty(deleteUserFeedback))
                                 {
                                     <p>@deleteUserFeedback</p>
                                 }
                             </form>
+                            </div>
                         }
                         @if (showCreateSessionForm)
                         {
                             <form class="create-session-form" @onsubmit="HandleCreateSession">
-                                <h3>Criar Nova Sessão</h3>
-                                <input type="text" placeholder="ID do Filme" @bind="newMovieId" class="form-control" />
-                                <input type="text" placeholder="Tipo de Filme (ex: 2D, 3D, IMAX)" @bind="newMovieType" class="form-control" />
-                                <input type="text" placeholder="Nome do Cinema" @bind="newCinemaName" class="form-control" />
-                                <button type="submit" class="button">Criar Sessão</button>
-                                <button type="button" class="button" @onclick="HideCreateSessionForm">Cancelar</button>
+                                <h3>Create New Session</h3>
+                                <input type="text" placeholder="Movie ID" @bind="newMovieId" class="form-control" required/>
+                                <select @bind="newMovieType" class="form-control" placeholder="Movie Type" required>
+                                    <option value="" disabled selected>Select Movie Type</option>
+                                    <option value="2D">2D</option>
+                                    <option value="3D">3D</option>
+                                    <option value="IMAX">IMAX</option>
+                                    <option value="4DX">4DX</option>
+                                </select>
+                                <input type="text" placeholder="Cinema Name" @bind="newCinemaName" class="form-control" required />
+                                <button type="submit" class="button">Create Session</button>
+                                <button type="button" class="button" @onclick="HideCreateSessionForm">Cancel</button>
                                 @if (!string.IsNullOrEmpty(createSessionFeedback))
                                 {
                                     <p>@createSessionFeedback</p>
@@ -107,7 +118,7 @@
 
                     </div>
                 </div>
-            </div>
+            
     }
     else
     {

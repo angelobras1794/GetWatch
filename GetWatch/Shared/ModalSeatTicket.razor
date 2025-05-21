@@ -28,7 +28,7 @@
                                       @onclick="() => ToggleSeat(row, col)"
                                       disabled="@isOccupied"
                                       style="@((isOccupied ? "pointer-events:none; background:#ccc; cursor:not-allowed;" : ""))">
-                                    @seatLabel
+                                    <a class="seat_text">@seatLabel</a>
                                 </span>
                             }
                         </div>
