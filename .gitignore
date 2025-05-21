@@ -5,6 +5,6 @@ obj/
 *.userosscache
 *.sln.docstates
 *sln
-
+*.db
 # Ignore Visual Studio Code files
 .vscode/
