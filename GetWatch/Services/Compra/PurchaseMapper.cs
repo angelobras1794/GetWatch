@@ -25,12 +25,13 @@ namespace GetWatch.Services.Compra
         public List<ICartItem> GetAll(Guid userId)
         {
             var repository = _unitOfWork.GetRepository<DbPurchases>();
+            Console.WriteLine($"Repository: ");
             if (repository == null)
             {
                 Console.WriteLine("Repository for DbPurchase is null.");
                 return new List<ICartItem>();
             }
-            var dbPurchases = repository.GetAll()?.Where(x => x.UserId == userId).ToList() ?? new List<DbPurchases>();
+            var dbPurchases = repository.GetAll()?.Where(x => x.UserId == userId).ToList();
 
             var PurchaseItems = dbPurchases.Select(dbPurchase =>
             {

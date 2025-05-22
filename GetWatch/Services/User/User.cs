@@ -54,10 +54,6 @@ namespace GetWatch.Services.User
             supportTicketMapper = new SupportTicketMapper(_unitOfWork);
             purchaseMapper = new PurchaseMapper(_unitOfWork);
             cardMapper = new CardMapper(_unitOfWork);
-            Cart = cartMapper.Get(Id);
-            SupportTickets = supportTicketMapper.GetAll(Id);
-            Transactions = purchaseMapper.GetAll(Id);
-            Cards = cardMapper.GetAll(Id);
 
         }
 

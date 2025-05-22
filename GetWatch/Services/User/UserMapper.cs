@@ -11,8 +11,8 @@ using GetWatch.Interfaces.SupportTickets;
 using GetWatch.Services.Tickets;
 using GetWatch.Interfaces.Cards;
 using GetWatch.Services.Cards;
-
-
+using System.Transactions;
+using GetWatch.Services.Compra;
 
 public class UserMapper : IUserMapper
 {
@@ -27,7 +27,7 @@ public class UserMapper : IUserMapper
         _unitOfWork = unitOfWork;
         _cartMapper = new ShoppingCartMapper(unitOfWork);
         _supportTicketMapper = new SupportTicketMapper(unitOfWork);
-        _transactionMapper = new CartItemMapper(unitOfWork);
+        _transactionMapper = new PurchaseMapper(unitOfWork);
         _cardMapper = new CardMapper(unitOfWork);
         _userBuilder = new UserBuilder();
     }
@@ -67,15 +67,17 @@ public class UserMapper : IUserMapper
         {
             throw new KeyNotFoundException($"User with ID {id} not found.");
         }
+    
 
         return new User
-        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone,dbUser.IsAdmin, dbUser.Id)
+        (_unitOfWork, dbUser.Name ?? string.Empty, dbUser.Email ?? string.Empty, dbUser.Password ?? string.Empty, dbUser.Phone, dbUser.IsAdmin, dbUser.Id)
         {
             Cart = _cartMapper.Get(dbUser.Id),
             SupportTickets = _supportTicketMapper.GetAll(dbUser.Id),
             Transactions = _transactionMapper.GetAll(dbUser.Id),
             Cards = _cardMapper.GetAll(dbUser.Id)
         };
+        
 
     }
 

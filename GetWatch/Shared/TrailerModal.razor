@@ -1,0 +1,21 @@
+@code {
+    [Parameter] public string? TrailerUrl { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+}
+
+@if (!string.IsNullOrEmpty(TrailerUrl))
+{
+    <div class="trailer-modal" @onclick="OnClose">
+        <div class="trailer-content" @onclick:stopPropagation>
+            <span class="close-button" @onclick="OnClose">&times;</span>
+            <iframe src="@TrailerUrl" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+}else{
+    <div class="trailer-modal" @onclick="OnClose">
+        <div class="trailer-content" @onclick:stopPropagation>
+            <span class="close-button" @onclick="OnClose">&times;</span>
+            <p>Movie Not Available</p>
+        </div>
+    </div>
+}
