@@ -6,6 +6,7 @@
 @using GetWatch.Services
 @inject UserLoginService UserLoginService
 @inject NavigationManager NavigationManager
+@inject CustomAuthenticationStateProvider AuthStateProvider
 
 <NavBar/>
 <div class="login-container">
@@ -103,4 +104,13 @@
             return;
         }
     }
+
+        protected override async void OnInitialized()
+      {
+         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            NavigationManager.NavigateTo("/", true);
+        }
+      }
 }      
