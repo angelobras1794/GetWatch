@@ -17,11 +17,8 @@ namespace GetWatch.Services.Movies.Strategy
         public async Task<List<PopularApiMovie>> FetchMoviesAsync(HttpClient httpClient)
 {
     var allMovies = new List<PopularApiMovie>();
-    // int currentPage = 1;
     int totalPages;
 
-    // do
-    // {
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -37,16 +34,12 @@ namespace GetWatch.Services.Movies.Strategy
         {
             response.EnsureSuccessStatusCode();
             var body = await response.Content.ReadAsStringAsync();
-
-            // Deserialize the response into a TmdbResponse object
             var result = JsonConvert.DeserializeObject<TmdbResponse>(body);
 
-            if (result?.Results != null)
-            {
-                allMovies.AddRange(result.Results);
-            }
-
-            // Get the total number of pages from the response
+                if (result?.Results != null)
+                {
+                    allMovies.AddRange(result.Results);
+                }
             totalPages = result?.TotalPages ?? 1;
         }
 

@@ -223,6 +223,14 @@
                                                 <p class="transaction-title">@movie.Title</p>
                                                 <p class="transaction-quantity">Date :@movieTicket.RentDate</p>
                                                 <p class="transaction-price">Price: @item.Price </p>
+                                                @if(movieTicket.RentDate >= DateTime.UtcNow){
+                                                    @if (movie?.Id != null)
+                                                    {
+                                                        <button class="play-button" @onclick="() => showTrailer(movie.Id!.Value)">Play</button>
+                                                    }
+                                        
+                                                }
+                                                
                                             </div>
                                             
                                         </div>
@@ -231,6 +239,7 @@
                                 }
                                     
                             }
+                            
                         </div>
                         <div class="info-item" id="suporttickets">
                             @foreach(var ticket in realUser.SupportTickets){
@@ -248,12 +257,21 @@
                 </div>
             </div>
             }
+            @if(showTrailerModal){
+                <TrailerModal TrailerUrl="@currentTrailerUrl" OnClose="CloseTrailer" />
+            }
+            
+            
+            
+            
     <Footer/>
 
 @code {
     private IUser? realUser = null;
 
     private DbMovieSession movieSession ;
+
+    private HttpClient httpclient = new HttpClient();
 
 
     private List<PopularApiMovie> transactionsMovies = new List<PopularApiMovie>();
@@ -270,8 +288,9 @@
     private string newMovieType = "";
     private string newCinemaName = "";
     private string createSessionFeedback = "";
+
+    private bool showTrailerModal = false;
     
-// eliminar o utilizador
     private void ShowDeleteUserForm()
     {
         showDeleteUserForm = true;
@@ -430,5 +449,28 @@
         
            await JS.InvokeVoidAsync("menuItensInit");
         
+    }
+
+        string? currentTrailerUrl;
+
+    async Task ShowTrailer(int movieId)
+    {
+        var service = new MovieVideosService();
+        var trailer = await service.GetMovieVideosAsync(movieId,httpclient);
+        currentTrailerUrl = trailer;
+        Console.WriteLine("Trailer URL: " + currentTrailerUrl);
+    }
+
+    void CloseTrailer()
+    {
+        currentTrailerUrl = null;
+        showTrailerModal = false;
+        StateHasChanged();
+    }
+    async Task showTrailer(int movieId)
+    {
+        await ShowTrailer(movieId);
+        showTrailerModal = true;
+        StateHasChanged();
     }
 }

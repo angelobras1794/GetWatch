@@ -362,3 +362,40 @@
     color: #555;
     margin-top: 10px;
 }
+
+
+.play-button {
+    background: linear-gradient(90deg, #1db954 0%, #1ed760 100%);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(30, 215, 96, 0.12);
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    margin: 4px 0;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: 100px;
+}
+
+.play-button:hover,
+.play-button:focus {
+    background: linear-gradient(90deg, #1ed760 0%, #1db954 100%);
+    transform: scale(1.04);
+    box-shadow: 0 4px 12px rgba(30, 215, 96, 0.18);
+    outline: none;
+}
+
+.play-button::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5,3 19,12 5,21" /></svg>') no-repeat center center;
+    background-size: 14px 14px;
+}
