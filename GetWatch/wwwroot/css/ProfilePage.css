@@ -104,7 +104,7 @@
 .menu-item {
     font-family: "Roboto", sans-serif;
     font-size: 16px;
-    color: black; /* Cor do texto */
+    color: rgb(255, 255, 255); /* Cor do texto */
     cursor: pointer;
     transition: color 0.3s ease, background-color 0.3s ease; /* Animação ao passar o mouse */
     gap: 10px; /* Espaçamento entre os itens */
@@ -115,8 +115,8 @@
 
 .menu-item:hover {
     color: #fff; /* Cor ao passar o mouse */
-    background-color: #444; /* Fundo ao passar o mouse */
-    border-color: #666; /* Borda ao passar o mouse */
+    background-color: #444; 
+    border-color: #666; 
 }
 
 .menu-item.active {
@@ -155,57 +155,63 @@
 
 .transaction-item {
     display: flex;
-    flex-direction: row; /* Organiza os itens em linha */
-    background-color: #1a1a1a; 
     align-items: center;
-    padding: 10px 15px; 
-    border-radius: 8px; 
-    margin-bottom: 10px; 
-    color: #fff; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+    justify-content: space-between; /* distribui espaço entre os elementos */
+    background-color: #1a1a1a;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     width: 90%;
+    max-width: 800px; /* Limita o tamanho para melhor leitura */
 }
 
+/* Imagem do filme */
 .movie-transaction-image {
-    width: 50px; 
-    height: 50px; 
-    border-radius: 5px;
-    object-fit: cover; 
-    margin-right: 15px; 
+    width: 60px;
+    height: 80px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 16px;
 }
 
+/* Área de texto do lado direito da imagem */
 .transaction-details {
     display: flex;
-    align-items: center;
-    
-    flex-direction: row; 
-    gap: 5px; 
-    flex-grow: 1; 
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
 }
 
+/* Título do filme */
 .transaction-title {
-    font-size: 16px;
-    margin: 0;
-    margin-left: 2%;
+    font-size: 17px;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 4px;
+}
+
+/* Linha com quantidade e preço */
+.transaction-meta {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-size: 14px;
     color: #ccc;
-
 }
 
-.transaction-quantity {
-    font-size: 16px;
-    color: #ccc; /* Cor mais clara para o texto secundário */
-    margin: 0;
-    margin-left: 15%;
-    word-wrap: break-word; /* Permite que o texto quebre em palavras longas */
-    white-space:nowrap; /* Impede quebras de linha automáticas */
-}
-
-.transaction-price {
-    font-size: 16px;
+/* Destaque se quantidade for positiva */
+.transaction-quantity.positive {
+    color: #4caf50;
     font-weight: bold;
-    color: #fff; /* Cor do preço */
-    margin: 0;
-    margin-left: 10%; /* Espaçamento entre os detalhes e o preço */
+}
+
+/* Preço */
+.transaction-price {
+    font-weight: bold;
+    color: #ffcc00;
+
 }
 .logout-button {
     background: linear-gradient(90deg, #ff5858 0%, #f857a6 100%);
@@ -236,8 +242,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 15%;
     position: relative;
+    left : 10%;
+
+
 }
 
 

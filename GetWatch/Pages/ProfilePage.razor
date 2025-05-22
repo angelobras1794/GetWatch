@@ -161,6 +161,7 @@
                         <ul class="section-menu">
                             <li class="menu-item active">Transactions</li>
                             <li class="menu-item">Tickets in effect</li>
+                            <li class="menu-item">Rentals</li>
                             <li class="menu-item">Support</li>
                         </ul>
 
@@ -170,7 +171,7 @@
                             
                             @foreach (var item in realUser.Transactions)
                             {
-                                @if(item is not MovieTicketProduct){
+                                @if(item is BluRayProduct){
                                     var movie = transactionsMovies.FirstOrDefault(m => m.Id == item.movieId);
                                     {
                                         <div class="transaction-item">
@@ -210,6 +211,27 @@
                                     
                             }
                         </div>
+                        <div class="info-item" id="rentals">
+                            @foreach (var item in realUser.Transactions)
+                            {
+                                @if(item is RentalProduct movieTicket){
+                                    var movie = transactionsMovies.FirstOrDefault(m => m.Id == item.movieId);
+                                    {
+                                        <div class="transaction-item">
+                                            <img src="https://image.tmdb.org/t/p/w500/@movie.PosterPath" alt="Movie Poster" class="movie-transaction-image">
+                                            <div class="transaction-details">
+                                                <p class="transaction-title">@movie.Title</p>
+                                                <p class="transaction-quantity">Date :@movieTicket.RentDate</p>
+                                                <p class="transaction-price">Price: @item.Price </p>
+                                            </div>
+                                            
+                                        </div>
+                                    }
+
+                                }
+                                    
+                            }
+                        </div>
                         <div class="info-item" id="suporttickets">
                             @foreach(var ticket in realUser.SupportTickets){
                                 <div class="transaction-item">
@@ -237,12 +259,12 @@
     private List<PopularApiMovie> transactionsMovies = new List<PopularApiMovie>();
     private List<PopularApiMovie> ticketsMovies = new List<PopularApiMovie>();
 
-    // Eliminar o Utilizador
+   
     private bool showDeleteUserForm = false;
     private string deleteUserId = "";
     private string deleteUserFeedback = "";
 
-    // Criar uma sessão 
+  
     private bool showCreateSessionForm = false;
     private string newMovieId = "";
     private string newMovieType = "";
@@ -354,12 +376,14 @@
         if (user != null)
         {
             realUser = UserMapper.Get(user.Id)!;
-            getTransactionsMovies();
+            await getTransactionsMovies();
+            
             
         }
         else{
             realUser = null;
         }
+
         
     }
 
