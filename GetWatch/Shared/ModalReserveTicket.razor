@@ -5,12 +5,12 @@
     <div class="modal-overlay">
         <div class="modal">
             <button class="close-button" @onclick="OnClose">×</button>
-            <h2>Selecionar localização :</h2>
+            <h2>Select Location :</h2>
 
             <div class="form-group">
                 <label>Cinema</label>
                 <select @bind="SelectedCinema">
-                    <option disabled selected value="">Selecione cinema</option>
+                    <option disabled selected value="">Select cinema</option>
                     @foreach (var cinema in Sessions.Select(s => s.CinemaName).Distinct().Where(c => !string.IsNullOrEmpty(c)))
                     {
                         <option value="@cinema">@cinema</option>
@@ -21,7 +21,7 @@
             <div class="form-group">
                 <label>Opções</label>
                 <select @bind="SelectedOption" disabled="@string.IsNullOrEmpty(SelectedCinema)">
-                    <option disabled selected value="">Selecionar opção</option>
+                    <option disabled selected value="">Select an option</option>
                     @foreach (var tipo in Sessions.Where(s => s.CinemaName == SelectedCinema)
                                                  .Select(s => s.MovieType)
                                                  .Distinct()
@@ -32,7 +32,7 @@
                 </select>
             </div>
 
-            <button class="submit-button" @onclick="OnSubmit" disabled="@(!CanSubmit)">Seguinte</button>
+            <button class="submit-button" @onclick="OnSubmit" disabled="@(!CanSubmit)">Next</button>
         </div>
     </div>
 }
