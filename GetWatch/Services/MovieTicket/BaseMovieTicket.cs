@@ -9,10 +9,6 @@ public class BaseMovieTicket: IMovieTicket
 
 {
 
-       
-        public BaseMovieTicket()
-        {
-        }
         
         public virtual double CalculatePrice()
         {

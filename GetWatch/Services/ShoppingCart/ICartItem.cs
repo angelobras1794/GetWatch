@@ -5,7 +5,7 @@ namespace GetWatch.Services.ShoppingCart
     public interface ICartItem: IDiscountable
     {
         Guid Id { get; set; }
-        // string Name { get; set; }
+       
 
         int Quantity { get; set; }
 

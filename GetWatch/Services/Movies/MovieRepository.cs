@@ -35,13 +35,13 @@ namespace GetWatch.Services.Movies
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
 
-                // Deserialize the response into a list of ApiMovie objects
+                
                 var result = JsonConvert.DeserializeObject<TmdbResponse>(body);
                 return result?.Results ?? new List<PopularApiMovie>();
             }
         }
 
-        //fetch movie by id
+        
         public async Task<PopularApiMovie> GetMovieByIdAsync(int id)
         {
             var request = new HttpRequestMessage
@@ -61,7 +61,7 @@ namespace GetWatch.Services.Movies
                 var body = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(body);
 
-                // Deserialize the response into a ApiMovie object
+                
                 var result = JsonConvert.DeserializeObject<PopularApiMovie>(body);
                 return result ?? new PopularApiMovie();
             }

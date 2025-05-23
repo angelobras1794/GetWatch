@@ -36,7 +36,6 @@ public class CommandManager: ICommandManager
         Console.WriteLine($"Position: {Position}");
     }
 
-    // Refaz o comando seguinte
     public void Redo()
     {
         if (HasRedo)

@@ -11,9 +11,9 @@ namespace GetWatch.Services.Db
 
         public string[]? AvailableSeats { get; set; }
 
-        public string? MovieType { get; set; } // 2D, 3D, IMAX, etc.
+        public string? MovieType { get; set; } 
         
-        public string ? CinemaName { get; set; } // Name of the cinema
+        public string ? CinemaName { get; set; } 
 
 
         

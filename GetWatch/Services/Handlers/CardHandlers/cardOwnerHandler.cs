@@ -20,7 +20,7 @@ namespace GetWatch.Services.Handlers.CardHandlers
                 throw new Exception("Card owner name must be at least 3 characters long.");
             }
 
-            // Pass to the next handler
+            
             NextHandler?.Handle(card);
         }
 

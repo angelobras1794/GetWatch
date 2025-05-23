@@ -191,10 +191,8 @@ else
     {
         movieTicket = new BaseMovieTicket();
         await getMovie();
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         isAuthenticated = authState.User.Identity != null && authState.User.Identity.IsAuthenticated;
-
         if (isAuthenticated)
         {
             var user = await UserService.GetAuthenticatedUserAsync();
@@ -346,8 +344,6 @@ else
         movieTicket = new MultiplePersonTicket(movieTicket, data.Adults);
         var realMovieTicket = CartItemFactory.CreateTicketItem(movieTicket.CalculatePrice(), id, data.Adults, data.Seats.ToArray(), 1);
         cartItemList?.AddItem(realMovieTicket);
-
-        // Guardar lugares ocupados na sessão correta
         var repository = UnitOfWork.GetRepository<DbMovieSession>();
         var session = selectedSession;
         if (session != null)
@@ -355,7 +351,6 @@ else
             var ocupados = session.AvailableSeats?.ToList() ?? new List<string>();
             ocupados.AddRange(data.Seats);
             session.AvailableSeats = ocupados.Distinct().ToArray();
-
             repository.Update(session);
             UnitOfWork.SaveChanges();
         }
@@ -363,7 +358,6 @@ else
         showLugarBilheteModal = false;
         showSuccessModal = true;
         StateHasChanged();
-
         return Task.CompletedTask;
     }
 }

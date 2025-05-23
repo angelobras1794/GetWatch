@@ -21,7 +21,7 @@ namespace GetWatch.Services.Handlers.CardHandlers
 
             }
 
-            // Pass to the next handler
+            
             NextHandler?.Handle(card);
         }
         

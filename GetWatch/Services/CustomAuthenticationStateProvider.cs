@@ -20,7 +20,7 @@ namespace GetWatch.Services
             var email = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authEmail");
             var userId = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authUserId");
             
-            Console.WriteLine($"Retrieved from localStorage - Email: {email}, UserId: {userId}"); // Debugging log
+            
 
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(userId))
             {

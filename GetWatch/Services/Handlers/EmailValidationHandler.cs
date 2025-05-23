@@ -18,7 +18,7 @@ namespace GetWatch.Services.Handlers
                 throw new Exception("Invalid email format.");
             }
 
-            // Pass to the next handler
+            
             NextHandler?.Handle(user);
         }
     }
