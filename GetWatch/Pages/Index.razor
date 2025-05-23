@@ -16,12 +16,11 @@
       GetWatch
     </div>
     <div class="button-container">
-      <button class="btn-explorar">Explorar</button>
-      <button class="btn-planos">Planos</button>
+      <button class="btn-explorar">Explore</button>
     </div>
   </div>
-</div>
-<MovieSlider Title="Atualmente nos cinemas" Items="movies" ItemsPerPage="5">
+</div>  
+<MovieSlider Title="Currently in Cinemas" Items="movies" ItemsPerPage="5">
   <ChildContent>
     <a href="/Movies/@context.Id" class="movie-link">
       <article class="movie-card">
@@ -32,7 +31,7 @@
   </ChildContent>
 </MovieSlider>
 
-<MovieSlider Title="Explora a nossa variedade de categorias" Items="genresWithMovies" ItemsPerPage="5">
+<MovieSlider Title="Explore our variety and categories" Items="genresWithMovies" ItemsPerPage="5">
   <ChildContent>
     <a href="/MoviesGenres/@context.Id" class="movie-link">
       <article class="category-card">
@@ -61,68 +60,6 @@
   </ChildContent>
 </MovieSlider>
 <Faq />
-<section class="pricing-section">
-  <div class="pricing-header">
-    <h2 class="section-title">Escolhe um plano mais indicado para ti</h2>
-  </div>
-
-  <div class="pricing-grid">
-    <article class="pricing-card">
-      <div class="plan-info">
-        <h3 class="plan-title">Plano Básico</h3>
-        <p class="plan-description">
-          Aproveite uma extensa biblioteca de filmes e programas,
-          apresentando uma variedade de conteúdos, incluindo títulos
-          recentes.
-        </p>
-      </div>
-      <div class="price-tag">
-        <span class="price">€9.99</span>
-        <span class="period">/mês</span>
-      </div>
-      <div class="plan-actions">
-        <button class="trial-button">Start Free Trial</button>
-        <button class="choose-button">Choose Plan</button>
-      </div>
-    </article>
-
-    <article class="pricing-card">
-      <div class="plan-info">
-        <h3 class="plan-title">Plano Standard</h3>
-        <p class="plan-description">
-          Acesso a uma seleção mais ampla de filmes e programas, incluindo
-          a maioria dos lançamentos recentes e conteúdos exclusivos.
-        </p>
-      </div>
-      <div class="price-tag">
-        <span class="price">€12.99</span>
-        <span class="period">/mês</span>
-      </div>
-      <div class="plan-actions">
-        <button class="trial-button">Start Free Trial</button>
-        <button class="choose-button">Choose Plan</button>
-      </div>
-    </article>
-
-    <article class="pricing-card">
-      <div class="plan-info">
-        <h3 class="plan-title">Plano Premium</h3>
-        <p class="plan-description">
-          Acesso à mais ampla seleção de filmes e programas, incluindo
-          todos os lançamentos e visualização offline.
-        </p>
-      </div>
-      <div class="price-tag">
-        <span class="price">€14.99</span>
-        <span class="period">/mês</span>
-      </div>
-      <div class="plan-actions">
-        <button class="trial-button">Start Free Trial</button>
-        <button class="choose-button">Choose Plan</button>
-      </div>
-    </article>
-  </div>
-</section>
 <Footer />
 
 @code {

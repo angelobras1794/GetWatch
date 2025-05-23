@@ -76,6 +76,7 @@
                         <div class="section-menu">
                             <button class="menu-item" @onclick="ShowDeleteUserForm"> Delete Users </button>
                             <button class="menu-item" @onclick="ShowCreateSessionForm" >Create Session</button>
+                            <button class="menu-item" @onclick="ShowDeleteMovieSessionForm">Delete Movie Session</button>
                         </div>
                     </div>
                     <br/>
@@ -99,6 +100,7 @@
                             <form class="create-session-form" @onsubmit="HandleCreateSession">
                                 <h3>Create New Session</h3>
                                 <input type="text" placeholder="Movie ID" @bind="newMovieId" class="form-control" required/>
+
                                 <select @bind="newMovieType" class="form-control" placeholder="Movie Type" required>
                                     <option value="" disabled selected>Select Movie Type</option>
                                     <option value="2D">2D</option>
@@ -106,7 +108,15 @@
                                     <option value="IMAX">IMAX</option>
                                     <option value="4DX">4DX</option>
                                 </select>
-                                <input type="text" placeholder="Cinema Name" @bind="newCinemaName" class="form-control" required />
+                                <select @bind="newCinemaName" class="form-control" placeholder="Cinema Name" required>
+                                    <option value="" disabled selected>Select Cinema Name </option>
+                                    <option value="Cinema Marcos">Cinema Marcos</option>
+                                    <option value="Cinema Ângelo">Cinema Ângelo</option>
+                                    <option value="Cinema Tomás">Cinema Tomás</option>
+                                    <option value="Cinema Afonso">Cinema Afonso</option>
+                                </select>
+
+                                
                                 <button type="submit" class="button">Create Session</button>
                                 <button type="button" class="button" @onclick="HideCreateSessionForm">Cancel</button>
                                 @if (!string.IsNullOrEmpty(createSessionFeedback))
@@ -114,6 +124,21 @@
                                     <p>@createSessionFeedback</p>
                                 }
                             </form>
+                        }
+                       @if (showDeleteMovieSessionForm)
+                        {
+                            <div>
+                                <form class="delete-user-form" @onsubmit="HandleDeleteMovieSession">
+                                    <h3>Delete Movie Session</h3>
+                                    <input type="text" placeholder="Session ID" @bind="deleteSessionId" class="form-control" required />
+                                    <button type="submit" class="button">Delete</button>
+                                    <button type="button" class="button" @onclick="HideDeleteMovieSessionForm">Cancel</button>
+                                    @if (!string.IsNullOrEmpty(deleteSessionFeedback))
+                                    {
+                                        <p>@deleteSessionFeedback</p>
+                                    }
+                                </form>
+                            </div>
                         }
 
                     </div>
@@ -289,8 +314,70 @@
     private string newCinemaName = "";
     private string createSessionFeedback = "";
 
+
+    // Eliminar uma sessão
+    private bool showDeleteMovieSessionForm = false;
+    private string deleteSessionId = "";
+    private string deleteSessionFeedback = "";
     private bool showTrailerModal = false;
-    
+
+
+     private void ShowDeleteMovieSessionForm()
+        {
+            showDeleteMovieSessionForm = true;
+            deleteSessionFeedback = "";
+            deleteSessionId = "";
+        }
+
+        private void HideDeleteMovieSessionForm()
+        {
+            showDeleteMovieSessionForm = false;
+            deleteSessionFeedback = "";
+            deleteSessionId = "";
+        }
+
+        private async Task HandleDeleteMovieSession()
+        {
+            if (!Guid.TryParse(deleteSessionId, out Guid sessionId))
+            {
+                deleteSessionFeedback = "ID da sessão inválido.";
+                return;
+            }
+
+            try
+            {
+                var repository = UnitOfWork.GetRepository<DbMovieSession>();
+                if (repository == null)
+                {
+                    throw new InvalidOperationException("Repository for DbMovieSession is null.");
+                }
+
+                var session = repository.GetAll().FirstOrDefault(s => s.Id == sessionId);
+
+                if (session == null)
+                {
+                    deleteSessionFeedback = "Sessão não encontrada.";
+                    return;
+                }
+
+                UnitOfWork.Begin();
+                repository.Delete(session);
+                UnitOfWork.SaveChanges();
+                UnitOfWork.Commit();
+                deleteSessionFeedback = "Sessão eliminada com sucesso!";
+                showDeleteMovieSessionForm = false;
+            }
+            catch (Exception ex)
+            {
+                deleteSessionFeedback = $"Erro ao eliminar sessão: {ex.Message}";
+            }
+        }
+
+
+
+
+// eliminar o utilizador
+
     private void ShowDeleteUserForm()
     {
         showDeleteUserForm = true;
@@ -364,6 +451,17 @@
             if (repository == null)
             {
                 throw new InvalidOperationException("Repository for DbMovieSession is null.");
+            }
+            // Verifica se já existe sessão igual
+            var existingSession = repository.GetAll().FirstOrDefault(s =>
+                s.MovieId == session.MovieId &&
+                s.MovieType == session.MovieType &&
+                s.CinemaName == session.CinemaName);
+
+            if (existingSession != null)
+            {
+                createSessionFeedback = "Já existe uma sessão para este filme neste cinema";
+                return;
             }
             
             UnitOfWork.Begin();
