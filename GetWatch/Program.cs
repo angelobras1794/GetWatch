@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-using GetWatch.Data;
 using GetWatch.Services.Db;
 using GetWatch.Services;
 using GetWatch.Services.User;
@@ -60,7 +59,7 @@ builder.Services.AddScoped<IGetWatchMediator,GetWatchMediator>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/login"; // Redirect here if unauthenticated
+        options.LoginPath = "/login"; 
     });
 
 
@@ -72,11 +71,11 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    
     app.UseHsts();
 }
 
@@ -86,8 +85,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Enable authentication middleware
-app.UseAuthorization();  // Enable authorization middleware
+app.UseAuthentication(); 
+app.UseAuthorization(); 
 
 
 app.MapBlazorHub();
