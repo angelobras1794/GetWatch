@@ -78,7 +78,9 @@
         }
         else
         {
-            <div class="cart-empty">Your cart is empty.</div>
+
+            <div class="cart-empty">Your Cart is empty.</div>
+
         }
         @if (realUser?.Cart != null)
         {
@@ -87,9 +89,10 @@
                 <span>@realUser.Cart.Price</span>
             </div>
             <div class="div-container">
-                <button disabled="@UndoDisabled" class="round-button grey-button" @onclick="Undo">Undo</button>
-                <button disabled="@RedoDisabled" class="round-button grey-button" @onclick="Redo">Redo</button>
+                <button disabled="@UndoDisabled" class="round-button undo" @onclick="Undo">Undo</button>
+                <button disabled="@RedoDisabled" class="round-button redo" @onclick="Redo">Redo</button>
             </div>
+            
         }
     }else if(step == 2){
         <PaymentCard realUser="realUser" OnCardSelected="(cardNum) => SelectedCardNumber = cardNum"/>
@@ -98,8 +101,11 @@
         <FinalCart realUser="realUser" GetItemType="getItemType"/>
     }
           
-    @if(step !=3){
+    @if(step !=3 ){
+        if (realUser?.Cart != null && realUser.Cart.GetItems().Any() )
+        {
         <button class="button" @onclick="nextStep">Next step</button>
+        }
     }
     @if(step != 1){
         <button class="button" @onclick="previousStep">Back</button>

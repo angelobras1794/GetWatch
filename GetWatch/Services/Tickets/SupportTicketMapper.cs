@@ -21,6 +21,7 @@ namespace GetWatch.Services.Tickets
 
         public List<ISupportTicket> GetAll(Guid userId)
         {
+
             var repository = _unitOfWork.GetRepository<DbSupportTickets>();
             if (repository == null)
             {
