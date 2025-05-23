@@ -21,7 +21,7 @@ namespace GetWatch.Services.Handlers.CardHandlers
                 throw new Exception("Card number must be 16 digits.");
             }
 
-            // Pass to the next handler
+            
             NextHandler?.Handle(card);
         }
         

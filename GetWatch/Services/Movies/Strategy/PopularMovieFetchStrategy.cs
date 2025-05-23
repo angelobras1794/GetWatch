@@ -28,7 +28,7 @@ namespace GetWatch.Services.Movies.Strategy
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
 
-                // Deserialize the response into a list of ApiMovie objects
+               
                 var result = JsonConvert.DeserializeObject<TmdbResponse>(body);
                 return result?.Results ?? new List<PopularApiMovie>();
             }

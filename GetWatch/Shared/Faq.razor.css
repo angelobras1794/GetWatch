@@ -103,8 +103,8 @@
 }
 
 .faq-item.open .faq-text {
-    max-height: 500px; /* Define uma altura máxima suficiente para o conteúdo */
-    padding: 10px; /* Adiciona padding ao expandir */
+    max-height: 500px;
+    padding: 10px; 
 }
 .faq-item-con{
     display: flex;

@@ -32,7 +32,7 @@ namespace GetWatch.Services.Movies.Strategy
             response.EnsureSuccessStatusCode();
             var body = await response.Content.ReadAsStringAsync();
 
-            // Deserialize the response into a PopularApiMovie object
+           
             var result = JsonConvert.DeserializeObject<PopularApiMovie>(body);
             return result ?? new PopularApiMovie();
         }

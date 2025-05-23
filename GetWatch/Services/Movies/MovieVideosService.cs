@@ -26,7 +26,7 @@ namespace GetWatch.Services.Movies
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<MovieVideos>(body);
-                //get the trailer key
+              
                     var video = result?.Results
                         ?.FirstOrDefault(x =>
                             x.Site == "YouTube" &&

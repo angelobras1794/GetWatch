@@ -2,7 +2,7 @@ using System;
 
 namespace GetWatch.Services.User;
 using System.Collections.Generic;
-using GetWatch.Interfaces.ShoppingCart; // Add the namespace for IShoppingCartMapper
+using GetWatch.Interfaces.ShoppingCart; 
 using GetWatch.Interfaces.Db;
 using GetWatch.Interfaces.User;
 using GetWatch.Services.Db;

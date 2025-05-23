@@ -7,8 +7,8 @@ namespace GetWatch.Services.Db
 {
     public class DbSupportTickets : DbItem
     {
-        public Guid UserId { get; set; } // Foreign key to DbUser
-        public DbUser? User { get; set; } // Navigation property
+        public Guid UserId { get; set; } 
+        public DbUser? User { get; set; } 
         public string Subject { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         

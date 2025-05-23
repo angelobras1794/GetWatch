@@ -23,7 +23,7 @@ namespace GetWatch.Services.Handlers
                 throw new Exception("Email does not exist.");
             }
 
-            // Pass to the next handler
+            
             NextHandler?.Handle(user);
         }
     }

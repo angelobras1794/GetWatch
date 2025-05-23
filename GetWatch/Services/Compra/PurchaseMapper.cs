@@ -84,7 +84,7 @@ namespace GetWatch.Services.Compra
             var user = userRepository.Get(userId);
             var dbPurchase = item switch
             {
-                BluRayProduct bluRayItem => (DbPurchases)new DbBluRayPurchase
+                BluRayProduct bluRayItem => (DbPurchases)new DbBluRayPurchase ()
                 {
                     Amount = bluRayItem.Price,
                     MovieId = bluRayItem.movieId,

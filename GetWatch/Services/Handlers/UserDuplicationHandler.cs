@@ -24,7 +24,7 @@ namespace GetWatch.Services.Handlers
                 throw new Exception("Username is already taken.");
             }
 
-            // Pass to the next handler
+           
             NextHandler?.Handle(user);
         }
     }

@@ -40,15 +40,6 @@ namespace GetWatch.Services.Tickets
                     Context.Attach(user);
                 }
 
-                // UnitOfWork.Begin();
-                // if (TicketsRepository == null)
-                // {
-                //     throw new InvalidOperationException("TicketsRepository is not initialized.");
-                // }
-                // TicketsRepository.Insert(ticket);
-                // UnitOfWork.SaveChanges();
-                // UnitOfWork.Commit();
-
                 supportTicketMapper.Insert(ticket, dbUser);
                 
                 }

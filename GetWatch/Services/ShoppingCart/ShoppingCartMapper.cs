@@ -26,7 +26,7 @@ namespace GetWatch.Services.ShoppingCart
             {
                 throw new InvalidOperationException("Repository for DbCart is null.");
             }
-            // fetch all support tickets of the user
+            
             var dbCarts = repository.GetAll()?.ToList() ?? new List<DbCart>();
 
             var carts = dbCarts.Select(dbCarts =>

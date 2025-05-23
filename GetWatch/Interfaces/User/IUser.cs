@@ -26,8 +26,6 @@ namespace GetWatch.Interfaces.User
 
         void AddtoCart(ICartItem item);
         void RemoveFromCart(ICartItem item);
-        void Checkout();
-        void AddSupportTicket(SupportTicket ticket);
 
         void AddCard(ICard card);
     }

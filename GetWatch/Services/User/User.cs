@@ -73,14 +73,6 @@ namespace GetWatch.Services.User
             cartItemMapper.Remove(item);
             Cart?.RemoveItem(item);
         }
-        public void Checkout()
-        {
-
-        }
-        public void AddSupportTicket(SupportTicket ticket)
-        {
-
-        }
         public void AddCard(ICard card)
         {
             if (Cards == null)
@@ -91,7 +83,6 @@ namespace GetWatch.Services.User
             }
             Cards.Add(card);
             cardMapper.Insert(card, Id);
-           
 
         }
 

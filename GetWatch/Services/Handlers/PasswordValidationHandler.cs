@@ -19,7 +19,7 @@ namespace GetWatch.Services.Handlers
             }
             
 
-            // Pass to the next handler
+            
             NextHandler?.Handle(user);
         }
     }

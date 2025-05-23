@@ -49,7 +49,7 @@ namespace GetWatch.Services
                 throw new ArgumentNullException(nameof(user.Email), "User email cannot be null or empty.");
             }
             await _authStateProvider.NotifyUserAuthentication(user.Email, user.Id.ToString());
-            Console.WriteLine("User login successful!");
+           
         
         
         }
